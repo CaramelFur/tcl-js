@@ -1,5 +1,3 @@
-/*global define */
-
 const types = require('./types');
 const ListObj = require('./objtype_list');
 

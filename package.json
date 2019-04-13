@@ -1,20 +1,26 @@
 {
-	"name": "tcl-js",
-	"version": "1.0",
-	"main": "src/interp",
-	"description": "An implementation of the Tcl language in Javascript",
-	"licenses": [
-		{
-			"type": "BSD",
-			"url": "http://www.tcl.tk/software/tcltk/license.html"
-		}
-	],
-	"keywords": [
-		"Tcl",
-		"JavaScript",
-		"Interpreter",
-		"Language",
-		"Parser"
-	],
-	"dependencies": {}
+  "name": "tcl-js",
+  "version": "1.0.1",
+  "description": "An implementation of the Tcl language in Javascript",
+  "main": "src/interp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubikscraft/tcl-js.git"
+  },
+  "license": "BSD",
+  "keywords": [
+    "tcl",
+    "javascript",
+    "interpreter",
+    "language",
+    "parser"
+  ],
+  "author": "Rubikscraft <renzodepenzo@live.nl> (htttps://rubikscraft.nl)",
+  "bugs": {
+    "url": "https://github.com/rubikscraft/tcl-js/issues"
+  },
+  "homepage": "https://github.com/rubikscraft/tcl-js#readme"
 }

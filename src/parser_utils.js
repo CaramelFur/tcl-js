@@ -1,6 +1,3 @@
-/*jshint eqnull:true */
-/*global define */
-
 const parser = require('./parser');
 const tcllist = require('./tcllist');
 

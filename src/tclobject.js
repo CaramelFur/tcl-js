@@ -1,6 +1,3 @@
-/*jshint eqnull:true, newcap:false */
-/*global define */
-
 var iface, objtypes = {},
 	TclObjectBase, jsvalhandlers, NewObj,
 	pendingFree = [],

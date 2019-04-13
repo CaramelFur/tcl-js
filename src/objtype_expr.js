@@ -1,6 +1,3 @@
-/*jslint plusplus: true, white: true, nomen: true, continue: true */
-/*global define */
-
 const types = require('./types');
 const tclobj = require('./tclobject');
 const parser = require('./parser');

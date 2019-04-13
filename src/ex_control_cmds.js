@@ -1,6 +1,3 @@
-/*jslint plusplus: true, white: true, nomen: true */
-/*global define */
-
 const types = require('./types');
 const utils = require('./utils');
 const BoolObj = require('./objtype_bool');

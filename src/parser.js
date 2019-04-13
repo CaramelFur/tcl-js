@@ -1,10 +1,3 @@
-/*jshint eqnull:true */
-/*global define */
-
-/* Current parser bugs:
-   None known
- */
-
 const types = require('./types');
 
 var iface, e,

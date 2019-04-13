@@ -1,6 +1,3 @@
-/*jshint curly:false */
-/*global define */
-
 const parser = require('./parser');
 const tclobj = require('./tclobject');
 const utils = require('./utils');

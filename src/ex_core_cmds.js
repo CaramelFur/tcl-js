@@ -1,6 +1,3 @@
-/*jslint plusplus: true, white: true, nomen: true, regexp: true */
-/*global define */
-
 const ex_callframes = require('./ex_callframes');
 const ex_control_cmds = require('./ex_control_cmds');
 const ex_list_cmds = require('./ex_list_cmds');

@@ -1,5 +1,3 @@
-/*global define */
-
 const utils = require('./utils');
 const tclobj = require('./tclobject');
 const BoolObj = require('./objtype_bool');

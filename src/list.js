@@ -1,5 +1,3 @@
-/*global define */
-
 const types = require('./types');
 
 var hex_chars = /[\dabcdefABCDEF]/,

@@ -1,8 +1,4 @@
-/*jslint plusplus: true, white: true, nomen: true */
-/*global define */
-
 const tclobj = require('./tclobject');
-
 
 var types = {
 	SCALAR: 0,
