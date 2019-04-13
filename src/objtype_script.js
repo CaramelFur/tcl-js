@@ -1,5 +1,3 @@
-/*global define */
-
 const types = require('./types');
 const tclobj = require('./tclobject');
 const parser = require('./parser');

@@ -1,6 +1,3 @@
-/*jshint bitwise:false */
-/*global define, require */
-
 const utils = require('./utils');
 const StringObj = require('./objtype_string');
 const IntObj = require('./objtype_int');

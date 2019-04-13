@@ -1,7 +1,3 @@
-/*jslint plusplus: true, white: true, nomen: true, regexp: true */
-/*global define */
-
-
 const tclobj = require('./tclobject');
 const ListObj = require('./objtype_list');
 const utils = require('./utils');

@@ -1,6 +1,3 @@
-/*jslint white: true, regexp: true */
-/*global define */
-
 const types = require('./types');
 const tclobj = require('./tclobject');
 

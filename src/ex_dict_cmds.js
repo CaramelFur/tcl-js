@@ -1,5 +1,3 @@
-/*global define */
-
 const tcllist = require('./list');
 const types = require('./types');
 const utils = require('./utils');

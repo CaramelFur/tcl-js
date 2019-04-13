@@ -1,12 +1,9 @@
-/*global define */
-
 const utils = require('./utils');
 const BoolObj = require('./objtype_bool');
 const ListObj = require('./objtype_list');
 const IntObj = require('./objtype_int');
 const types = require('./types');
 
-'use strict';
 // Initially there is no 'locale' determination, only catering for simplistic clock functions
 // based on dd mm CCYY formats, and English 'names',  used in wf. Needs better handling of this
 // to determin the right format being passed through.

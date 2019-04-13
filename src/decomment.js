@@ -1,6 +1,3 @@
-/*jslint white: true, plusplus: true */
-/*global define */
-
 module.exports = function (str) {
 	var out = [],
 		lines = str.split('\n'),
