@@ -1,6 +1,6 @@
 {
   "name": "tcl-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An implementation of the Tcl language in Javascript",
   "main": "src/interp.js",
   "scripts": {
