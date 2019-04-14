@@ -1,5 +1,10 @@
 # tcl-js
-A port of tcl.js to NodeJs, a native javascript tcl interpreter
+### A native javascript tcl interpreter
+
+This a port of [tcl.js](https://github.com/cyanogilvie/Tcl.js) to NodeJs
+
+I can not guarantee that everything works as it should, and the api will probably still change.
+Therefore it is not recommended  use this package in production yet.
 
 Currently working tcl commands:
 * append
