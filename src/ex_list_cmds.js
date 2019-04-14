@@ -2,26 +2,26 @@ const tclobj = require('./tclobject');
 const ListObj = require('./objtype_list');
 const utils = require('./utils');
 
-function resolve_index(list, obj) {
+function resolveIndex(list, obj) {
   return utils.resolve_idx(list.length, obj);
 }
 
 function install(interp) {
-  let { TclError } = interp;
   if (interp.register_extension('ex_list_cmds')) {
     return;
   }
 
   /* list commands still to implement:
-	 lsearch linsert lreplace lset lsort
-	 */
+   *lsearch linsert lreplace lset lsort
+   */
 
   interp.registerCommand('lassign', (args) => {
     interp.checkArgs(args, [1, null], 'list ?varname ...?');
     let list = args[1].GetList();
     let i;
-    let idx;
-    for (i = 2, idx = 0; i < args.length; i++, idx++) {
+    let idx = 0;
+    for (i = 2; i < args.length; i++) {
+      idx += 1;
       interp.set_scalar(args[i], list[idx] || '');
     }
     return new ListObj(list.slice(idx));
@@ -30,8 +30,8 @@ function install(interp) {
   interp.registerCommand('lrange', (args) => {
     interp.checkArgs(args, 3, 'list first last');
     let list = args[1].GetList();
-    let a = resolve_index(list, args[2]);
-    let b = resolve_index(list, args[3]);
+    let a = resolveIndex(list, args[2]);
+    let b = resolveIndex(list, args[3]);
     return new ListObj(list.slice(a, b - a + 1));
   });
 
@@ -91,15 +91,17 @@ function install(interp) {
   interp.registerCommand('list', args => new ListObj(args.slice(1)));
 
   interp.registerCommand('lindex', (args) => {
-    let i; let obj; let idx; let
-      list;
+    let i;
+    let obj;
+    let idx;
+    let list;
     interp.checkArgs(args, [1, null], 'list ?index ...?');
 
     obj = args[1];
 
     for (i = 2; i < args.length; i++) {
       list = obj.GetList();
-      idx = resolve_index(list, args[i]);
+      idx = resolveIndex(list, args[i]);
       obj = list[idx];
     }
     return obj;

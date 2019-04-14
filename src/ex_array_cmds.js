@@ -5,183 +5,191 @@ const ListObj = require('./objtype_list');
 const IntObj = require('./objtype_int');
 const types = require('./types');
 
-let subcmds;
 let { TclError } = types;
 let { ARRAY } = types;
 
-subcmds = {
-  exists(args, I) {
-    I.checkArgs(args, 1, 'arrayName');
-    return new BoolObj(I.array_exists(args[1]));
-  },
-  get(args, I) {
-    I.checkArgs(args, [1, 2], 'arrayName ?pattern?');
-    let vinfo = I.resolve_var(args[1]);
-    let res = [];
-    let a;
-    let e;
-    let pattern;
+let subcmds = {};
 
-    if (vinfo === undefined || vinfo.type === ARRAY) {
-      return I.EmptyResult;
-    }
+subcmds.exists = (args, I) => {
+  I.checkArgs(args, 1, 'arrayName');
+  return new BoolObj(I.array_exists(args[1]));
+};
 
-    a = vinfo.value;
-    if (args[2] === undefined) {
-      for (e in a) {
-        if (a.hasOwnProperty(e)) {
-          res.push(e, a[e]);
-        }
-      }
-    } else {
-      pattern = utils.glob2regex(args[2]);
-      for (e in a) {
-        if (a.hasOwnProperty(e) && pattern.test(e)) {
-          res.push(e, a[e]);
-        }
-      }
-    }
+subcmds.get = (args, I) => {
+  I.checkArgs(args, [1, 2], 'arrayName ?pattern?');
+  let vinfo = I.resolve_var(args[1]);
+  let res = [];
+  let a;
+  let pattern;
 
-    return new ListObj(res);
-  },
-  names(args, I) {
-    I.checkArgs(args, [1, 3], 'arrayName ?mode? ?pattern?');
-    let vinfo = I.resolve_var(args[1]);
-    let res = [];
-    let a;
-    let e;
-    let mode;
-    let pattern;
-
-    if (vinfo === undefined || vinfo.type === ARRAY) {
-      return I.EmptyResult;
-    }
-
-    if (args.length >= 2) {
-      mode = args[2].toString();
-    } else {
-      mode = '-glob';
-    }
-
-    if (args.length >= 3) {
-      switch (mode) {
-        case 'glob':
-          pattern = utils.glob2regex(args[3]);
-          break;
-        case 'exact':
-          pattern = utils.escape_regex(args[3]);
-          break;
-        case 'regex':
-          if (args[3].cache.regex === undefined) {
-            args[3].cache.regex = new RegExp(args[3].toString());
-          }
-          pattern = args[3].cache.regex;
-          break;
-        default:
-          throw new TclError(
-            `bad option "${args[2]}": must be -exact, -glob, or -regexp`,
-            ['TCL', 'LOOKUP', 'INDEX'],
-          );
-      }
-    }
-
-    a = vinfo.value;
-    if (pattern === undefined) {
-      for (e in a) {
-        if (a.hasOwnProperty(e)) {
-          res.push(e);
-        }
-      }
-    } else {
-      for (e in a) {
-        if (a.hasOwnProperty(e) && pattern.test(e)) {
-          res.push(e);
-        }
-      }
-    }
-
-    return new ListObj(res);
-  },
-  set(args, I) {
-    I.checkArgs(args, 2, 'arrayName list');
-    let vinfo = I.resolve_var(args[1]);
-    let l;
-    let k;
-    let v;
-    let i;
-
-    if (vinfo === undefined) {
-      vinfo = I.create_var(args[1], '');
-    }
-
-    if (vinfo.type !== ARRAY) {
-      throw new TclError(`can't array set "${args[1]}": variable isn't array`, [
-        'TCL',
-        'WRITE',
-        'ARRAY',
-      ]);
-    }
-
-    l = args[2].GetList();
-    for (i = 0; i < l.length; i += 2) {
-      k = l[i];
-      v = l[i + 1];
-      if (vinfo.value.hasOwnProperty(k)) {
-        vinfo.value[k].DecrRefCount();
-      }
-      vinfo.value[k] = tclobj.AsObj(v);
-      vinfo.value[k].IncrRefCount();
-    }
+  if (vinfo === undefined || vinfo.type === ARRAY) {
     return I.EmptyResult;
-  },
-  size(args, I) {
-    I.checkArgs(args, 1, 'arrayName');
-    let vinfo = I.resolve_var(args[1]);
-    let c = 0;
-    let e;
+  }
 
-    if (vinfo === undefined || vinfo.type !== ARRAY) {
-      return I.EmptyResult;
-    }
-
-    for (e in vinfo.value) {
-      if (vinfo.value.hasOwnProperty(e)) {
-        c++;
+  a = vinfo.value;
+  if (args[2] === undefined) {
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e)) {
+        res.push(e, a[e]);
       }
     }
-
-    return new IntObj(c);
-  },
-  unset(args, I) {
-    I.checkArgs(args, [1, 2], 'arrayName ?pattern?');
-    let vinfo = I.resolve_var(args[1]);
-    let e;
-    let a;
-    let pattern;
-
-    if (vinfo === undefined || vinfo.type !== ARRAY) {
-      return I.EmptyResult;
-    }
-    a = vinfo.value;
-    if (args[2] === undefined) {
-      for (e in a) {
-        if (a.hasOwnProperty(e)) {
-          a[e].DecrRefCount();
-          delete a[e];
-        }
-      }
-    } else {
-      pattern = utils.glob2regex(args[2]);
-      for (e in a) {
-        if (a.hasOwnProperty(e) && pattern.test(e)) {
-          a[e].DecrRefCount();
-          delete a[e];
-        }
+  } else {
+    pattern = utils.glob2regex(args[2]);
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e) && pattern.test(e)) {
+        res.push(e, a[e]);
       }
     }
+  }
 
+  return new ListObj(res);
+};
+
+subcmds.names = (args, I) => {
+  I.checkArgs(args, [1, 3], 'arrayName ?mode? ?pattern?');
+  let vinfo = I.resolve_var(args[1]);
+  let res = [];
+  let a;
+  let mode;
+  let pattern;
+
+  if (vinfo === undefined || vinfo.type === ARRAY) {
     return I.EmptyResult;
-  },
+  }
+
+  if (args.length >= 2) {
+    mode = args[2].toString();
+  } else {
+    mode = '-glob';
+  }
+
+  if (args.length >= 3) {
+    switch (mode) {
+      case 'glob':
+        pattern = utils.glob2regex(args[3]);
+        break;
+      case 'exact':
+        pattern = utils.escape_regex(args[3]);
+        break;
+      case 'regex':
+        if (args[3].cache.regex === undefined) {
+          args[3].cache.regex = new RegExp(args[3].toString());
+        }
+        pattern = args[3].cache.regex;
+        break;
+      default:
+        throw new TclError(
+          `bad option "${args[2]}": must be -exact, -glob, or -regexp`,
+          ['TCL', 'LOOKUP', 'INDEX'],
+        );
+    }
+  }
+
+  a = vinfo.value;
+  if (pattern === undefined) {
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e)) {
+        res.push(e);
+      }
+    }
+  } else {
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e) && pattern.test(e)) {
+        res.push(e);
+      }
+    }
+  }
+
+  return new ListObj(res);
+};
+
+subcmds.set = (args, I) => {
+  I.checkArgs(args, 2, 'arrayName list');
+  let vinfo = I.resolve_var(args[1]);
+  let l;
+  let k;
+  let v;
+  let i;
+
+  if (vinfo === undefined) {
+    vinfo = I.create_var(args[1], '');
+  }
+
+  if (vinfo.type !== ARRAY) {
+    throw new TclError(`can't array set "${args[1]}": variable isn't array`, [
+      'TCL',
+      'WRITE',
+      'ARRAY',
+    ]);
+  }
+
+  l = args[2].GetList();
+  for (i = 0; i < l.length; i += 2) {
+    k = l[i];
+    v = l[i + 1];
+    if (Object.prototype.hasOwnProperty.call(vinfo.value, k)) {
+      vinfo.value[k].DecrRefCount();
+    }
+    vinfo.value[k] = tclobj.AsObj(v);
+    vinfo.value[k].IncrRefCount();
+  }
+  return I.EmptyResult;
+};
+
+subcmds.size = (args, I) => {
+  I.checkArgs(args, 1, 'arrayName');
+  let vinfo = I.resolve_var(args[1]);
+  let c = 0;
+
+  if (vinfo === undefined || vinfo.type !== ARRAY) {
+    return I.EmptyResult;
+  }
+
+  for (let i = 0; i < Object.keys(vinfo.value).length; i++) {
+    let e = Object.keys(vinfo.value)[i];
+
+    if (Object.prototype.hasOwnProperty.call(vinfo.value, e)) {
+      c += 1;
+    }
+  }
+
+  return new IntObj(c);
+};
+
+subcmds.unset = (args, I) => {
+  I.checkArgs(args, [1, 2], 'arrayName ?pattern?');
+  let vinfo = I.resolve_var(args[1]);
+  let a;
+  let pattern;
+
+  if (vinfo === undefined || vinfo.type !== ARRAY) {
+    return I.EmptyResult;
+  }
+  a = vinfo.value;
+  if (args[2] === undefined) {
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e)) {
+        a[e].DecrRefCount();
+        delete a[e];
+      }
+    }
+  } else {
+    pattern = utils.glob2regex(args[2]);
+    for (let i = 0; i < Object.keys(a).length; i++) {
+      let e = Object.keys(a)[i];
+      if (Object.prototype.hasOwnProperty.call(a, e) && pattern.test(e)) {
+        a[e].DecrRefCount();
+        delete a[e];
+      }
+    }
+  }
+
+  return I.EmptyResult;
 };
 
 function install(interp) {
