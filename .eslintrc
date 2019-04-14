@@ -45,7 +45,8 @@
     "no-useless-escape": "off",
     "no-extend-native": "off",
     "no-eval": ["warn"],
-    "no-multi-str": "off"
+    "no-multi-str": "off",
+    "no-control-regex": ["warn"]
   },
   "env": {
     "browser": true,

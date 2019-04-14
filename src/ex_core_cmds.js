@@ -1,10 +1,10 @@
-const ex_callframes = require('./ex_callframes');
-const ex_control_cmds = require('./ex_control_cmds');
-const ex_list_cmds = require('./ex_list_cmds');
-const ex_dict_cmds = require('./ex_dict_cmds');
-const ex_string_cmds = require('./ex_string_cmds');
-const ex_array_cmds = require('./ex_array_cmds');
-const ex_clock_cmds = require('./ex_clock_cmds');
+const exCallframes = require('./ex_callframes');
+const exControlCmds = require('./ex_control_cmds');
+const exListCmds = require('./ex_list_cmds');
+const exDictCmds = require('./ex_dict_cmds');
+const exStringCmds = require('./ex_string_cmds');
+const exArrayCmds = require('./ex_array_cmds');
+const exClockCmds = require('./ex_clock_cmds');
 const types = require('./types');
 const IntObj = require('./objtype_int');
 
@@ -18,10 +18,10 @@ function install(interp) {
   }
 
   /* Core commands still to implement:
-	 after binary clock coroutine format global info interp
-	 namespace package regexp regsub rename scan subst tailcall time trace
-	 update uplevel upvar variable vwait yield zlib
-	 */
+   * after binary clock coroutine format global info interp
+   * namespace package regexp regsub rename scan subst tailcall time trace
+   * update uplevel upvar variable vwait yield zlib
+   */
 
   interp.registerCommand('set', (args) => {
     interp.checkArgs(args, [1, 2], 'varName ?newValue?');
@@ -32,27 +32,27 @@ function install(interp) {
   });
 
   interp.registerCommand('unset', (args) => {
-    let eating_args = true;
-    let report_errors = true;
-    let i;
-    while (eating_args && args.length > 0) {
+    let eatingArgs = true;
+    let reportErrors = true;
+    while (eatingArgs && args.length > 0) {
       switch (args[0].toString()) {
         case '-nocomplain':
-          report_errors = false;
+          reportErrors = false;
           args.shift();
           break;
         case '--':
-          eating_args = false;
+          eatingArgs = false;
           args.shift();
           break;
+        default:
       }
     }
-    for (i = 0; i < args.length; i++) {
-      interp.unset_var(args[i], report_errors);
+    for (let i = 0; i < args.length; i++) {
+      interp.unset_var(args[i], reportErrors);
     }
   });
 
-  interp.registerAsyncCommand('catch', (c, args) => {
+  interp.registerAsyncCommand('catch', (callback, args) => {
     interp.checkArgs(args, [1, 3], 'script ?resultVarName? ?optionsVarName?');
     let resultvar = args[2];
     let optionsvar = args[3];
@@ -63,21 +63,21 @@ function install(interp) {
       if (optionsvar !== undefined) {
         interp.set_var(optionsvar, res.options);
       }
-      return c(new IntObj(res.code));
+      return callback(new IntObj(res.code));
     });
   });
 
-  interp.registerAsyncCommand('expr', (c, args) => {
+  interp.registerAsyncCommand('expr', (callback, args) => {
     interp.checkArgs(args, [1, null], 'arg ?arg ...?');
     if (args.length === 2) {
-      return interp._TclExpr(args[1], c);
+      return interp._TclExpr(args[1], callback);
     }
     let i;
-    let str_args = [];
+    let strArgs = [];
     for (i = 1; i < args.length; i++) {
-      str_args.push(args.toString());
+      strArgs.push(args.toString());
     }
-    return interp._TclExpr(str_args.join(' '), c);
+    return interp._TclExpr(strArgs.join(' '), callback);
   });
 
   interp.registerCommand('incr', (args) => {
@@ -111,8 +111,10 @@ function install(interp) {
       value = types.EmptyString;
     }
     while (i < args.length) {
-      k = args[i++];
-      v = args[i++];
+      k = args[i];
+      i += 1;
+      v = args[i];
+      i += 1;
       options.push(k, v);
       if (k === '-code') {
         code = types.lookup_code(v);
@@ -136,20 +138,19 @@ function install(interp) {
     return new TclResult(mycode, value, options, level, code);
   });
 
-  interp.registerAsyncCommand('eval', (c, args) => {
+  interp.registerAsyncCommand('eval', (callback, args) => {
     let parts = [];
     let i;
     for (i = 1; i < args.length; i++) {
       parts.push(/^[ \t\n\r]*(.*?)[ \t\n\r]*$/.exec(args[i].toString())[1]);
     }
-    return interp.exec(parts.join(' '), c);
+    return interp.exec(parts.join(' '), callback);
   });
 
   interp.registerCommand('append', (args) => {
     interp.checkArgs(args, [1, null], 'varName ?value ...?');
     let parts = [];
     let obj;
-    let i;
     let varname = args[1].toString();
     let vinfo = interp.resolve_var(varname);
 
@@ -169,7 +170,7 @@ function install(interp) {
       vinfo.value = obj;
       obj.IncrRefCount();
     }
-    for (i = 2; i < args.length; i++) {
+    for (let i = 2; i < args.length; i++) {
       parts.push(args[i].toString());
     }
     vinfo.value.ConvertToType('string');
@@ -178,13 +179,13 @@ function install(interp) {
     return vinfo.value;
   });
 
-  ex_callframes.install(interp);
-  ex_control_cmds.install(interp);
-  ex_list_cmds.install(interp);
-  ex_dict_cmds.install(interp);
-  ex_string_cmds.install(interp);
-  ex_array_cmds.install(interp);
-  ex_clock_cmds.install(interp);
+  exCallframes.install(interp);
+  exControlCmds.install(interp);
+  exListCmds.install(interp);
+  exDictCmds.install(interp);
+  exStringCmds.install(interp);
+  exArrayCmds.install(interp);
+  exClockCmds.install(interp);
 }
 
 module.exports = {

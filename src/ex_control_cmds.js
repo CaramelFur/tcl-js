@@ -1,6 +1,5 @@
 const types = require('./types');
 const utils = require('./utils');
-const BoolObj = require('./objtype_bool');
 const DictObj = require('./objtype_dict');
 const ListObj = require('./objtype_list');
 const IntObj = require('./objtype_int');
@@ -18,38 +17,57 @@ function install(interp) {
   }
 
   /* Core control structures still to implement:
-	 switch
-	 */
+   * switch
+   */
 
   interp.registerCommand('continue', (args) => {
     interp.checkArgs(args, 0, '');
-    return new TclResult(types.CONTINUE, EmptyString,
-      ['-level', intZero, '-code', intFour], 0, 4);
+    return new TclResult(
+      types.CONTINUE,
+      EmptyString,
+      ['-level', intZero, '-code', intFour],
+      0,
+      4,
+    );
   });
 
   interp.registerCommand('break', (args) => {
     interp.checkArgs(args, 0, '');
-    return new TclResult(types.BREAK, EmptyString,
-      ['-level', intZero, '-code', intThree], 0, 3);
+    return new TclResult(
+      types.BREAK,
+      EmptyString,
+      ['-level', intZero, '-code', intThree],
+      0,
+      3,
+    );
   });
 
   interp.registerCommand('error', (args) => {
     interp.checkArgs(args, [1, 3], 'message ?info? ?code?');
-    return new TclError(args[1],
+    return new TclError(
+      args[1],
       args[2] !== undefined ? args[2].GetList() : ['NONE'],
-      args[3]);
+      args[3],
+    );
   });
 
   interp.registerCommand('throw', (args) => {
     interp.checkArgs(args, 2, 'type message');
-    return new TclError(args[2],
-      args[1] !== undefined ? args[1].GetList() : ['NONE']);
+    return new TclError(
+      args[2],
+      args[1] !== undefined ? args[1].GetList() : ['NONE'],
+    );
   });
 
   interp.registerAsyncCommand('try', (c, args) => {
-    let body; let finallyscript; let handlers = [];
-    let type; let match; let varlist; let script; let
-      i = 0;
+    let body;
+    let finallyscript;
+    let handlers = [];
+    let type;
+    let match;
+    let varlist;
+    let script;
+    let i = 0;
     interp.checkArgs(args, [1, null], 'body ?handler...? ?finally script?');
     args.shift();
     body = args.shift();
@@ -63,13 +81,17 @@ function install(interp) {
       interp.checkArgs(args, 0, 'body ?handler...? ?finally script?');
     }
     while (i < args.length) {
-      type = args[i++];
-      match = args[i++];
-      varlist = args[i++].GetList();
+      type = args[i];
+      i += 1;
+      match = args[i];
+      i += 1;
+      varlist = args[i].GetList();
+      i += 1;
       if (varlist.length > 2) {
         throw new TclError('Too many variable names for try handler');
       }
-      script = args[i++];
+      script = args[i];
+      i += 1;
       switch (type.toString()) {
         case 'on':
           type = 0;
@@ -91,26 +113,26 @@ function install(interp) {
 
     function dofinally(res) {
       if (finallyscript) {
-        return interp.exec(finallyscript, (finally_res) => {
-          if (finally_res.code === types.OK) {
+        return interp.exec(finallyscript, (finallyRes) => {
+          if (finallyRes.code === types.OK) {
             return c(res);
           }
-          return c(finally_res);
+          return c(finallyRes);
         });
       }
       return c(res);
     }
 
     function matches(res, handler) {
-      let i; let
-        errorcode;
-      if (handler[0] === 0) { // on handler
+      let errorcode;
+      if (handler[0] === 0) {
+        // on handler
         return res.code === handler[1];
       }
       // trap handler
       errorcode = res.options['-errorcode'] || [];
-      for (i = 0; i < handler[1].length; i++) {
-        if (handler[1][i].toString() !== errorcode[i].toString()) {
+      for (let j = 0; j < handler[1].length; j++) {
+        if (handler[1][j].toString() !== errorcode[j].toString()) {
           return false;
         }
       }
@@ -132,69 +154,82 @@ function install(interp) {
         if (handler[2][1]) {
           interp.set_scalar(handler[2][1], new DictObj(res.options));
         }
-        return interp.exec(handler[3], res => dofinally(res));
+        return interp.exec(handler[3], res2 => dofinally(res2));
       }
       return dofinally(res);
     });
   });
 
-  interp.registerAsyncCommand('if', (c, args, interp) => {
-    interp.checkArgs(args, [2, null], 'expression script ?args ...?');
+  interp.registerAsyncCommand('if', (c, args, In) => {
+    In.checkArgs(args, [2, null], 'expression script ?args ...?');
     let i = 1;
 
     return function next() {
-      return interp._TclExpr(args[i++], (res) => {
+      let retf = In._TclExpr(args[i], (res) => {
         if (res.code !== types.OK) {
           return c(res);
         }
         if (res.result.GetBool()) {
           if (args[i].toString() === 'then') {
-            i++;
+            i += 1;
           }
-          return interp.exec(args[i], c);
+          return In.exec(args[i], c);
         }
-        i++; // skip then body
+        i += 1; // skip then body
         if (i >= args.length) {
-          return c(interp.EmptyString);
+          return c(In.EmptyString);
         }
-        switch (args[i++].toString()) {
+        let toswitch = args[i].toString();
+        i += 1;
+        switch (toswitch) {
           case 'elseif':
             return next;
           case 'else':
-            return interp.exec(args[i], c);
+            return In.exec(args[i], c);
           default:
-            return interp.exec(args[i - 1], c);
+            return In.exec(args[i - 1], c);
         }
       });
+      i += 1;
+      return retf;
     };
   });
 
   interp.registerAsyncCommand('switch', (c, args, I) => {
-    let arg; let cmp; let eating_args = true;
+    let arg;
+    let cmp;
+    let eatingArgs = true;
     let ignorecase = false;
-    let default_handler;
-    let matchvar; let indexvar; let str; let patterns; let cmdname = args.shift();
+    let defaultHandler;
+    let matchvar;
+    let indexvar;
+    let str;
+    let patterns;
+    let cmdname = args.shift();
     let i;
 
-    function cmp_exact(pat) {
+    function cmpExact(pat) {
       return pat.toString() === str;
     }
 
-    function cmp_exact_nocase(pat) {
+    function cmpExactNocase(pat) {
       return pat.toString().toLowerCase() === str;
     }
 
-    function cmp_glob(pat) {
+    function cmpGlob(pat) {
       return utils.glob2regex(pat).test(str, ignorecase);
     }
 
-    function cmp_regexp(pat) {
-      let m; let re; let indices = [];
-      let i;
+    function cmpRegexp(pat) {
+      let m;
+      let re;
+      let indices = [];
+      let j;
       // TODO somehow translate pat (which is a Tcl style regex) to a
       // javascript style regex
       re = new RegExp(pat, ignorecase ? 'i' : '');
-      if ((m = re.exec(str))) {
+      m = re.exec(str);
+      if (m) {
         if (matchvar !== undefined) {
           I.set_var(matchvar, new ListObj(m));
         }
@@ -202,8 +237,8 @@ function install(interp) {
           indices.push(new ListObj([m.index, m.index + m[0].length]));
           // TODO: somehow get the indices of the submatches, the
           // hack below is not reliable
-          for (i = 1; i < m.length; i++) {
-            indices.push(str.indexOf(m[i], m.index));
+          for (j = 1; j < m.length; j++) {
+            indices.push(str.indexOf(m[j], m.index));
           }
           I.set_var(indexvar, new ListObj(indices));
         }
@@ -212,9 +247,9 @@ function install(interp) {
       return false;
     }
 
-    cmp = cmp_glob;
+    cmp = cmpGlob;
 
-    while (eating_args && args.length > 2) {
+    while (eatingArgs && args.length > 2) {
       arg = args[0].toString();
       if (arg.charAt(0) !== '-') {
         break;
@@ -222,13 +257,13 @@ function install(interp) {
       args.shift();
       switch (arg) {
         case '-exact':
-          cmp = cmp_exact;
+          cmp = cmpExact;
           break;
         case '-glob':
-          cmp = cmp_glob;
+          cmp = cmpGlob;
           break;
         case '-regexp':
-          cmp = cmp_regexp;
+          cmp = cmpRegexp;
           break;
         case '-nocase':
           ignorecase = true;
@@ -240,10 +275,13 @@ function install(interp) {
           indexvar = args.shift();
           break;
         case '--':
-          eating_args = false;
+          eatingArgs = false;
           break;
         default:
-          throw new TclError(`bad option "${arg}" must be -exact, -glob, -indexvar, -matchvar, -nocase, -regexp, or --`, ['TCL', 'LOOKUP', 'INDEX', 'option', arg]);
+          throw new TclError(
+            `bad option "${arg}" must be -exact, -glob, -indexvar, -matchvar, -nocase, -regexp, or --`,
+            ['TCL', 'LOOKUP', 'INDEX', 'option', arg],
+          );
       }
     }
 
@@ -253,30 +291,46 @@ function install(interp) {
     } else {
       patterns = args;
     }
-    if (str === undefined || patterns === undefined || patterns.length % 2 !== 0) {
-      I.checkArgs([cmdname], 2, '?options? string {pattern body ?pattern body ...?}');
+    if (
+      str === undefined ||
+      patterns === undefined ||
+      patterns.length % 2 !== 0
+    ) {
+      I.checkArgs(
+        [cmdname],
+        2,
+        '?options? string {pattern body ?pattern body ...?}',
+      );
     }
     if (ignorecase) {
       str = str.toString().tolowerCase();
     } else {
       str = str.toString();
     }
-    if (cmp !== cmp_regexp) {
+    if (cmp !== cmpRegexp) {
       if (matchvar !== undefined) {
-        throw new TclError('-matchvar option requries -regexp option',
-          ['TCL', 'OPERATION', 'SWITCH', 'MODERESTRICTION']);
+        throw new TclError('-matchvar option requries -regexp option', [
+          'TCL',
+          'OPERATION',
+          'SWITCH',
+          'MODERESTRICTION',
+        ]);
       }
       if (indexvar !== undefined) {
-        throw new TclError('-indexvar option requries -regexp option',
-          ['TCL', 'OPERATION', 'SWITCH', 'MODERESTRICTION']);
+        throw new TclError('-indexvar option requries -regexp option', [
+          'TCL',
+          'OPERATION',
+          'SWITCH',
+          'MODERESTRICTION',
+        ]);
       }
     }
-    if (cmp === cmp_exact && ignorecase) {
-      cmp = cmp_exact_nocase;
+    if (cmp === cmpExact && ignorecase) {
+      cmp = cmpExactNocase;
     }
 
     if (patterns[patterns.length - 2].toString() === 'default') {
-      default_handler = patterns.pop();
+      defaultHandler = patterns.pop();
       patterns.pop();
     }
 
@@ -285,14 +339,14 @@ function install(interp) {
         return I.exec(patterns[i + 1], c);
       }
     }
-    if (default_handler !== undefined) {
+    if (defaultHandler !== undefined) {
       if (matchvar !== undefined) {
         I.set_var(matchvar, new ListObj());
       }
       if (indexvar !== undefined) {
         I.set_var(indexvar, new ListObj());
       }
-      return I.exec(default_handler, c);
+      return I.exec(defaultHandler, c);
     }
     return EmptyString;
   });
@@ -309,20 +363,20 @@ function install(interp) {
       return function loop() {
         return interp._TclExpr(args[2], (r) => {
           if (!r.result.GetBool()) return c();
-          return interp.exec(body, (res) => {
-            switch (res.code) {
+          return interp.exec(body, (res2) => {
+            switch (res2.code) {
               case types.CONTINUE:
               case types.OK:
-                return interp.exec(next, (res) => {
-                  if (res.code !== types.OK) {
-                    return c(res);
+                return interp.exec(next, (res3) => {
+                  if (res3.code !== types.OK) {
+                    return c(res3);
                   }
                   return loop;
                 });
               case types.BREAK:
                 return c();
               default:
-                return c(res);
+                return c(res2);
             }
           });
         });
@@ -339,18 +393,18 @@ function install(interp) {
         if (res.code !== types.OK) {
           return c(res);
         }
-        if (!(res.result.GetBool())) {
+        if (!res.result.GetBool()) {
           return c();
         }
-        return interp.exec(body, (res) => {
-          switch (res.code) {
+        return interp.exec(body, (res2) => {
+          switch (res2.code) {
             case types.CONTINUE:
             case types.OK:
               return loop;
             case types.BREAK:
               return c();
             default:
-              return c(res);
+              return c(res2);
           }
         });
       });
@@ -372,9 +426,10 @@ function install(interp) {
       let listptrs = [];
 
       function done() {
-        let i = lists.length;
-        while (i-- > 0) {
-          if (listptrs[i] < lists[i].length) {
+        let k = lists.length;
+        while (k > 0) {
+          k -= 1;
+          if (listptrs[k] < lists[k].length) {
             return false;
           }
         }
@@ -382,8 +437,10 @@ function install(interp) {
       }
 
       while (i < loopvardesc.length) {
-        varlists.push(loopvardesc[i++].GetList());
-        lists.push(loopvardesc[i++].GetList());
+        varlists.push(loopvardesc[i].GetList());
+        i += 1;
+        lists.push(loopvardesc[i].GetList());
+        i += 1;
         listptrs.push(0);
       }
       return function loop() {
@@ -392,8 +449,11 @@ function install(interp) {
         }
         for (i = 0; i < varlists.length; i++) {
           for (j = 0; j < varlists[i].length; j++) {
-            interp.set_scalar(varlists[i][j],
-              lists[i][listptrs[i]++] || types.EmptyString);
+            interp.set_scalar(
+              varlists[i][j],
+              lists[i][listptrs[i]] || types.EmptyString,
+            );
+            listptrs[i] += 1;
           }
         }
         return interp.exec(body, (res) => {
@@ -402,7 +462,7 @@ function install(interp) {
               if (acc) {
                 acc.push(res.result);
               }
-              // falls through
+            // falls through
             case types.CONTINUE:
               return loop;
 
