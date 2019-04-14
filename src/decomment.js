@@ -1,11 +1,11 @@
 module.exports = function (str) {
-	var out = [],
-		lines = str.split('\n'),
-		i;
-	for (i = 0; i < lines.length; i++) {
-		if (!/^\s*#/.test(lines[i])) {
-			out.push(lines[i]);
-		}
-	}
-	return out.join('\n');
+  let out = [];
+  let lines = str.split('\n');
+  let i;
+  for (i = 0; i < lines.length; i++) {
+    if (!/^\s*#/.test(lines[i])) {
+      out.push(lines[i]);
+    }
+  }
+  return out.join('\n');
 };
