@@ -2,7 +2,6 @@ const parser = require('./parser');
 const tclobj = require('./tclobject');
 const utils = require('./utils');
 const types = require('./types');
-const ListObj = require('./objtype_list');
 const ScriptObj = require('./objtype_script');
 const ExprObj = require('./objtype_expr');
 const IntObj = require('./objtype_int');
@@ -40,19 +39,20 @@ function asTclError(e) {
   return e instanceof TclError ? e : new TclError(e);
 }
 
-function trampoline(res) {
+function trampoline(resArg) {
+  let res = resArg;
   while (typeof res === 'function' && res.tcl_break_trampoline === undefined) {
     res = res();
   }
   return res;
 }
 
-module.exports = function (/* extensions... */) {
-  let interp_args = Array.prototype.slice.call(arguments);
+module.exports = function (...mainArgs) {
+  let interpArgs = Array.prototype.slice.call(mainArgs);
   let I = this;
   let mathops;
   let mathfuncs;
-  let mathop_cache = [null, {}, {}];
+  let mathopCache = [null, {}, {}];
 
   this.vars = {};
   this.commands = {};
@@ -87,7 +87,6 @@ module.exports = function (/* extensions... */) {
   };
 
   this.delete_var = function (varname) {
-    let e;
     let arr;
     if (this.vars[varname] === undefined) {
       return;
@@ -98,13 +97,15 @@ module.exports = function (/* extensions... */) {
         break;
       case ARRAY:
         arr = this.vars[varname].value;
-        for (e in arr) {
-          if (arr.hasOwnProperty(e)) {
+        for (let i = 0; i < Object.keys(arr).length; i++) {
+          let e = Object.keys(arr)[i];
+          if (Object.prototype.hasOwnProperty.call(arr, e)) {
             arr[e].value.DecrRefCount();
             delete arr[e];
           }
         }
         break;
+      default:
     }
     delete this.vars[varname];
   };
@@ -123,7 +124,7 @@ module.exports = function (/* extensions... */) {
     return vinfo !== undefined && vinfo.type === ARRAY;
   };
 
-  this.get_scalar = function (varname, make_unshared) {
+  this.get_scalar = function (varname, makeUnshared) {
     let vinfo = this.resolve_var(varname);
     let obj;
     if (vinfo === undefined) {
@@ -142,7 +143,7 @@ module.exports = function (/* extensions... */) {
       ]);
     }
     obj = vinfo.value;
-    if (make_unshared && obj.refCount > 1) {
+    if (makeUnshared && obj.refCount > 1) {
       obj = obj.DuplicateObj();
       vinfo.value.DecrRefCount();
       vinfo.value = obj;
@@ -151,7 +152,7 @@ module.exports = function (/* extensions... */) {
     return obj;
   };
 
-  this.get_array = function (array, index, make_unshared) {
+  this.get_array = function (array, index, makeUnshared) {
     let vinfo = this.resolve_var(array);
     let obj;
     if (vinfo === undefined) {
@@ -176,7 +177,7 @@ module.exports = function (/* extensions... */) {
         );
       }
       obj = vinfo.value[index];
-      if (make_unshared && obj.refCount > 1) {
+      if (makeUnshared && obj.refCount > 1) {
         obj = obj.DuplicateObj();
         vinfo.value[index].DecrRefCount();
         vinfo.value[index] = obj;
@@ -228,7 +229,7 @@ module.exports = function (/* extensions... */) {
     return value;
   };
 
-  function parse_varname(varname) {
+  function parseVarname(varname) {
     let array;
     let index;
     let idx;
@@ -241,15 +242,15 @@ module.exports = function (/* extensions... */) {
     return [array, index];
   }
 
-  this.unset_var = function (varname, report_errors) {
+  this.unset_var = function (varnameArg, reportErrors) {
     let parts;
     let vinfo;
-    varname = tclobj.AsVal(varname);
+    let varname = tclobj.AsVal(varnameArg);
     if (varname[varname.length - 1] === ')') {
-      parts = parse_varname(varname);
+      parts = parseVarname(varname);
       vinfo = this.resolve_var(parts[0]);
       if (
-        report_errors &&
+        reportErrors &&
         (vinfo === undefined || vinfo[parts[1]] === undefined)
       ) {
         throw new TclError(`can't unset "${varname}": no such variable`, [
@@ -262,7 +263,7 @@ module.exports = function (/* extensions... */) {
       delete vinfo[parts[1]];
       return;
     }
-    if (report_errors && this.resolve_var(varname) === undefined) {
+    if (reportErrors && this.resolve_var(varname) === undefined) {
       throw new TclError(`can't unset "${varname}": no such variable`, [
         'TCL',
         'LOOKUP',
@@ -272,23 +273,23 @@ module.exports = function (/* extensions... */) {
     this.delete_var(varname);
   };
 
-  this.get_var = function (varname, make_unshared) {
+  this.get_var = function (varnameArg, makeUnshared) {
     let parts;
     let obj;
-    varname = tclobj.AsVal(varname);
+    let varname = tclobj.AsVal(varnameArg);
     if (varname[varname.length - 1] === ')') {
-      parts = parse_varname(varname);
-      return this.get_array(parts[0], parts[1], make_unshared);
+      parts = parseVarname(varname);
+      return this.get_array(parts[0], parts[1], makeUnshared);
     }
-    obj = this.get_scalar(varname, make_unshared);
+    obj = this.get_scalar(varname, makeUnshared);
     return obj;
   };
 
-  this.set_var = function (varname, value) {
+  this.set_var = function (varnameArg, value) {
     let parts;
-    varname = tclobj.AsVal(varname);
+    let varname = tclobj.AsVal(varnameArg);
     if (varname[varname.length - 1] === ')') {
-      parts = parse_varname(varname);
+      parts = parseVarname(varname);
       return this.set_array(parts[0], parts[1], value);
     }
     return this.set_scalar(varname, value);
@@ -328,7 +329,8 @@ module.exports = function (/* extensions... */) {
         cinfo.cacheRefs.pop()();
       }
     } else {
-      cinfo = I.commands[commandname] = {};
+      cinfo = {};
+      I.commands[commandname] = {};
     }
     cinfo.handler = handler;
     cinfo.async = async;
@@ -362,33 +364,34 @@ module.exports = function (/* extensions... */) {
     }
   };
 
-  function resolve_word(tokens, c_ok, c_err) {
+  function resolveWord(tokens, cOk, cErr) {
     let parts = [];
     let expand = false;
     let array;
     let i = 0;
 
-    function resolve_index(indexwords) {
+    function resolveIndex(indexwords) {
       let index = indexwords.join('');
       parts.push(I.get_array(array, index));
       array = null;
-      return next_tokens;
+      return nextTokens;
     }
 
-    function script_result(result) {
+    function scriptResult(result) {
       if (result.code === OK) {
         parts.push(result.result);
-        return next_tokens;
+        return nextTokens;
       }
-      return c_err(result);
+      return cErr(result);
     }
 
-    function next_tokens() {
+    function nextTokens() {
       let res;
       let token;
 
       while (i < tokens.length) {
-        token = tokens[i++];
+        token = tokens[i];
+        i += 1;
         switch (token[0]) {
           case parser.EXPAND:
             expand = true;
@@ -411,76 +414,81 @@ module.exports = function (/* extensions... */) {
             break;
 
           case parser.INDEX:
-            return resolve_word(token[1], resolve_index, c_err);
+            return resolveWord(token[1], resolveIndex, cErr);
 
           case parser.SCRIPT:
             if (!(token[1] instanceof TclObject)) {
               token[1] = new ScriptObj([parser.SCRIPT, token[1].slice()]);
             }
-            return I.exec(token[1], script_result);
+            return I.exec(token[1], scriptResult);
+          default:
         }
       }
 
       if (parts.length === 0) {
-        return c_ok([]);
+        return cOk([]);
       }
       if (parts.length > 1) {
         res = new StringObj(parts.join(''));
       } else {
         res = parts[0];
       }
-      return c_ok(expand ? tclobj.GetList(res) : [res]);
+      return cOk(expand ? tclobj.GetList(res) : [res]);
     }
-    return next_tokens;
+    return nextTokens;
   }
 
-  function exec_command(args, c) {
+  function execCommand(args, c) {
     let cinfo = I.resolve_command(args[0]);
     let result;
-    let needs_trampoline = false;
+    let needsTrampoline = false;
     let asyncres;
     let i = args.length;
 
     while (i > 0) {
-      args[--i].IncrRefCount();
+      i -= 1;
+      args[i].IncrRefCount();
     }
 
-    function normalize_result(result) {
-      if (!(result instanceof TclResult)) {
-        if (result instanceof TclError) {
-          result = result.toTclResult();
-        } else if (result instanceof Error) {
-          result = new TclResult(ERROR, new StringObj(result));
+    function normalizeResult(result2Arg) {
+      let result2 = result2Arg;
+      if (!(result2 instanceof TclResult)) {
+        if (result2 instanceof TclError) {
+          result2 = result2.toTclResult();
+        } else if (result2 instanceof Error) {
+          result2 = new TclResult(ERROR, new StringObj(result2));
         } else {
-          result = new TclResult(OK, result);
+          result2 = new TclResult(OK, result2);
         }
       }
-      return result;
+      return result2;
     }
 
-    function got_result(result) {
-      let i = args.length;
-      while (i > 0) {
-        args[--i].DecrRefCount();
+    function gotResult(result2) {
+      let j = args.length;
+      while (j > 0) {
+        j -= 1;
+        args[j].DecrRefCount();
       }
-      return c(normalize_result(result));
+      return c(normalizeResult(result2));
     }
 
     try {
       if (cinfo.async) {
         asyncres = cinfo.handler(
-          (result) => {
+          (result2Arg) => {
+            let result2 = result2Arg;
             try {
-              while (typeof result === 'function') {
+              while (typeof result2 === 'function') {
                 // Support tailcalls
-                result = result();
+                result2 = result2();
               }
-              if (!needs_trampoline) {
-                return got_result(result);
+              if (!needsTrampoline) {
+                return gotResult(result2);
               }
-              return trampoline(got_result(result));
+              return trampoline(gotResult(result2));
             } catch (e2) {
-              return got_result(asTclError(e2));
+              return gotResult(asTclError(e2));
             }
           },
           args,
@@ -488,7 +496,7 @@ module.exports = function (/* extensions... */) {
           cinfo.priv,
         );
         if (typeof asyncres !== 'function') {
-          needs_trampoline = true;
+          needsTrampoline = true;
         }
         return asyncres;
       }
@@ -500,7 +508,7 @@ module.exports = function (/* extensions... */) {
     } catch (e) {
       result = e;
     }
-    return got_result(result);
+    return gotResult(result);
   }
 
   this.compile_script = function (commands) {
@@ -510,8 +518,8 @@ module.exports = function (/* extensions... */) {
     let command = [];
     let out = [];
 
-    function compile_word(tokens) {
-      let i;
+    function compileWord(tokens) {
+      let k;
       let token;
       let word = [];
       let async = false;
@@ -523,11 +531,11 @@ module.exports = function (/* extensions... */) {
       let outtokens;
       let dyntokens;
 
-      for (i = 0; i < tokens.length; i++) {
-        token = tokens[i];
+      for (k = 0; k < tokens.length; k++) {
+        token = tokens[k];
         switch (token[0]) {
           case parser.SCRIPT:
-            word.push(script_op(token));
+            word.push(scriptOp(token));
             if (constant) {
               constant = false;
             }
@@ -535,7 +543,7 @@ module.exports = function (/* extensions... */) {
             break;
 
           case parser.INDEX:
-            f = array_op(array, token[1]);
+            f = arrayOp(array, token[1]);
             word.push(f);
             if (!async && f.async) {
               async = true;
@@ -555,21 +563,21 @@ module.exports = function (/* extensions... */) {
             break;
 
           case parser.TEXT:
-            word.push(constant_op(token[1]));
+            word.push(constantOp(token[1]));
             if (constant) {
               constval += token[1];
             }
             break;
 
           case parser.ESCAPE:
-            word.push(constant_op(token[2]));
+            word.push(constantOp(token[2]));
             if (constant) {
               constval += token[2];
             }
             break;
 
           case parser.VAR:
-            word.push(scalar_op(token[1]));
+            word.push(scalarOp(token[1]));
             if (constant) {
               constant = false;
             }
@@ -588,40 +596,42 @@ module.exports = function (/* extensions... */) {
         return;
       }
       if (constant) {
-        f = constant_op(new StringObj(constval));
+        f = constantOp(new StringObj(constval));
       } else if (word.length === 1) {
         f = word[0];
       } else {
         outtokens = new Array(word.length);
         dyntokens = [];
-        for (i = 0; i < word.length; i++) {
-          if (word[i].constant) {
-            outtokens[i] = word[i]();
+        for (k = 0; k < word.length; k++) {
+          if (word[k].constant) {
+            outtokens[k] = word[k]();
           } else {
-            dyntokens.push(i, word[i]);
+            dyntokens.push(k, word[k]);
           }
         }
         if (async) {
           f = function (c) {
-            let i = 0;
+            let l = 0;
 
-            function setarg(j) {
+            function setarg(m) {
               return function (v) {
-                outtokens[j] = v;
+                outtokens[m] = v;
                 return loop;
               };
             }
 
             function loop() {
-              let j;
+              let m;
               let fv;
-              while (i < dyntokens.length) {
-                j = dyntokens[i++];
-                fv = dyntokens[i++];
+              while (l < dyntokens.length) {
+                m = dyntokens[l];
+                l += 1;
+                fv = dyntokens[l];
+                l += 1;
                 if (fv.async) {
-                  return fv(setarg(j));
+                  return fv(setarg(m));
                 }
-                outtokens[j] = fv();
+                outtokens[m] = fv();
               }
               return c(new StringObj(outtokens.join('')));
             }
@@ -630,9 +640,9 @@ module.exports = function (/* extensions... */) {
           f.async = true;
         } else {
           f = function () {
-            let i;
-            for (i = 0; i < dyntokens.length; i += 2) {
-              outtokens[dyntokens[i]] = dyntokens[i + 1]();
+            let l;
+            for (l = 0; l < dyntokens.length; l += 2) {
+              outtokens[dyntokens[l]] = dyntokens[l + 1]();
             }
             return new StringObj(outtokens.join(''));
           };
@@ -642,8 +652,8 @@ module.exports = function (/* extensions... */) {
       return f;
     }
 
-    function compile_command(command) {
-      let i;
+    function compileCommand(command2) {
+      let k;
       let word;
       let expand = false;
       let async = false;
@@ -651,51 +661,53 @@ module.exports = function (/* extensions... */) {
       let f;
       let dynwords = [];
 
-      for (i = 0; i < command.length; i++) {
-        word = command[i];
+      for (k = 0; k < command2.length; k++) {
+        word = command2[k];
         if (!expand && word.expand) expand = true;
         if (!word.constant) {
-          dynwords.push(i, word);
+          dynwords.push(k, word);
           if (constant) constant = false;
         }
         if (!async && word.async) async = true;
       }
 
       if (!expand) {
-        let outwords = new Array(command.length);
-        for (i = 0; i < command.length; i++) {
-          if (command[i].constant) {
-            outwords[i] = command[i]().replace(outwords[i]);
+        let outwords = new Array(command2.length);
+        for (k = 0; k < command2.length; k++) {
+          if (command2[k].constant) {
+            outwords[k] = command2[k]().replace(outwords[k]);
           }
         }
         if (constant) {
           return function (c) {
-            return exec_command(outwords, c);
+            return execCommand(outwords, c);
           };
         }
         if (async) {
           f = function (c) {
-            let i = 0;
+            let l = 0;
 
-            function setarg(j) {
+            function setarg(m) {
               return function (v) {
-                outwords[j] = v;
+                outwords[m] = v;
                 return loop;
               };
             }
 
             function loop() {
-              let j;
+              let m;
               let fv;
-              while (i < dynwords.length) {
-                j = dynwords[i++];
-                fv = dynwords[i++];
+              while (l < dynwords.length) {
+                m = dynwords[l];
+                l += 1;
+                fv = dynwords[l];
+                l += 1;
                 if (fv.async) {
-                  return fv(setarg(j));
+                  return fv(setarg(m));
                 }
-                outwords[j] = fv();
+                outwords[m] = fv();
               }
-              return exec_command(outwords, c);
+              return execCommand(outwords, c);
             }
             return loop;
           };
@@ -703,15 +715,17 @@ module.exports = function (/* extensions... */) {
           return f;
         }
         return function (c) {
-          let i = 0;
-          let j;
+          let l = 0;
+          let m;
           let fv;
-          while (i < dynwords.length) {
-            j = dynwords[i++];
-            fv = dynwords[i++];
-            outwords[j] = fv();
+          while (l < dynwords.length) {
+            m = dynwords[l];
+            l += 1;
+            fv = dynwords[l];
+            l += 1;
+            outwords[m] = fv();
           }
-          return exec_command(outwords, c);
+          return execCommand(outwords, c);
         };
       }
 
@@ -719,10 +733,10 @@ module.exports = function (/* extensions... */) {
       if (async) {
         f = function (c) {
           let words = [];
-          let i = 0;
+          let l = 0;
 
-          function setarg(expand) {
-            if (expand) {
+          function setarg(expand2) {
+            if (expand2) {
               return function (v) {
                 Array.prototype.push.apply(words, v.GetList());
                 return loop;
@@ -736,8 +750,9 @@ module.exports = function (/* extensions... */) {
 
           function loop() {
             let fv;
-            while (i < command.length) {
-              fv = command[i++];
+            while (l < command2.length) {
+              fv = command2[l];
+              l += 1;
               if (fv.async) {
                 return fv(setarg(fv.expand));
               }
@@ -747,7 +762,7 @@ module.exports = function (/* extensions... */) {
                 words.push(fv());
               }
             }
-            return exec_command(words, c);
+            return execCommand(words, c);
           }
           return loop();
         };
@@ -756,48 +771,51 @@ module.exports = function (/* extensions... */) {
       }
       return function (c) {
         let words = [];
-        let i = 0;
+        let l = 0;
         let fv;
-        while (i < command.length) {
-          fv = command[i++];
+        while (l < command2.length) {
+          fv = command2[l];
+          l += 1;
           if (fv.expand) {
             Array.prototype.push.apply(words, fv().GetList());
           } else {
             words.push(fv());
           }
         }
-        return exec_command(words, c);
+        return execCommand(words, c);
       };
     }
 
     for (i = 0; i < commands.length; i++) {
       command = [];
       for (j = 0; j < commands[i].length; j++) {
-        wordf = compile_word(commands[i][j]);
+        wordf = compileWord(commands[i][j]);
         if (wordf !== undefined) {
           command.push(wordf);
         }
       }
       if (command.length) {
-        out.push(compile_command(command));
+        out.push(compileCommand(command));
       }
     }
     return function (c) {
-      let i = 0;
-      let last_res = EmptyResult;
+      let k = 0;
+      let lastRes = EmptyResult;
 
-      function got_res(res) {
-        last_res = res;
-        return res.code === OK ? next_command : c(res);
+      function gotRes(res) {
+        lastRes = res;
+        return res.code === OK ? nextCommand : c(res);
       }
 
-      function next_command() {
-        while (i < out.length) {
-          return out[i++](got_res);
+      function nextCommand() {
+        while (k < out.length) {
+          let returnv = out[k](gotRes);
+          k += 1;
+          return returnv;
         }
-        return c(last_res);
+        return c(lastRes);
       }
-      return next_command();
+      return nextCommand();
     };
   };
 
@@ -813,11 +831,11 @@ module.exports = function (/* extensions... */) {
     }
   };
 
-  function not_implemented() {
+  function notImplemented() {
     throw new Error('Not implemented yet');
   }
 
-  function bignum_not_implemented() {
+  function bignumNotImplemented() {
     throw new Error('Bignum support not implemented yet');
   }
   mathfuncs = {
@@ -836,7 +854,7 @@ module.exports = function (/* extensions... */) {
     cos: 'cos',
     cosh: {
       args: [1, 1],
-      handler: not_implemented,
+      handler: notImplemented,
     },
     double: {
       args: [1, 1],
@@ -846,7 +864,7 @@ module.exports = function (/* extensions... */) {
     },
     entier: {
       args: [1, 1],
-      handler: bignum_not_implemented,
+      handler: bignumNotImplemented,
     },
     exp: 'exp',
     floor: 'floor',
@@ -875,12 +893,12 @@ module.exports = function (/* extensions... */) {
     },
     isqrt: {
       args: [1, 1],
-      handler: bignum_not_implemented,
+      handler: bignumNotImplemented,
     },
     log: 'log',
     log10: {
       args: [1, 1],
-      handler: not_implemented,
+      handler: notImplemented,
     },
     max: 'max',
     min: 'min',
@@ -895,7 +913,7 @@ module.exports = function (/* extensions... */) {
     sin: 'sin',
     sinh: {
       args: [1, 1],
-      handler: not_implemented,
+      handler: notImplemented,
     },
     sqrt: 'sqrt',
     srand: {
@@ -905,7 +923,7 @@ module.exports = function (/* extensions... */) {
     tan: 'tan',
     tanh: {
       args: [1, 1],
-      handler: not_implemented,
+      handler: notImplemented,
     },
     wide: {
       args: [1, 1],
@@ -917,7 +935,7 @@ module.exports = function (/* extensions... */) {
       },
     },
   };
-  let mathfunc_contracts = {
+  let mathfuncContracts = {
     // Flag functions that aren't const and sync here
     rand: {
       constant: false,
@@ -946,7 +964,7 @@ module.exports = function (/* extensions... */) {
       '<<': '<<',
       '>>': '>>',
       '**': function (a, b) {
-        return Math.pow(a, b);
+        return a ** b;
       },
       '||': {
         compiler(args) {
@@ -1105,9 +1123,9 @@ module.exports = function (/* extensions... */) {
   };
 
   this._TclExpr = function (expr, c) {
-    let f = compile_expr(expr);
+    let f = compileExpr(expr);
 
-    function got_val(v) {
+    function gotVal(v) {
       switch (typeof v) {
         case 'boolean':
           return c(v ? TrueResult : FalseResult);
@@ -1119,10 +1137,10 @@ module.exports = function (/* extensions... */) {
           return c(new TclResult(OK, tclobj.AsObj(v)));
       }
     }
-    return f.async ? f(got_val) : got_val(f());
+    return f.async ? f(gotVal) : gotVal(f());
   };
 
-  function check_tokens(tokens) {
+  function checkTokens(tokens) {
     let i;
     let token;
     let async = false;
@@ -1151,7 +1169,7 @@ module.exports = function (/* extensions... */) {
           break;
 
         case parser.INDEX:
-          r = check_tokens(token[1]);
+          r = checkTokens(token[1]);
           if (r.async) {
             async = true;
           }
@@ -1160,6 +1178,7 @@ module.exports = function (/* extensions... */) {
           async = true;
           constant = false;
           break;
+        default:
       }
     }
     return {
@@ -1169,7 +1188,7 @@ module.exports = function (/* extensions... */) {
     };
   }
 
-  function constant_op(operand) {
+  function constantOp(operand) {
     let f = function () {
       return operand;
     };
@@ -1177,11 +1196,11 @@ module.exports = function (/* extensions... */) {
     return f;
   }
 
-  function string_op(tokens) {
+  function stringOp(tokens) {
     let f;
-    let r = check_tokens(tokens);
+    let r = checkTokens(tokens);
     if (r.constant) {
-      return constant_op(r.constval);
+      return constantOp(r.constval);
     }
 
     function err(errmsg) {
@@ -1189,7 +1208,7 @@ module.exports = function (/* extensions... */) {
     }
     if (r.async) {
       f = function (c) {
-        return resolve_word(
+        return resolveWord(
           tokens,
           chunks => (chunks.length === 1 ? c(chunks[0]) : c(chunks.join(''))),
           err,
@@ -1198,7 +1217,7 @@ module.exports = function (/* extensions... */) {
     } else {
       f = function () {
         return trampoline(
-          resolve_word(
+          resolveWord(
             tokens,
             chunks => (chunks.length === 1 ? chunks[0] : chunks.join('')),
             err,
@@ -1210,13 +1229,13 @@ module.exports = function (/* extensions... */) {
     return f;
   }
 
-  function scalar_op(varname) {
+  function scalarOp(varname) {
     return function () {
       return I.get_scalar(varname);
     };
   }
 
-  function array_op(varname, indextokens) {
+  function arrayOp(varname, indextokens) {
     let f;
     let index;
     let indexfunc;
@@ -1228,7 +1247,7 @@ module.exports = function (/* extensions... */) {
       };
     }
 
-    indexfunc = string_op(indextokens);
+    indexfunc = stringOp(indextokens);
     if (indexfunc.constant) {
       index = indexfunc();
       return function () {
@@ -1238,7 +1257,7 @@ module.exports = function (/* extensions... */) {
 
     if (indexfunc.async) {
       f = function (c) {
-        return indexfunc(index => c(I.get_array(varname, index)));
+        return indexfunc(index2 => c(I.get_array(varname, index2)));
       };
       f.async = true;
       return f;
@@ -1248,7 +1267,8 @@ module.exports = function (/* extensions... */) {
     };
   }
 
-  function script_op(script) {
+  function scriptOp(scriptArg) {
+    let script = scriptArg;
     let f;
     if (script instanceof Array) {
       script = new ScriptObj(script);
@@ -1260,7 +1280,7 @@ module.exports = function (/* extensions... */) {
     return f;
   }
 
-  function mathfunc_op(parts) {
+  function mathfuncOp(parts) {
     let part;
     let args = [];
     let arg;
@@ -1275,15 +1295,13 @@ module.exports = function (/* extensions... */) {
     let apply;
     let handler;
     let funcname = parts[0][3];
-    let func_handler = mathfuncs[funcname];
+    let funcHandler = mathfuncs[funcname];
 
     for (i = 2; i < parts.length; i++) {
       // 0 is funcname, 1 is (
       part = parts[i];
       if (part[0] === ARG) {
-        arg = part[1] === parser.EXPR ?
-          compile_expr(part[2]) :
-          constant_op(part[2]);
+        arg = part[1] === parser.EXPR ? compileExpr(part[2]) : constantOp(part[2]);
 
         if (!async && arg.async) {
           async = true;
@@ -1297,27 +1315,27 @@ module.exports = function (/* extensions... */) {
             constant = false;
           }
         }
-        j++;
+        j += 1;
       }
     }
 
     // TODO: when we allow runtime definitions of math funcs, any change
     // to the math funcs must invalidate all the expr caches
-    if (func_handler === undefined) {
+    if (funcHandler === undefined) {
       // Not really true yet
       throw new TclError(`invalid command name "tcl::mathfunc::${funcname}"`);
     }
 
-    if (func_handler.args) {
-      if (args.length < func_handler.args[0]) {
+    if (funcHandler.args) {
+      if (args.length < funcHandler.args[0]) {
         throw new TclError(`too few arguments to math function "${funcname}"`, [
           'TCL',
           'WRONGARGS',
         ]);
       }
       if (
-        func_handler.args[1] !== null &&
-        outargs.length > func_handler.args[1]
+        funcHandler.args[1] !== null &&
+        outargs.length > funcHandler.args[1]
       ) {
         throw new TclError(
           `too many arguments to math function "${funcname}"`,
@@ -1326,28 +1344,28 @@ module.exports = function (/* extensions... */) {
       }
     }
 
-    if (mathfunc_contracts[funcname]) {
-      if (constant && mathfunc_contracts[funcname].constant !== true) {
+    if (mathfuncContracts[funcname]) {
+      if (constant && mathfuncContracts[funcname].constant !== true) {
         constant = false;
       }
-      if (!async && mathfunc_contracts[funcname].async) {
+      if (!async && mathfuncContracts[funcname].async) {
         async = true;
       }
     }
 
-    if (typeof func_handler === 'string') {
-      nativefunc = Math[func_handler];
+    if (typeof funcHandler === 'string') {
+      nativefunc = Math[funcHandler];
     } else {
-      handler = func_handler.handler;
+      handler = funcHandler.handler;
     }
 
     if (constant) {
       if (nativefunc) {
         constval = nativefunc.apply(Math, outargs);
       } else {
-        constval = handler(outargs, I, func_handler.priv);
+        constval = handler(outargs, I, funcHandler.priv);
       }
-      return constant_op(constval);
+      return constantOp(constval);
     }
 
     apply = nativefunc ?
@@ -1355,28 +1373,30 @@ module.exports = function (/* extensions... */) {
         return nativefunc.apply(Math, outargs);
       } :
       function () {
-        return handler(outargs, I, func_handler.priv);
+        return handler(outargs, I, funcHandler.priv);
       };
 
     if (async) {
       f = function (c) {
-        let i = 0;
+        let k = 0;
 
-        function setarg(j) {
+        function setarg(l) {
           return function (res) {
-            outargs[j] = res;
+            outargs[l] = res;
             return loop;
           };
         }
 
         function loop() {
-          let j;
+          let l;
           let argfunc;
-          while (i < args.length) {
-            j = args[i++];
-            argfunc = args[i++];
-            if (argfunc.async) return argfunc(setarg(j));
-            outargs[j] = argfunc();
+          while (k < args.length) {
+            l = args[k];
+            k += 1;
+            argfunc = args[k];
+            k += 1;
+            if (argfunc.async) return argfunc(setarg(l));
+            outargs[l] = argfunc();
           }
           return c(apply());
         }
@@ -1384,9 +1404,9 @@ module.exports = function (/* extensions... */) {
       };
     } else {
       f = function () {
-        let i;
-        for (i = 0; i < args.length; i += 2) {
-          outargs[args[i]] = args[i + 1]();
+        let k;
+        for (k = 0; k < args.length; k += 2) {
+          outargs[args[k]] = args[k + 1]();
         }
         return apply();
       };
@@ -1397,26 +1417,26 @@ module.exports = function (/* extensions... */) {
 
   function operand2func(operand) {
     if (!(operand instanceof Array)) {
-      debugger; // Shouldn't happen
-      return constant_op(operand);
+      // debugger; // Shouldn't happen
+      return constantOp(operand);
     }
     // console.log('resolving operand: ', operand.slice());
     switch (operand[1]) {
       case MATHFUNC:
-        return mathfunc_op(operand[2]);
+        return mathfuncOp(operand[2]);
       case INTEGER:
       case FLOAT:
       case BOOL:
-        return constant_op(operand[2]);
+        return constantOp(operand[2]);
       case BRACED:
       case QUOTED:
-        return string_op(operand[2]);
+        return stringOp(operand[2]);
       case VAR:
         return operand[2].length === 1 ?
-          scalar_op(operand[2][0]) :
-          array_op(operand[2][0], operand[2][1]);
+          scalarOp(operand[2][0]) :
+          arrayOp(operand[2][0], operand[2][1]);
       case SCRIPT:
-        return script_op(operand[2]);
+        return scriptOp(operand[2]);
       default:
         throw new Error(`Unexpected operand type: ${operand[1]}`);
     }
@@ -1439,7 +1459,7 @@ module.exports = function (/* extensions... */) {
     }
 
     if (typeof mathop === 'string') {
-      cached = mathop_cache[takes];
+      cached = mathopCache[takes];
       if (cached[name] === undefined) {
         /* jslint evil: true */
         if (takes === 1) {
@@ -1467,7 +1487,7 @@ module.exports = function (/* extensions... */) {
       }
     }
 
-    if (constant) return constant_op(mathop.apply(null, outargs));
+    if (constant) return constantOp(mathop(...outargs));
 
     switch (args.length) {
       case 1:
@@ -1495,7 +1515,7 @@ module.exports = function (/* extensions... */) {
 
     if (async) {
       f = function (c) {
-        let i = 0;
+        let k = 0;
 
         function setarg(j) {
           return function (v) {
@@ -1507,9 +1527,11 @@ module.exports = function (/* extensions... */) {
         function loop() {
           let j;
           let fv;
-          while (i < dynargs.length) {
-            j = dynargs[i++];
-            fv = dynargs[i++];
+          while (k < dynargs.length) {
+            j = dynargs[k];
+            k += 1;
+            fv = dynargs[k];
+            k += 1;
             if (fv.async) return fv(setarg(j));
             outargs[j] = fv();
           }
@@ -1519,9 +1541,9 @@ module.exports = function (/* extensions... */) {
       };
     } else {
       f = function () {
-        let i;
-        for (i = 0; i < dynargs.length; i += 2) {
-          outargs[dynargs[i]] = dynargs[i + 1]();
+        let k;
+        for (k = 0; k < dynargs.length; k += 2) {
+          outargs[dynargs[k]] = dynargs[k + 1]();
         }
         return apply();
       };
@@ -1530,7 +1552,7 @@ module.exports = function (/* extensions... */) {
     return f;
   }
 
-  function compile_expr(expr) {
+  function compileExpr(expr) {
     let exprObj = expr instanceof TclObject ? expr : new ExprObj(expr);
     let f = exprObj.cache.expr_f;
     let P;
@@ -1561,6 +1583,7 @@ module.exports = function (/* extensions... */) {
           args = stack.splice(-numargs, numargs);
           stack.push(operator2func(thisP[3], args));
           break;
+        default:
       }
     }
 
@@ -1576,7 +1599,7 @@ module.exports = function (/* extensions... */) {
     exprObj.cache.expr_f = f;
     return f;
   }
-  this.compile_expr = compile_expr;
+  this.compile_expr = compileExpr;
 
   this.TclError = TclError;
   this.TclResult = TclResult;
@@ -1592,15 +1615,15 @@ module.exports = function (/* extensions... */) {
     return true;
   };
 
-  this.override = function (fn, new_implmentation) {
-    I[fn] = new_implmentation;
+  this.override = function (fn, newImplmentation) {
+    I[fn] = newImplmentation;
   };
 
   (function () {
     let i;
     // Load the extensions
-    for (i = 0; i < interp_args.length; i++) {
-      interp_args[i].install(this);
+    for (i = 0; i < interpArgs.length; i++) {
+      interpArgs[i].install(this);
     }
   }());
 };

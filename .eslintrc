@@ -46,7 +46,10 @@
     "no-extend-native": "off",
     "no-eval": ["warn"],
     "no-multi-str": "off",
-    "no-control-regex": ["warn"]
+    "no-control-regex": ["warn"],
+    "no-fallthrough": ["warn"],
+    "no-continue":"off",
+    "no-loop-func": "off"
   },
   "env": {
     "browser": true,

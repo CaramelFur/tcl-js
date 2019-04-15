@@ -1,7 +1,6 @@
 const types = require('./types');
 
 let iface;
-let e;
 let TEXT = 0;
 let SPACE = 1;
 let VAR = 2;
@@ -28,7 +27,7 @@ let BRACED = 22;
 let SCRIPTARG = 24;
 let EXPRARG = 25;
 let SUBSTARG = 26;
-// SWITCHARG	= 27,  No longer used - switch parses to LISTARG now
+// SWITCHARG = 27,  No longer used - switch parses to LISTARG now
 let LISTARG = 28;
 let t = {
   TEXT,
@@ -96,38 +95,38 @@ let operators = [
   3,
 ];
 
-function find_line_no(source, ofs) {
+function findLineNo(source, ofs) {
   let line = source.substr(0, ofs).replace(/[^\n]+/g, '').length;
   return line + 1;
 }
 
-function find_line_ofs(source, ofs) {
+function findLineOfs(source, ofs) {
   return ofs - source.lastIndexOf('\n', ofs);
 }
 
-function visualize_whitespace(str) {
+function visualizeWhitespace(str) {
   return str.replace(/\n/g, '\u23ce').replace(/\t/g, '\u21e5');
 }
 
 function ParseError(message, charnum, source, ofs) {
   this.name = 'ParseError';
   this.message = message;
-  this.line_no = find_line_no(source, charnum);
-  this.line_ofs = find_line_ofs(source, charnum);
+  this.line_no = findLineNo(source, charnum);
+  this.line_ofs = findLineOfs(source, charnum);
   this.pretty_print = function (fullsource) {
-    let preamble_len = Math.min(charnum, 20);
-    let line_no = find_line_no(fullsource, charnum + ofs);
-    let line_ofs = find_line_ofs(fullsource, charnum + ofs);
-    return `Parse error: ${message} at line ${line_no}, character ${line_ofs}\n\t${visualize_whitespace(
-      fullsource.substr(charnum + ofs - preamble_len, preamble_len + 20),
-    )}\n\t${new Array(preamble_len + 1).join('.')}^`;
+    let preambleLen = Math.min(charnum, 20);
+    let lineNo = findLineNo(fullsource, charnum + ofs);
+    let lineOfs = findLineOfs(fullsource, charnum + ofs);
+    return `Parse error: ${message} at line ${lineNo}, character ${lineOfs}\n\t${visualizeWhitespace(
+      fullsource.substr(charnum + ofs - preambleLen, preambleLen + 20),
+    )}\n\t${new Array(preambleLen + 1).join('.')}^`;
   };
   this.char = charnum;
   this.ofs = ofs || 0;
 }
 ParseError.prototype = new Error();
 
-function word_empty(tokens) {
+function wordEmpty(tokens) {
   let i;
   for (i = 0; i < tokens.length; i++) {
     switch (tokens[i][0]) {
@@ -135,16 +134,17 @@ function word_empty(tokens) {
       case ESCAPE:
       case VAR:
       case ARRAY:
-      // case INDEX:	// Can't have INDEX without ARRAY
+      // case INDEX: // Can't have INDEX without ARRAY
       case SCRIPT:
       case EXPAND:
         return false;
+      default:
     }
   }
   return true;
 }
 
-function all_script_tokens(commands) {
+function allScriptTokens(commands) {
   let i;
   let j;
   let k;
@@ -165,8 +165,8 @@ function all_script_tokens(commands) {
 }
 
 function parse(text, mode, ofs) {
-  let i = 0;
   let word;
+  let i = 0;
   let token = '';
   let tokens = [];
   let lasttoken;
@@ -177,21 +177,20 @@ function parse(text, mode, ofs) {
 
   function toklength(tok) {
     let len;
-    let i;
-    let tokens;
+    let tokens2;
     switch (tok[0]) {
       case INDEX:
         len = 0;
-        for (i = 0; i < tok[1].length; i++) {
-          len += toklength(tok[1][i]);
+        for (let j = 0; j < tok[1].length; j++) {
+          len += toklength(tok[1][j]);
         }
         return len;
 
       case SCRIPT:
-        tokens = all_script_tokens(tok[1]);
+        tokens2 = allScriptTokens(tok[1]);
         len = 0;
-        for (i = 0; i < tokens.length; i++) {
-          len += toklength(tokens[i]);
+        for (let j = 0; j < tokens2.length; j++) {
+          len += toklength(tokens2[j]);
         }
         return len;
 
@@ -207,19 +206,20 @@ function parse(text, mode, ofs) {
     token = '';
   }
 
-  function emit_waiting(type) {
+  function emitWaiting(type) {
     if (token) {
       emit([type, token]);
     }
   }
 
-  function parse_escape() {
+  function parseEscape() {
     let escapechars;
-    let first = i++;
+    let first = i;
+    i += 1;
 
     function literal(crep, len) {
       let last = first + (len === undefined ? 1 : len);
-      emit_waiting(TEXT);
+      emitWaiting(TEXT);
       emit([ESCAPE, text.substr(first, last - first + 1), crep]);
       i = last + 1;
     }
@@ -227,8 +227,10 @@ function parse(text, mode, ofs) {
     function charcode(code, len) {
       literal(String.fromCharCode(code), len);
     }
+    let toSwitch = text[i];
+    i += 1;
 
-    switch (text[i++]) {
+    switch (toSwitch) {
       case undefined:
         token += '\\';
         break;
@@ -282,7 +284,7 @@ function parse(text, mode, ofs) {
         break;
 
       default:
-        i--;
+        i -= 1;
         matches = text.substr(i).match(/^[0-7]{1,3}/);
         if (matches !== null) {
           escapechars = matches[0];
@@ -294,58 +296,61 @@ function parse(text, mode, ofs) {
     }
   }
 
-  function parse_commands() {
-    let word;
-    let lasttoken;
+  function parseCommands() {
+    let word2;
+    let lasttoken2;
     let savetokens;
     let savetokstart;
-    let command = [];
-    let commands = [];
+    let command2 = [];
+    let commands2 = [];
 
-    emit_waiting(TEXT);
-    emit([SYNTAX, text[i++]]);
+    emitWaiting(TEXT);
+    emit([SYNTAX, text[i]]);
+    i += 1;
     savetokstart = tokstart;
     while (true) {
       savetokens = tokens.slice();
-      word = get_word(command.length === 0, true);
+      word2 = getWord(command2.length === 0, true);
       tokens = savetokens;
-      command.push(word);
-      lasttoken = word[word.length - 1];
-      if (lasttoken == null) {
+      command2.push(word2);
+      lasttoken2 = word2[word2.length - 1];
+      if (lasttoken2 == null) {
         throw new ParseError('Cannot find end of command', i, text, ofs);
       }
-      if (lasttoken[0] === END) {
-        commands.push(command);
-        command = [];
-        if (lasttoken[1] === ']' || lasttoken[1] === '') {
+      if (lasttoken2[0] === END) {
+        commands2.push(command2);
+        command2 = [];
+        if (lasttoken2[1] === ']' || lasttoken2[1] === '') {
           break;
         }
       }
     }
     tokstart = savetokstart;
-    emit([SCRIPT, commands]);
+    emit([SCRIPT, commands2]);
   }
 
-  function parse_variable() {
+  function parseVariable() {
     let idx;
-    let save_i;
+    let saveI;
 
     if (!/^([a-zA-Z0-9_{(]|::)/.test(text.substr(i + 1, 2))) {
-      token += text[i++];
+      token += text[i];
+      i += 1;
       return;
     }
 
-    emit_waiting(TEXT);
-    emit([SYNTAX, text[i++]]);
-
-    function parse_index() {
-      let saved_tokens;
-      let saved_tokstart;
+    emitWaiting(TEXT);
+    emit([SYNTAX, text[i]]);
+    i += 1;
+    function parseIndex() {
+      let savedTokens;
+      let savedTokstart;
       let indextokens;
       // escape, variable and command substs apply here
-      emit([SYNTAX, text[i++]]);
-      saved_tokens = tokens.slice(0);
-      saved_tokstart = tokstart;
+      emit([SYNTAX, text[i]]);
+      i += 1;
+      savedTokens = tokens.slice(0);
+      savedTokstart = tokstart;
       tokens = [];
       while (true) {
         switch (text[i]) {
@@ -353,33 +358,36 @@ function parse(text, mode, ofs) {
             throw new ParseError('missing )', i, text, ofs);
 
           case ')':
-            emit_waiting(TEXT);
+            emitWaiting(TEXT);
             indextokens = tokens.slice(0);
-            tokens = saved_tokens;
-            tokstart = saved_tokstart;
+            tokens = savedTokens;
+            tokstart = savedTokstart;
             emit([INDEX, indextokens]);
-            emit([SYNTAX, text[i++]]);
+            emit([SYNTAX, text[i]]);
+            i += 1;
             return;
 
           case '\\':
-            parse_escape();
+            parseEscape();
             break;
           case '$':
-            parse_variable();
+            parseVariable();
             break;
           case '[':
-            parse_commands();
+            parseCommands();
             break;
 
           default:
-            token += text[i++];
+            token += text[i];
+            i += 1;
             break;
         }
       }
     }
 
     if (text[i] === '{') {
-      emit([SYNTAX, text[i++]]);
+      emit([SYNTAX, text[i]]);
+      i += 1;
       idx = text.indexOf('}', i);
       if (idx === -1) {
         throw new ParseError(
@@ -391,21 +399,21 @@ function parse(text, mode, ofs) {
       }
       token = text.substr(i, idx - i);
       i += idx - i;
-      if (
-        token[token.length - 1] === ')' &&
-        (idx = token.lastIndexOf('(')) !== -1
-      ) {
-        save_i = i;
+
+      idx = token.lastIndexOf('(');
+      if (token[token.length - 1] === ')' && idx !== -1) {
+        saveI = i;
         i -= token.length;
         token = token.substr(0, idx);
         i += token.length;
         emit([ARRAY, token]);
-        parse_index();
-        i = save_i;
+        parseIndex();
+        i = saveI;
       } else {
         emit([VAR, token]);
       }
-      emit([SYNTAX, text[i++]]);
+      emit([SYNTAX, text[i]]);
+      i += 1;
     } else {
       token = text.substr(i).match(/^[a-zA-Z_0-9:]*/)[0];
       // : alone is a name terminator
@@ -418,20 +426,21 @@ function parse(text, mode, ofs) {
         emit([VAR, token]);
       } else {
         emit([ARRAY, token]);
-        parse_index();
+        parseIndex();
       }
     }
   }
 
-  function parse_braced() {
+  function parseBraced() {
     let depth = 1;
     let m;
     let from;
     let emitted = false;
-    emit([SYNTAX, text[i++]]);
+    emit([SYNTAX, text[i]]);
+    i += 1;
     from = i;
 
-    function emit_fold(len) {
+    function emitFold(len) {
       emit([ESCAPE, text.substr(i, len), ' ']);
       i += len;
       from = i;
@@ -453,31 +462,33 @@ function parse(text, mode, ofs) {
         if (i > from) {
           emit([TEXT, text.substr(from, i - from)]);
         }
-        emit_fold(m[3].length);
+        emitFold(m[3].length);
         emitted = true;
       } else {
         if (m[2].charAt(0) === '{') {
-          depth++;
+          depth += 1;
         } else {
-          depth--;
+          depth -= 1;
         }
-        i++;
+        i += 1;
       }
     }
-    i--;
+    i -= 1;
     if (!emitted || i > from) {
       emit([TEXT, text.substr(from, i - from)]);
     }
-    emit([SYNTAX, text[i++]]);
+    emit([SYNTAX, text[i]]);
+    i += 1;
     return tokens;
   }
 
-  function parse_combined(quoted, incmdsubst, ignore_trailing) {
+  function parseCombined(quoted, incmdsubst, ignoreTrailing) {
     let matched;
     let start = i;
 
     if (quoted) {
-      emit([SYNTAX, text[i++]]);
+      emit([SYNTAX, text[i]]);
+      i += 1;
     }
 
     while (true) {
@@ -490,7 +501,7 @@ function parse(text, mode, ofs) {
 
           case '"':
             if (
-              !ignore_trailing &&
+              !ignoreTrailing &&
               text[i + 1] !== undefined &&
               text.substr(i + 1, 2) !== '\\\n' &&
               !(incmdsubst ? /[\s;\]]/ : /[\s;]/).test(text[i + 1])
@@ -515,9 +526,10 @@ function parse(text, mode, ofs) {
               // token === ''
               emit([TEXT, token]);
             } else {
-              emit_waiting(TEXT);
+              emitWaiting(TEXT);
             }
-            emit([SYNTAX, text[i++]]);
+            emit([SYNTAX, text[i]]);
+            i += 1;
             return tokens;
 
           default:
@@ -526,14 +538,15 @@ function parse(text, mode, ofs) {
       } else {
         switch (text[i]) {
           case undefined:
-            emit_waiting(TEXT);
+            emitWaiting(TEXT);
             emit([END, '']);
             return tokens;
 
           case '\n':
           case ';':
-            emit_waiting(TEXT);
-            token = text[i++];
+            emitWaiting(TEXT);
+            token = text[i];
+            i += 1;
             emit([END, token]);
             return tokens;
 
@@ -545,7 +558,7 @@ function parse(text, mode, ofs) {
           // Line fold - falls through
           case ' ':
           case '\t':
-            emit_waiting(TEXT);
+            emitWaiting(TEXT);
             return tokens;
 
           default:
@@ -556,34 +569,36 @@ function parse(text, mode, ofs) {
       if (!matched) {
         switch (text[i]) {
           case '\\':
-            parse_escape();
+            parseEscape();
             break;
 
           case '$':
-            parse_variable();
+            parseVariable();
             break;
 
           case '[':
-            parse_commands();
+            parseCommands();
             break;
 
           case ']':
             if (incmdsubst && !quoted) {
-              emit_waiting(TEXT);
-              token = text[i++];
+              emitWaiting(TEXT);
+              token = text[i];
+              i += 1;
               emit([END, token]);
               return tokens;
             }
           // Falls through
           default:
-            token += text[i++];
+            token += text[i];
+            i += 1;
             break;
         }
       }
     }
   }
 
-  function get_word(first, incmdsubst) {
+  function getWord(first, incmdsubst) {
     let re;
     let m;
 
@@ -594,20 +609,24 @@ function parse(text, mode, ofs) {
       /^(?:[\t ]*\\\n[\t ]*)|^[\t ]+/;
 
     // Consume any leading whitespace / comments if first word
-    while ((first && text[i] === '#') || (m = re.exec(text.substr(i)))) {
+    m = re.exec(text.substr(i));
+    while ((first && text[i] === '#') || m) {
       if (m) {
         token += m[0];
         i += m[0].length;
       }
-      emit_waiting(SPACE);
+      emitWaiting(SPACE);
       if (first && text[i] === '#') {
         while (text[i] !== undefined) {
           if (text[i] === '\\' && i < text.length - 1) {
-            token += text[i++];
+            token += text[i];
+            i += 1;
           }
-          token += text[i++];
+          token += text[i];
+          i += 1;
           if (text[i] === '\n') {
-            token += text[i++];
+            token += text[i];
+            i += 1;
             break;
           }
         }
@@ -626,28 +645,30 @@ function parse(text, mode, ofs) {
       case undefined:
         return tokens;
       case '{':
-        return parse_braced();
+        return parseBraced();
       case '"':
-        return parse_combined(true, incmdsubst);
+        return parseCombined(true, incmdsubst);
       case ']':
         if (incmdsubst) {
-          emit([END, text[i++]]);
+          emit([END, text[i]]);
+          i += 1;
           return tokens;
         }
       // Falls through to default
       default:
-        return parse_combined(false, incmdsubst);
+        return parseCombined(false, incmdsubst);
     }
   }
 
-  function parse_subexpr(funcargs) {
+  function parseSubexpr(funcargs) {
     let here;
     let m;
     let found;
     let j;
-    let expecting_operator = false;
+    let expectingOperator = false;
 
-    function emit_token(type, value, subtype, crep) {
+    function emitToken(type, valueArg, subtype, crep) {
+      let value = valueArg;
       if (value === undefined) {
         value = '';
       }
@@ -664,83 +685,86 @@ function parse(text, mode, ofs) {
       i += value.length;
     }
 
-    function parse_quoted() {
-      parse_combined(true, false, true);
+    function parseQuoted() {
+      parseCombined(true, false, true);
     }
 
-    function sub_parse(subtoken, func, make_crep) {
-      let s_tokens = tokens.slice();
-      let s_tokstart = tokstart;
-      let s_i = i;
-      let e_i;
+    function subParse(subtoken, func, makeCrep) {
+      let sTokens = tokens.slice();
+      let sTokstart = tokstart;
+      let sI = i;
+      let eI;
       let crep;
       let subtokens;
       tokens = [];
       func();
       subtokens = tokens.slice();
-      e_i = i;
-      tokens = s_tokens;
-      tokstart = s_tokstart;
-      i = s_i;
-      crep = make_crep ? make_crep(subtokens) : subtokens;
-      emit_token(OPERAND, text.substr(i, e_i - i), subtoken, crep);
+      eI = i;
+      tokens = sTokens;
+      tokstart = sTokstart;
+      i = sI;
+      crep = makeCrep ? makeCrep(subtokens) : subtokens;
+      emitToken(OPERAND, text.substr(i, eI - i), subtoken, crep);
     }
 
-    function sub_parse_arg() {
-      let s_tokens = tokens.slice();
-      let s_i = i;
-      let e_i;
+    function subParseArg() {
+      let sTokens = tokens.slice();
+      let sI = i;
+      let eI;
       let subtokens;
       tokens = [];
-      parse_subexpr(true);
+      parseSubexpr(true);
       subtokens = tokens;
-      tokens = s_tokens;
-      e_i = i;
-      i = s_i;
-      emit_token(ARG, text.substr(i, e_i - i), EXPR, subtokens);
+      tokens = sTokens;
+      eI = i;
+      i = sI;
+      emitToken(ARG, text.substr(i, eI - i), EXPR, subtokens);
       return subtokens[subtokens.length - 1][3];
     }
 
-    function parse_mathfunc(funcname, space) {
-      let s_i = i;
-      let e_i;
-      let s_tokens = tokens.slice();
+    function parseMathfunc(funcname, space) {
+      let sI = i;
+      let eI;
+      let sTokens = tokens.slice();
       let term;
       let subtokens;
       tokens = [];
-      emit_token(MATHFUNC, funcname);
+      emitToken(MATHFUNC, funcname);
       if (space) {
-        emit_token(SPACE, space);
+        emitToken(SPACE, space);
       }
-      emit_token(SYNTAX, '(');
+      emitToken(SYNTAX, '(');
       do {
-        term = sub_parse_arg();
+        term = subParseArg();
       } while (term === ',');
       subtokens = tokens;
-      tokens = s_tokens;
-      e_i = i;
-      i = s_i;
-      emit_token(OPERAND, text.substr(i, e_i - i), MATHFUNC, subtokens);
+      tokens = sTokens;
+      eI = i;
+      i = sI;
+      emitToken(OPERAND, text.substr(i, eI - i), MATHFUNC, subtokens);
     }
 
     while (text[i] !== undefined) {
       here = text.substr(i);
       // line folds
-      if ((m = /^\\\n\s+/.exec(here))) {
-        emit_token(SPACE, m[0]);
+      m = /^\\\n\s+/.exec(here);
+      if (m) {
+        emitToken(SPACE, m[0]);
         continue;
       }
 
       // whitespace
-      if ((m = /^\s+/.exec(here))) {
-        emit_token(SPACE, m[0]);
+      m = /^\s+/.exec(here);
+      if (m) {
+        emitToken(SPACE, m[0]);
         continue;
       }
 
-      if (!expecting_operator) {
+      if (!expectingOperator) {
         // Unitary + and -
-        if ((m = /[\-+]/.exec(text[i]))) {
-          emit_token(OPERATOR, m[0], 0, 1);
+        m = /[\-+]/.exec(text[i]);
+        if (m) {
+          emitToken(OPERATOR, m[0], 0, 1);
           continue;
         }
       }
@@ -748,10 +772,11 @@ function parse(text, mode, ofs) {
       // operators, in decreasing precedence
       found = false;
       for (j = 0; j < operators.length; j += 2) {
-        if ((m = operators[j].exec(here))) {
-          emit_token(OPERATOR, m[0], j, operators[j + 1]);
+        m = operators[j].exec(here);
+        if (m) {
+          emitToken(OPERATOR, m[0], j, operators[j + 1]);
           found = true;
-          expecting_operator = false;
+          expectingOperator = false;
           break;
         }
       }
@@ -759,24 +784,24 @@ function parse(text, mode, ofs) {
         continue;
       }
 
-      expecting_operator = true;
+      expectingOperator = true;
 
       // number
-      if ((m = /^(?:([\-+]?)(Inf(?:inity)?)|(NaN))\b/i.exec(here))) {
+      m = /^(?:([\-+]?)(Inf(?:inity)?)|(NaN))\b/i.exec(here);
+      if (m) {
         if (/n/i.test(m[0][1])) {
-          emit_token(OPERAND, m[0], FLOAT, NaN);
+          emitToken(OPERAND, m[0], FLOAT, NaN);
         } else {
-          emit_token(OPERAND, m[0], FLOAT, Number(`${m[1]}Infinity`));
+          emitToken(OPERAND, m[0], FLOAT, Number(`${m[1]}Infinity`));
         }
         continue;
       }
-      if (
-        (m = /^([\-+])?(0x)([\dA-F]+)/i.exec(here) ||
-          /^([\-+])?(0b)([01]+)/i.exec(here) ||
-          /^([\-+])?(0o)([0-7]+)/i.exec(here))
-      ) {
+      m = /^([\-+])?(0x)([\dA-F]+)/i.exec(here) ||
+        /^([\-+])?(0b)([01]+)/i.exec(here) ||
+        /^([\-+])?(0o)([0-7]+)/i.exec(here);
+      if (m) {
         // TODO: Bignum support
-        emit_token(
+        emitToken(
           OPERAND,
           m[0],
           INTEGER,
@@ -792,14 +817,15 @@ function parse(text, mode, ofs) {
         );
         continue;
       }
-      if (
-        (m = /^[\-+]?\d+(?:(\.)(?:\d+)?)?(e[\-+]?\d+)?/i.exec(here) ||
-          /^[\-+]?(\.)\d+(e[\-+]?\d+)?/i.exec(here))
-      ) {
+
+      m = /^[\-+]?\d+(?:(\.)(?:\d+)?)?(e[\-+]?\d+)?/i.exec(here) ||
+        /^[\-+]?(\.)\d+(e[\-+]?\d+)?/i.exec(here);
+
+      if (m) {
         if (m[1] === undefined && m[2] === undefined) {
-          emit_token(OPERAND, m[0], INTEGER, Number(m[0]));
+          emitToken(OPERAND, m[0], INTEGER, Number(m[0]));
         } else {
-          emit_token(OPERAND, m[0], FLOAT, Number(m[0]));
+          emitToken(OPERAND, m[0], FLOAT, Number(m[0]));
         }
         continue;
       }
@@ -809,85 +835,90 @@ function parse(text, mode, ofs) {
           throw new ParseError('missing operand', i, text, ofs);
 
         case '"':
-          sub_parse(QUOTED, parse_quoted);
+          subParse(QUOTED, parseQuoted);
           continue;
         case '{':
-          sub_parse(BRACED, parse_braced);
+          subParse(BRACED, parseBraced);
           continue;
         case '$':
-          sub_parse(VAR, parse_variable, (tokens) => {
-            let j;
+          subParse(VAR, parseVariable, (tokens2) => {
+            let k;
             let array;
             let index;
-            for (j = 0; j < tokens.length; j++) {
-              switch (tokens[j][0]) {
+            for (k = 0; k < tokens2.length; k++) {
+              switch (tokens2[k][0]) {
                 case VAR:
-                  return [tokens[j][1]];
+                  return [tokens2[k][1]];
                 case ARRAY:
-                  array = tokens[j][1];
+                  array = tokens2[k][1];
                   break;
                 case INDEX:
-                  index = tokens[j][1];
+                  index = tokens2[k][1];
                   if (index.length === 1 && index[0][0] === TEXT) {
                     // Optimize the common case where the
                     // index is a simple string
                     return [array, index[0][1]];
                   }
                   // Index needs runtime resolution
-                  return [array, tokens[j][1]];
+                  return [array, tokens2[k][1]];
+                default:
               }
             }
             throw new ParseError('No variable found', i, text, ofs);
           });
           continue;
         case '[':
-          sub_parse(SCRIPT, parse_commands, (tokens) => {
-            let j;
-            for (j = 0; j < tokens.length; j++) {
-              if (tokens[j][0] === SCRIPT) {
-                return tokens[j];
+          subParse(SCRIPT, parseCommands, (tokens2) => {
+            for (let k = 0; k < tokens2.length; k++) {
+              if (tokens2[k][0] === SCRIPT) {
+                return tokens2[k];
               }
-              if (tokens[j][0] === SYNTAX) {
+              if (tokens2[k][0] === SYNTAX) {
                 // Dirty hack to inject the [ syntax token
-                emit_token(SYNTAX, tokens[j][1]);
+                emitToken(SYNTAX, tokens2[k][1]);
               }
             }
             throw new ParseError('No script found', i, text, ofs);
           });
           continue;
         case '(':
-          emit_token(LPAREN, text[i]);
+          emitToken(LPAREN, text[i]);
           continue;
         case ')':
           if (funcargs) {
-            emit_token(SYNTAX, text[i]);
+            emitToken(SYNTAX, text[i]);
             return;
           }
-          emit_token(RPAREN, text[i]);
+          emitToken(RPAREN, text[i]);
           continue;
+        default:
       }
       if (funcargs) {
         if (text[i] === ',') {
-          emit_token(SYNTAX, text[i]);
+          emitToken(SYNTAX, text[i]);
           return;
         }
       }
       // mathfunc
-      if ((m = /^(\w+)(\s*)?\(/.exec(here))) {
-        parse_mathfunc(m[1], m[2]);
+      m = /^(\w+)(\s*)?\(/.exec(here);
+      if (m) {
+        parseMathfunc(m[1], m[2]);
         continue;
       }
       // boolean
-      if ((m = /^(?:tr(?:ue?)?|yes?|on)\b/i.exec(here))) {
-        emit_token(OPERAND, m[0], BOOL, true);
+      m = /^(?:tr(?:ue?)?|yes?|on)\b/i.exec(here);
+      if (m) {
+        emitToken(OPERAND, m[0], BOOL, true);
         continue;
       }
-      if ((m = /^(?:fa(?:l(?:se?)?)?|no|off?)\b/i.exec(here))) {
-        emit_token(OPERAND, m[0], BOOL, false);
+      m = /^(?:fa(?:l(?:se?)?)?|no|off?)\b/i.exec(here);
+      if (m) {
+        emitToken(OPERAND, m[0], BOOL, false);
         continue;
       }
       // invalid bareword
-      if ((m = /^\w+\b/.exec(here))) {
+      m = /^\w+\b/.exec(here);
+      if (m) {
         throw new types.TclError(`invalid bareword "${m[0]}"`, [
           'TCL',
           'PARSE',
@@ -905,15 +936,16 @@ function parse(text, mode, ofs) {
     }
   }
 
-  function parse_list_element(cx) {
+  function parseListElement(cx) {
     let start = i;
     let depth = 1;
 
     if (cx != null) {
-      emit([SYNTAX, text[i++]]);
+      emit([SYNTAX, text[i]]);
+      i += 1;
     }
 
-    function is_whitespace(c) {
+    function isWhitespace(c) {
       switch (c) {
         case undefined:
         case '\t':
@@ -923,6 +955,7 @@ function parse(text, mode, ofs) {
         case '\r':
         case ' ': // Definitive whitespace list from http://tip.tcl.tk/407
           return true;
+        default:
       }
 
       return false;
@@ -935,7 +968,7 @@ function parse(text, mode, ofs) {
             throw new ParseError('missing "', start, text, ofs);
 
           case '"':
-            if (!is_whitespace(text[i + 1])) {
+            if (!isWhitespace(text[i + 1])) {
               throw new ParseError(
                 `list element in quotes followed by "${
                   text[i + 1]
@@ -945,9 +978,11 @@ function parse(text, mode, ofs) {
                 ofs,
               );
             }
-            emit_waiting(TEXT);
-            emit([SYNTAX, text[i++]]);
+            emitWaiting(TEXT);
+            emit([SYNTAX, text[i]]);
+            i += 1;
             return tokens;
+          default:
         }
       } else if (cx === '{') {
         switch (text[i]) {
@@ -955,12 +990,13 @@ function parse(text, mode, ofs) {
             throw new ParseError('missing }', start, text, ofs);
 
           case '{':
-            depth++;
+            depth += 1;
             break;
 
           case '}':
-            if (--depth === 0) {
-              if (!is_whitespace(text[i + 1])) {
+            depth -= 1;
+            if (depth === 0) {
+              if (!isWhitespace(text[i + 1])) {
                 throw new ParseError(
                   `list element in braces followed by "${
                     text[i + 1]
@@ -970,39 +1006,45 @@ function parse(text, mode, ofs) {
                   ofs,
                 );
               }
-              emit_waiting(TEXT);
-              emit([SYNTAX, text[i++]]);
+              emitWaiting(TEXT);
+              emit([SYNTAX, text[i]]);
+              i += 1;
               return tokens;
             }
             break;
+          default:
         }
-      } else if (is_whitespace(text[i])) {
-        emit_waiting(TEXT);
+      } else if (isWhitespace(text[i])) {
+        emitWaiting(TEXT);
         return tokens;
       }
 
       if (text[i] == '\\') {
         if (cx === '{') {
-          token += text[i++];
+          token += text[i];
+          i += 1;
           if (text[i] === undefined) {
             throw new ParseError('missing }', start, text, ofs);
           }
-          token += text[i++];
+          token += text[i];
+          i += 1;
         } else {
-          parse_escape();
+          parseEscape();
         }
       } else {
-        token += text[i++];
+        token += text[i];
+        i += 1;
       }
     }
   }
 
-  function tokenize_list() {
+  function tokenizeList() {
     let m;
     let cx;
 
     while (true) {
-      if ((m = /^[\t\n\v\f\r ]+/.exec(text.substr(i)))) {
+      m = /^[\t\n\v\f\r ]+/.exec(text.substr(i));
+      if (m) {
         emit([SPACE, m[0]]);
         i += m[0].length;
       }
@@ -1021,14 +1063,14 @@ function parse(text, mode, ofs) {
           break;
       }
 
-      parse_list_element(cx);
+      parseListElement(cx);
     }
   }
 
   switch (mode) {
     case 'script':
       while (i < text.length) {
-        word = get_word(command.length === 0, false);
+        word = getWord(command.length === 0, false);
         if (
           i >= text.length &&
           word.length &&
@@ -1036,7 +1078,7 @@ function parse(text, mode, ofs) {
         ) {
           word.push([END, '', null, i]);
         }
-        if (command.length > 1 && word_empty(word)) {
+        if (command.length > 1 && wordEmpty(word)) {
           // Prevent a fake word being added to the command only
           // containing non-word tokens
           Array.prototype.push.apply(command[command.length - 1], word);
@@ -1051,54 +1093,55 @@ function parse(text, mode, ofs) {
       }
       return [SCRIPT, commands, undefined, 0];
     case 'expr':
-      parse_subexpr();
+      parseSubexpr();
       return tokens;
     case 'list':
-      tokenize_list();
+      tokenizeList();
       return tokens;
     case 'subst':
       while (i < text.length) {
         switch (text[i]) {
           case '\\':
-            parse_escape();
+            parseEscape();
             break;
 
           case '$':
-            parse_variable();
+            parseVariable();
             break;
 
           case '[':
-            parse_commands();
+            parseCommands();
             break;
 
           default:
-            token += text[i++];
+            token += text[i];
+            i += 1;
             break;
         }
       }
-      emit_waiting(TEXT);
+      emitWaiting(TEXT);
       return tokens;
     default:
       throw new Error(`Invalid parse mode: "${mode}"`);
   }
 }
 
-function parse_script(text, ofs) {
+function parseScript(text, ofs) {
   // First unfold - happens even in brace quoted words
   // This has been pushed down to parse_escape, parse_braced and parse_subexpr
   // text = text.replace(/\\\n\s*/g, ' ');
   return parse(text, 'script', ofs);
 }
 
-function parse_expr(text, ofs) {
+function parseExpr(text, ofs) {
   return parse(text, 'expr', ofs);
 }
 
-function parse_list(text, ofs) {
+function parseList(text, ofs) {
   return parse(text, 'list', ofs);
 }
 
-function parse_subst(text, ofs) {
+function parseSubst(text, ofs) {
   return parse(text, 'subst', ofs);
 }
 
@@ -1133,12 +1176,14 @@ function expr2stack(expr) {
         if (stack.length === 0 || stack[stack.length - 1][0] === LPAREN) {
           stack.push(expr[i]);
         } else {
+          item = stack[stack.length - 1];
           while (
             stack.length &&
-            (item = stack[stack.length - 1])[0] !== LPAREN &&
+            (item)[0] !== LPAREN &&
             expr[i][1] > item[1]
           ) {
             P.push(stack.pop());
+            item = stack[stack.length - 1];
           }
           stack.push(expr[i]);
         }
@@ -1162,18 +1207,20 @@ function expr2stack(expr) {
 }
 
 iface = {
-  parse_script,
-  parse_expr,
-  parse_list,
-  parse_subst,
+  parse_script: parseScript,
+  parse_expr: parseExpr,
+  parse_list: parseList,
+  parse_subst: parseSubst,
   expr2stack,
   ParseError,
   tokenname: {},
-  find_line_no,
-  find_line_ofs,
+  find_line_no: findLineNo,
+  find_line_ofs: findLineOfs,
 };
-for (e in t) {
-  if (t.hasOwnProperty(e)) {
+
+for (let i = 0; i < Object.keys(t).length; i++) {
+  let e = Object.keys(t)[i];
+  if (Object.prototype.hasOwnProperty.call(t, e)) {
     iface[e] = t[e];
     iface.tokenname[t[e]] = e;
   }
