@@ -2,9 +2,10 @@
   "name": "tcl-js",
   "version": "1.0.2",
   "description": "An implementation of the Tcl language in Javascript",
-  "main": "src/interp.js",
+  "main": "dist/tcl.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,9 @@
   },
   "homepage": "https://github.com/rubikscraft/tcl-js#readme",
   "devDependencies": {
+    "@types/node": "^11.13.4",
     "chai": "^4.2.0",
-    "mocha": "^6.1.3"
+    "mocha": "^6.1.3",
+    "typescript": "^3.4.3"
   }
 }
