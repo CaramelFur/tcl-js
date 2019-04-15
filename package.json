@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/rubikscraft/tcl-js.git"
   },
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "keywords": [
     "tcl",
     "javascript",
@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/rubikscraft/tcl-js/issues"
   },
-  "homepage": "https://github.com/rubikscraft/tcl-js#readme"
+  "homepage": "https://github.com/rubikscraft/tcl-js#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.3"
+  }
 }

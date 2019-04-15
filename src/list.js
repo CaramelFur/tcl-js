@@ -1,6 +1,6 @@
 const types = require('./types');
 
-let hex_chars = /[\dabcdefABCDEF]/;
+let hexChars = /[\dabcdefABCDEF]/;
 let whitespace = /\s/;
 let backquotechars = /[\\ \t\f\n\r\v{}"\[\]$;]/g;
 let backquotemap = {
@@ -35,26 +35,26 @@ function IncompleteError(message, missing) {
 IncompleteError.prototype = new ParseError();
 // Exceptions >>>
 
-function unicode_char(value) {
+function unicodeChar(value) {
   // <<<
   return String.fromCharCode(value);
 }
 
 // >>>
-function parse_tcl_list(str) {
+function parseTclList(str) {
   // <<<
   let ofs = -1;
   let parts = [];
   let elem = '';
-  let in_elem = false;
+  let inElem = false;
   let braced = false;
   let quoted = false;
   let bracedepth = 0;
   let braceescape = false;
   let elemstart = false;
   let escaped = false;
-  let escape_seq = '';
-  let escape_mode = '';
+  let escapeSeq = '';
+  let escapeMode = '';
   let needspace = false;
   let braceofs = 0;
   let quoteofs = 0;
@@ -71,7 +71,7 @@ function parse_tcl_list(str) {
   }
 
   for (i = 0; i < str.length; i++) {
-    ofs++;
+    ofs += 1;
 
     c = str.charAt(i);
 
@@ -86,12 +86,12 @@ function parse_tcl_list(str) {
       );
     }
     // >>>
-    if (!in_elem) {
+    if (!inElem) {
       // fallthrough if c not a space <<<
       if (whitespace.test(c)) {
         continue;
       }
-      in_elem = true;
+      inElem = true;
       elemstart = true;
     }
     // >>>
@@ -118,7 +118,7 @@ function parse_tcl_list(str) {
     // >>>
     if (escaped) {
       // sometimes falls through <<<
-      if (escape_mode === '') {
+      if (escapeMode === '') {
         // <<<
         switch (c) {
           case 'a':
@@ -158,16 +158,16 @@ function parse_tcl_list(str) {
           case '5':
           case '6':
           case '7':
-            escape_mode = 'octal';
-            escape_seq += c;
+            escapeMode = 'octal';
+            escapeSeq += c;
             break;
 
           case 'x':
-            escape_mode = 'hex';
+            escapeMode = 'hex';
             break;
 
           case 'u':
-            escape_mode = 'unicode';
+            escapeMode = 'unicode';
             break;
 
           default:
@@ -176,11 +176,11 @@ function parse_tcl_list(str) {
             break;
         }
         if (!escaped) {
-          escape_mode = '';
+          escapeMode = '';
         }
         continue;
         // >>>
-      } else if (escape_mode === 'octal') {
+      } else if (escapeMode === 'octal') {
         // <<<
         finished = false;
         cont = false;
@@ -193,8 +193,8 @@ function parse_tcl_list(str) {
           case '5':
           case '6':
           case '7':
-            escape_seq += c;
-            if (escape_seq.length === 3) {
+            escapeSeq += c;
+            if (escapeSeq.length === 3) {
               finished = true;
             } else {
               finished = false;
@@ -210,48 +210,48 @@ function parse_tcl_list(str) {
         if (finished) {
           acc = 0;
           pow = 0;
-          while (escape_seq.length > 0) {
-            lsd = escape_seq.substr(-1, 1);
-            escape_seq = escape_seq.slice(0, -1);
-            acc += lsd * Math.pow(8, pow);
-            pow++;
+          while (escapeSeq.length > 0) {
+            lsd = escapeSeq.substr(-1, 1);
+            escapeSeq = escapeSeq.slice(0, -1);
+            acc += lsd * (8 ** pow);
+            pow += 1;
           }
-          elem += unicode_char(acc);
-          escape_mode = '';
+          elem += unicodeChar(acc);
+          escapeMode = '';
           escaped = false;
         }
         if (cont) {
           continue;
         }
         // >>>
-      } else if (escape_mode === 'hex') {
+      } else if (escapeMode === 'hex') {
         // <<<
-        if (hex_chars.test(c)) {
-          escape_seq += c;
+        if (hexChars.test(c)) {
+          escapeSeq += c;
           continue;
         } else {
-          if (escape_seq.length === 0) {
+          if (escapeSeq.length === 0) {
             elem += `x${c}`;
             escaped = false;
-            escape_mode = '';
+            escapeMode = '';
             continue;
           }
-          if (escape_seq.length > 2) {
-            escape_seq = escape_seq.substr(-2, 2);
+          if (escapeSeq.length > 2) {
+            escapeSeq = escapeSeq.substr(-2, 2);
           }
         }
-        elem += unicode_char(`0x${escape_seq}`);
-        escape_mode = '';
+        elem += unicodeChar(`0x${escapeSeq}`);
+        escapeMode = '';
         escaped = false;
         // >>>
-      } else if (escape_mode === 'unicode') {
+      } else if (escapeMode === 'unicode') {
         // <<<
         finished = false;
         cont = false;
 
-        if (hex_chars.test(c)) {
-          escape_seq += c;
-          if (escape_seq.length === 4) {
+        if (hexChars.test(c)) {
+          escapeSeq += c;
+          if (escapeSeq.length === 4) {
             finished = true;
           } else {
             finished = false;
@@ -263,18 +263,18 @@ function parse_tcl_list(str) {
         }
 
         if (finished) {
-          if (escape_seq.length === 0) {
+          if (escapeSeq.length === 0) {
             elem += 'u';
           } else {
-            while (escape_seq.length < 4) {
-              escape_seq = `0${escape_seq}`;
+            while (escapeSeq.length < 4) {
+              escapeSeq = `0${escapeSeq}`;
             }
             /* jslint evil: true */
-            elem += eval(`"\\u${escape_seq}"`);
+            elem += eval(`"\\u${escapeSeq}"`);
             /* jslint evil: false */
-            escape_seq = '';
+            escapeSeq = '';
           }
-          escape_mode = '';
+          escapeMode = '';
           escaped = false;
         }
 
@@ -284,7 +284,7 @@ function parse_tcl_list(str) {
         // >>>
       } else {
         throw new Error(
-          `Error in escape sequence parser state: invalid state "${escape_mode}"`,
+          `Error in escape sequence parser state: invalid state "${escapeMode}"`,
         );
       }
     }
@@ -299,14 +299,14 @@ function parse_tcl_list(str) {
       switch (c) {
         case '{':
           elem += c;
-          bracedepth++;
+          bracedepth += 1;
           break;
         case '}':
-          bracedepth--;
+          bracedepth -= 1;
           if (bracedepth === 0) {
             braced = false;
             needspace = true;
-            in_elem = false;
+            inElem = false;
             parts.push(elem);
             elem = '';
           } else {
@@ -326,7 +326,7 @@ function parse_tcl_list(str) {
       // continues <<<
       if (c === '"') {
         quoted = false;
-        in_elem = false;
+        inElem = false;
         parts.push(elem);
         elem = '';
         needspace = false;
@@ -342,7 +342,7 @@ function parse_tcl_list(str) {
       // continues <<<
       parts.push(elem);
       elem = '';
-      in_elem = false;
+      inElem = false;
       continue;
     }
     // >>>
@@ -374,64 +374,64 @@ function parse_tcl_list(str) {
   // >>>
   if (escaped) {
     // <<<
-    switch (escape_mode) {
+    switch (escapeMode) {
       case '':
         elem += '\\';
         parts.push(elem);
-        in_elem = false;
+        inElem = false;
         break;
 
       case 'octal':
         acc = 0;
         pow = 0;
-        while (escape_seq.length > 0) {
-          lsd = escape_seq.substr(-1, 1);
-          escape_seq = escape_seq.slice(0, -1);
-          acc += lsd * Math.pow(8, pow);
-          pow++;
+        while (escapeSeq.length > 0) {
+          lsd = escapeSeq.substr(-1, 1);
+          escapeSeq = escapeSeq.slice(0, -1);
+          acc += lsd * (8 ** pow);
+          pow += 1;
         }
-        elem += unicode_char(acc);
-        escape_mode = '';
+        elem += unicodeChar(acc);
+        escapeMode = '';
         escaped = false;
         break;
 
       case 'hex':
-        if (escape_seq.length === 0) {
+        if (escapeSeq.length === 0) {
           elem += 'x';
         } else {
-          if (escape_seq.length > 2) {
-            escape_seq = escape_seq.substr(-2, 2);
+          if (escapeSeq.length > 2) {
+            escapeSeq = escapeSeq.substr(-2, 2);
           }
-          elem += unicode_char(`0x${escape_seq}`);
+          elem += unicodeChar(`0x${escapeSeq}`);
         }
-        escape_mode = '';
+        escapeMode = '';
         escaped = false;
         break;
 
       case 'unicode':
-        if (escape_seq.length === 0) {
+        if (escapeSeq.length === 0) {
           elem += 'u';
         } else {
-          while (escape_seq.length < 4) {
-            escape_seq = `0${escape_seq}`;
+          while (escapeSeq.length < 4) {
+            escapeSeq = `0${escapeSeq}`;
           }
           /* jslint evil: true */
-          elem += eval(`"\\u${escape_seq}"`);
+          elem += eval(`"\\u${escapeSeq}"`);
           /* jslint evil: false */
         }
-        escape_mode = '';
+        escapeMode = '';
         escaped = false;
         break;
 
       default:
         throw new Error(
-          `Error in escape sequence parser state: invalid state "${escape_mode}"`,
+          `Error in escape sequence parser state: invalid state "${escapeMode}"`,
         );
       // break;
     }
   }
   // >>>
-  if (in_elem) {
+  if (inElem) {
     // <<<
     parts.push(elem);
     elem = '';
@@ -442,13 +442,13 @@ function parse_tcl_list(str) {
 }
 
 // >>>
-function quote_elem(elem) {
+function quoteElem(elemArg) {
   // <<<
   let m;
   let c;
   let depth;
 
-  elem = String(elem);
+  let elem = String(elemArg);
 
   function backquote() {
     return elem.replace(backquotechars, match => `\\${backquotemap[match]}`);
@@ -460,7 +460,8 @@ function quote_elem(elem) {
   if (!/^[{"]/.test(elem) && /[ \t\f\n\r\v\[\]$;]/.test(elem) === false) {
     return elem.replace(/\\/g, '\\\\');
   }
-  if ((m = /\\+$/.exec(elem)) && m[0].length % 2 === 1) {
+  m = /\\+$/.exec(elem);
+  if (m && m[0].length % 2 === 1) {
     // There is an odd number of \ characters at end of elem, can't
     // brace quote
     return backquote();
@@ -472,14 +473,15 @@ function quote_elem(elem) {
   for (c = 0; c < elem.length; c++) {
     switch (elem.charAt(c)) {
       case '\\':
-        c++;
+        c += 1;
         break;
       case '{':
-        depth++;
+        depth += 1;
         break;
       case '}':
-        depth--;
+        depth -= 1;
         break;
+      default:
     }
     if (depth < 0) {
       return backquote();
@@ -492,12 +494,12 @@ function quote_elem(elem) {
 }
 
 // >>>
-function serialize_tcl_list(arr) {
+function serializeTclList(arr) {
   // <<<
   let i;
   let staged = new Array(arr.length);
   for (i = 0; i < arr.length; i++) {
-    staged[i] = quote_elem(arr[i]);
+    staged[i] = quoteElem(arr[i]);
   }
   return staged.join(' ');
 }
@@ -519,30 +521,28 @@ function array2dict(arr) {
 // >>>
 function list2dict(list) {
   // <<<
-  return array2dict(parse_tcl_list(list));
+  return array2dict(parseTclList(list));
 }
 
 // >>>
 function dict2list(dict) {
   // <<<
-  let member;
   let arr;
   arr = [];
-  for (member in dict) {
-    if (dict.hasOwnProperty(member)) {
+  for (let i = 0; i < Object.keys(dict).length; i++) {
+    let member = Object.keys(dict)[i];
+    if (Object.prototype.hasOwnProperty.call(dict, member)) {
       arr.push(member);
       arr.push(dict[member]);
     }
   }
-  return serialize_tcl_list(arr);
+  return serializeTclList(arr);
 }
 
 // >>>
 
-function to_tcl(from) {
+function toTcl(from) {
   // <<<
-  let i;
-  let e;
   let staged;
 
   switch (typeof from) {
@@ -555,9 +555,9 @@ function to_tcl(from) {
       }
       if (from instanceof Array) {
         staged = [];
-        for (i = 0; i < from.length; i++) {
+        for (let i = 0; i < from.length; i++) {
           if (from[i] == null) continue;
-          staged.push(quote_elem(to_tcl(from[i])));
+          staged.push(quoteElem(toTcl(from[i])));
         }
         return staged.join(' ');
       }
@@ -569,15 +569,15 @@ function to_tcl(from) {
       }
       // hopefully a generic object or instance of Function
       staged = [];
-      for (e in from) {
-        if (from.hasOwnProperty(e) && from[e] != null) {
-          staged.push(quote_elem(e));
-          staged.push(quote_elem(to_tcl(from[e])));
+
+      for (let i = 0; i < Object.keys(from).length; i++) {
+        let e = Object.keys(from)[i];
+        if (Object.prototype.hasOwnProperty.call(from, e) && from[e] != null) {
+          staged.push(quoteElem(e));
+          staged.push(quoteElem(toTcl(from[e])));
         }
       }
       return staged.join(' ');
-
-      break;
     case 'number':
       return String(from);
     case 'string':
@@ -596,7 +596,7 @@ function to_tcl(from) {
 function complete(str) {
   // <<<
   try {
-    parse_tcl_list(str);
+    parseTclList(str);
   } catch (err) {
     if (err instanceof IncompleteError) {
       return false;
@@ -612,14 +612,14 @@ function complete(str) {
 // >>>
 
 module.exports = {
-  list2array: parse_tcl_list,
-  parse_tcl_list,
-  array2list: serialize_tcl_list,
-  serialize_tcl_list,
+  list2array: parseTclList,
+  parse_tcl_list: parseTclList,
+  array2list: serializeTclList,
+  serialize_tcl_list: serializeTclList,
   array2dict,
   list2dict,
   dict2list,
-  to_tcl,
+  to_tcl: toTcl,
   complete,
   bool() {
     throw new Error('bool() has moved to utils');

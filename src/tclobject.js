@@ -47,7 +47,8 @@ TclObjectBase = {
     this.refCount += 1;
   },
   DecrRefCount() {
-    if (--this.refCount <= 0) {
+    this.refCount -= 1;
+    if (this.refCount <= 0) {
       pendingFree.push(this);
       if (freeTimeout == null) {
         freeTimeout = setTimeout(freeObjs, 0);
@@ -123,7 +124,9 @@ function TclObject() {
 }
 TclObject.prototype = TclObjectBase;
 
-NewObj = function (type, value) {
+NewObj = function (typeArg, valueArg) {
+  let type = typeArg;
+  let value = valueArg;
   let obj;
   if (type === undefined) {
     type = 'auto';
