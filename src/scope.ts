@@ -84,6 +84,8 @@ export class Scope {
       let arrayNum = parseInt(regex.groups.array, 10);
       return value[arrayNum];
     } else {
+      if (typeof value === 'object') return 'Object';
+      if (Array.isArray(value)) return 'Array';
       return value;
     }
   }
