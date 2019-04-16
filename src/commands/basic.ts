@@ -1,5 +1,5 @@
-import { Tcl } from '../tcl';
-import { CommandSet } from './';
+import { CommandHandler } from './';
+import { Interpreter } from '../interpreter';
 
 let commands: { [index: string]: Function } = {};
 
@@ -11,7 +11,7 @@ let commands: { [index: string]: Function } = {};
  * @see https://wiki.tcl.tk/1024
  */
 
-commands.set = (interpreter: Tcl, args: Array<string>): any => {
+commands.set = (interpreter: Interpreter, args: Array<string>): any => {
   const [varName, value] = args;
 
   // TODO: handle arrays
@@ -27,7 +27,7 @@ commands.set = (interpreter: Tcl, args: Array<string>): any => {
   throw new Error('wrong # args: should be "set varName ?newValue?"');
 };
 
-export function Load(commandset: CommandSet) {
+export function Load(commandset: CommandHandler) {
   for (let command in commands) {
     commandset.define(command, commands[command]);
   }

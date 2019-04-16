@@ -1,13 +1,13 @@
-import { CommandSet } from './commands';
+import { CommandHandler } from './commands';
 import { Scope } from './scope';
 import { IO } from './io';
 import { Parser } from './parser';
 import * as fs from 'fs';
+import { Interpreter } from './interpreter';
 
 export class Tcl {
-  commands = new CommandSet(this);
-  lastResult: any = null;
-  scope: Scope = new Scope();
+  commands = new CommandHandler();
+  globalScope: Scope = new Scope();
   io: IO = new IO();
   disabledCommands: Array<string> = [];
 
@@ -16,8 +16,8 @@ export class Tcl {
   }
 
   run(input: string): any {
-    let parser = new Parser(input);
-    return parser.get();
+    let interpreter = new Interpreter(this, input);
+    return interpreter.run();
   }
 
   runFile(location: string) {

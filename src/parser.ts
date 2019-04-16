@@ -31,11 +31,11 @@ export class Parser {
   }
 }
 
-interface Program {
+export interface Program {
   commands: Array<CommandToken>;
 }
 
-interface CommandToken {
+export interface CommandToken {
   command: string;
   args: Array<WordToken>;
 }

@@ -1,5 +1,5 @@
-import { Tcl } from '../tcl';
-import { CommandSet } from './';
+import { CommandHandler } from './';
+import { Interpreter } from '../interpreter';
 
 let commands: { [index: string]: Function } = {};
 
@@ -11,7 +11,7 @@ let commands: { [index: string]: Function } = {};
  * @see https://wiki.tcl.tk/919
  */
 
-commands.puts = (interpreter: Tcl, args: Array<string>) => {
+commands.puts = (interpreter: Interpreter, args: Array<string>) => {
   let nonewline = false;
   let channelId = 'stdout';
   let string = '';
@@ -39,9 +39,11 @@ commands.puts = (interpreter: Tcl, args: Array<string>) => {
   // right now.
 
   interpreter.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
+  
+  return string;
 };
 
-export function Load(commandset: CommandSet) {
+export function Load(commandset: CommandHandler) {
   for (let command in commands) {
     commandset.define(command, commands[command]);
   }
