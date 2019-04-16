@@ -14,23 +14,23 @@
     function skipWhitespace(input, start, includeNewlines) {
         if (includeNewlines === void 0) { includeNewlines = false; }
         var pos = start;
-        var c = input.charAt(pos);
+        var char = input.charAt(pos);
         while (pos < input.length &&
-            (Is.Whitespace(c) || (includeNewlines && c === '\n'))) {
+            (Is.Whitespace(char) || (includeNewlines && char === '\n'))) {
             pos += 1;
-            c = input.charAt(pos);
+            char = input.charAt(pos);
         }
         return pos;
     }
     function skipComment(input, start) {
         var pos = skipWhitespace(input, start, true);
-        var c = input.charAt(pos);
-        if (c === '#') {
-            while (pos < input.length && c !== '\n') {
+        var char = input.charAt(pos);
+        if (char === '#') {
+            while (pos < input.length && char !== '\n') {
                 pos += 1;
-                c = input.charAt(pos);
+                char = input.charAt(pos);
             }
-            if (c === '\n') {
+            if (char === '\n') {
                 pos += 1;
             }
         }
@@ -47,12 +47,12 @@
     }
     function parseOctal(input, start) {
         var pos = start;
-        var c = input.charAt(pos);
+        var char = input.charAt(pos);
         var result = '';
-        while (pos < input.length && result.length <= 3 && Is.Octal(c)) {
-            result += c;
+        while (pos < input.length && result.length <= 3 && Is.Octal(char)) {
+            result += char;
             pos += 1;
-            c = input.charAt(pos);
+            char = input.charAt(pos);
         }
         if (!result)
             return null;
@@ -66,12 +66,12 @@
     exports.parseOctal = parseOctal;
     function parseHex(input, start, max) {
         var pos = start;
-        var c = input.charAt(pos);
+        var char = input.charAt(pos);
         var result = '';
-        while (pos < input.length && result.length <= max && Is.Hex(c)) {
-            result += c;
+        while (pos < input.length && result.length <= max && Is.Hex(char)) {
+            result += char;
             pos += 1;
-            c = input.charAt(pos);
+            char = input.charAt(pos);
         }
         if (!result)
             return null;
@@ -84,32 +84,32 @@
     }
     exports.parseHex = parseHex;
     function parseBackslash(input, start) {
-        var c = input.charAt(start + 1);
-        var result = c;
+        var char = input.charAt(start + 1);
+        var result = char;
         var end = start + 1;
         switch (true) {
-            case c === 'a':
+            case char === 'a':
                 result = String.fromCharCode(7);
                 break;
-            case c === 'b':
+            case char === 'b':
                 result = '\b';
                 break;
-            case c === 'f':
+            case char === 'f':
                 result = '\f';
                 break;
-            case c === 'n':
+            case char === 'n':
                 result = '\n';
                 break;
-            case c === 'r':
+            case char === 'r':
                 result = '\r';
                 break;
-            case c === 't':
+            case char === 't':
                 result = '\t';
                 break;
-            case c === 'v':
+            case char === 'v':
                 result = '\v';
                 break;
-            case c === 'x': {
+            case char === 'x': {
                 var hex = parseHex(input, start + 2, 2);
                 if (hex) {
                     result = hex.value;
@@ -117,7 +117,7 @@
                 }
                 break;
             }
-            case c === 'u': {
+            case char === 'u': {
                 var hex = parseHex(input, start + 2, 4);
                 if (hex) {
                     result = hex.value;
@@ -125,7 +125,7 @@
                 }
                 break;
             }
-            case c === 'U': {
+            case char === 'U': {
                 var hex = parseHex(input, start + 2, 8);
                 if (hex) {
                     result = hex.value;
@@ -133,7 +133,7 @@
                 }
                 break;
             }
-            case Is.Octal(c): {
+            case Is.Octal(char): {
                 var octal = parseOctal(input, start + 1);
                 if (octal) {
                     result = octal.value;
@@ -154,15 +154,15 @@
     function parseQuotedString(input, start) { }
     function parseBraces(input, start) {
         var pos = start + 1;
-        var c = input.charAt(pos);
+        var char = input.charAt(pos);
         var level = 1;
         var result = '';
         var done = false;
         while (pos < input.length && !done) {
-            switch (c) {
+            switch (char) {
                 case '{':
                     level += 1;
-                    result += c;
+                    result += char;
                     break;
                 case '}':
                     level -= 1;
@@ -170,7 +170,7 @@
                         done = true;
                     }
                     else {
-                        result += c;
+                        result += char;
                     }
                     break;
                 case '\\': {
@@ -180,10 +180,10 @@
                     break;
                 }
                 default:
-                    result += c;
+                    result += char;
             }
             pos += 1;
-            c = input.charAt(pos);
+            char = input.charAt(pos);
         }
         if (level !== 0) {
             throw new Error('unmatched closing }');

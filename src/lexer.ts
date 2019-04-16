@@ -6,24 +6,24 @@ export interface ILexer {
 
 export function Lexer(input: string): ILexer {
   let pos = 0;
-  let c = input.charAt(0);
+  let currentChar = input.charAt(0);
   let wordIdx = 0;
 
   function read(): string {
-    const val = c;
+    const val = currentChar;
     pos += 1;
-    c = input.charAt(pos);
+    currentChar = input.charAt(pos);
     return val;
   }
 
   function skipWhitespace() {
-    while (Is.Whitespace(c)) {
+    while (Is.Whitespace(currentChar)) {
       read();
     }
   }
 
   function skipComment() {
-    while (pos < input.length && c !== '\n') {
+    while (pos < input.length && currentChar !== '\n') {
       read();
     }
   }
@@ -37,14 +37,14 @@ export function Lexer(input: string): ILexer {
       ? (ch: string) => ch === delimiter
       : Is.WordSeparator;
 
-    while (pos < input.length && !testEndOfWord(c)) {
-      hasVariable = delimiter !== '}' && (hasVariable || c === '$');
-      hasSubExpr = delimiter !== '}' && (hasSubExpr || c === '[');
+    while (pos < input.length && !testEndOfWord(currentChar)) {
+      hasVariable = delimiter !== '}' && (hasVariable || currentChar === '$');
+      hasSubExpr = delimiter !== '}' && (hasSubExpr || currentChar === '[');
       value += read();
     }
 
     if (delimiter) {
-      if (!testEndOfWord(c)) {
+      if (!testEndOfWord(currentChar)) {
         throw new Error('Parse error: unexpected end of input');
       }
       read();
@@ -55,7 +55,7 @@ export function Lexer(input: string): ILexer {
   }
 
   function skipEndOfCommand() {
-    while (Is.CommandDelimiter(c) || Is.Whitespace(c)) {
+    while (Is.CommandDelimiter(currentChar) || Is.Whitespace(currentChar)) {
       read();
     }
     wordIdx = 0;
@@ -67,16 +67,16 @@ export function Lexer(input: string): ILexer {
       return null;
     }
     switch (true) {
-      case wordIdx === 0 && c === '#':
+      case wordIdx === 0 && currentChar === '#':
         skipComment();
         return nextToken();
-      case Is.CommandDelimiter(c):
+      case Is.CommandDelimiter(currentChar):
         skipEndOfCommand();
         return nextToken();
-      case c === '"':
+      case currentChar === '"':
         read();
         return scanWord('"');
-      case c === '{':
+      case currentChar === '{':
         read();
         return scanWord('}');
       default:

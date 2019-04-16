@@ -11,6 +11,7 @@
     "alwaysStrict": true,       // Enable JavaScript's "use strict" mode
     "removeComments": true,
     "outDir": "dist",
+    "pretty": false,
     "plugins": [
       {
         "name": "typescript-tslint-plugin",
