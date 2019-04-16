@@ -11,6 +11,7 @@ export class Interpreter {
   program: Program;
   scope: Scope;
   lastValue: any;
+  tcl: Tcl;
   io: IO;
   commands: CommandHandler;
 
@@ -19,6 +20,7 @@ export class Interpreter {
 
     this.program = parser.get();
     this.scope = new Scope(scope);
+    this.tcl = tcl;
     this.io = tcl.io;
     this.commands = tcl.commands;
   }
@@ -37,6 +39,11 @@ export class Interpreter {
           let groups: RegexVariable = regex[regex.length - 1];
           return `${this.scope.resolve(groups.fullname)}`;
         });
+      }
+
+      if (arg.hasSubExpr) {
+        let subInterpreter = new Interpreter(this.tcl, arg.value, this.scope);
+        arg.value = subInterpreter.run();
       }
     }
 

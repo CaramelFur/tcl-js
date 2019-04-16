@@ -1,5 +1,6 @@
 import { CommandHandler } from './';
 import { Interpreter } from '../interpreter';
+import * as math from 'mathjs';
 
 let commands: { [index: string]: Function } = {};
 
@@ -41,14 +42,38 @@ commands.unset = (interpreter: Interpreter, args: Array<string>): any => {
     args.shift();
   }
 
-  if (args.length === 0) throw new Error('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
+  if (args.length === 0)
+    throw new Error(
+      'wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"',
+    );
 
   let returnValue: any = 0;
-  for(let arg of args){
+  for (let arg of args) {
     returnValue = interpreter.scope.undefine(arg);
   }
 
   return returnValue;
+};
+
+/**
+ * expr — Evaluates an expression
+ *
+ * :: arg ?arg arg ...?
+ *
+ * @see https://wiki.tcl-lang.org/page/expr
+ */
+
+commands.expr = (interpreter: Interpreter, args: Array<string>): any => {
+  if (args.length === 0)
+    throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
+
+  let expression = args.join(' ');
+  
+  try{
+    return math.eval(expression);
+  }catch(e){
+    throw new Error('invalid expression')
+  }
 };
 
 export function Load(commandset: CommandHandler) {

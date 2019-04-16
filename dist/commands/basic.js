@@ -4,11 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "mathjs"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var math = require("mathjs");
     var commands = {};
     commands.set = function (interpreter, args) {
         var varName = args[0], value = args[1];
@@ -35,6 +36,17 @@
             returnValue = interpreter.scope.undefine(arg);
         }
         return returnValue;
+    };
+    commands.expr = function (interpreter, args) {
+        if (args.length === 0)
+            throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
+        var expression = args.join(' ');
+        try {
+            return math.eval(expression);
+        }
+        catch (e) {
+            throw new Error('invalid expression');
+        }
     };
     function Load(commandset) {
         for (var command in commands) {

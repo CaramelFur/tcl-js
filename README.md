@@ -11,6 +11,7 @@ Currently working tcl commands:
 
 * set
 * unset
+* expr
 * puts
 
 Other working parts:

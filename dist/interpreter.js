@@ -17,6 +17,7 @@
             var parser = new parser_1.Parser(input);
             this.program = parser.get();
             this.scope = new scope_1.Scope(scope);
+            this.tcl = tcl;
             this.io = tcl.io;
             this.commands = tcl.commands;
         }
@@ -40,6 +41,10 @@
                         var groups = regex[regex.length - 1];
                         return "" + _this.scope.resolve(groups.fullname);
                     });
+                }
+                if (arg.hasSubExpr) {
+                    var subInterpreter = new Interpreter(this.tcl, arg.value, this.scope);
+                    arg.value = subInterpreter.run();
                 }
             }
             var args = command.args.map(function (value) { return value.value; });
