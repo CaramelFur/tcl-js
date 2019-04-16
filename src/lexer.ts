@@ -1,6 +1,6 @@
 import * as Is from './is';
 
-export class LineLexer {
+export class Lexer {
   pos = 0;
   wordIdx = 0;
   currentChar: string;
@@ -60,8 +60,8 @@ export class LineLexer {
       if (delimiters.length > 0) {
         let delimiter = delimiters[delimiters.length - 1];
         if (test === delimiter) {
+          if (delimiters.length === 1) return EndWordType.END;
           delimiters.pop();
-          if (delimiters.length === 0) return EndWordType.END;
           return EndWordType.POPPED;
         }
         return EndWordType.CONTINUE;
@@ -72,7 +72,7 @@ export class LineLexer {
     while (this.pos < this.input.length) {
       let isEnd = testEndOfWord(this.currentChar);
       if (isEnd === EndWordType.END) {
-        this.read();
+        if (this.currentChar === delimiters.pop()) this.read();
         break;
       }
 

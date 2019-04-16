@@ -1,7 +1,7 @@
 import { CommandSet } from './commands';
 import { Scope } from './scope';
 import { IO } from './io';
-import * as Lexer from './lexer';
+import { Parser } from './parser';
 import * as fs from 'fs';
 
 export class Tcl {
@@ -16,13 +16,8 @@ export class Tcl {
   }
 
   run(input: string): any {
-    let llexer = new Lexer.LineLexer(input);
-    while (true) {
-      let token = llexer.nextToken();
-      if (!token) break;
-      console.log(token);
-    }
-    return;
+    let parser = new Parser(input);
+    return parser.get();
   }
 
   runFile(location: string) {

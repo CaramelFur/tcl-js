@@ -10,30 +10,30 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Is = require("./is");
-    var LineLexer = (function () {
-        function LineLexer(input) {
+    var Lexer = (function () {
+        function Lexer(input) {
             this.pos = 0;
             this.wordIdx = 0;
             this.input = input;
             this.currentChar = input.charAt(0);
         }
-        LineLexer.prototype.read = function () {
+        Lexer.prototype.read = function () {
             var old = this.currentChar;
             this.pos += 1;
             this.currentChar = this.input.charAt(this.pos);
             return old;
         };
-        LineLexer.prototype.skipWhitespace = function () {
+        Lexer.prototype.skipWhitespace = function () {
             while (Is.Whitespace(this.currentChar)) {
                 this.read();
             }
         };
-        LineLexer.prototype.skipComment = function () {
+        Lexer.prototype.skipComment = function () {
             while (this.pos < this.input.length && this.currentChar !== '\n') {
                 this.read();
             }
         };
-        LineLexer.prototype.scanWord = function (delimiterIn) {
+        Lexer.prototype.scanWord = function (delimiterIn) {
             var delimiters = [];
             if (delimiterIn)
                 delimiters.push(delimiterIn);
@@ -61,9 +61,9 @@
                 if (delimiters.length > 0) {
                     var delimiter = delimiters[delimiters.length - 1];
                     if (test === delimiter) {
-                        delimiters.pop();
-                        if (delimiters.length === 0)
+                        if (delimiters.length === 1)
                             return EndWordType.END;
+                        delimiters.pop();
                         return EndWordType.POPPED;
                     }
                     return EndWordType.CONTINUE;
@@ -73,7 +73,8 @@
             while (this.pos < this.input.length) {
                 var isEnd = testEndOfWord(this.currentChar);
                 if (isEnd === EndWordType.END) {
-                    this.read();
+                    if (this.currentChar === delimiters.pop())
+                        this.read();
                     break;
                 }
                 out.hasVariable =
@@ -99,14 +100,14 @@
             this.wordIdx += 1;
             return out;
         };
-        LineLexer.prototype.skipEndOfCommand = function () {
+        Lexer.prototype.skipEndOfCommand = function () {
             while (Is.CommandDelimiter(this.currentChar) ||
                 Is.Whitespace(this.currentChar)) {
                 this.read();
             }
             this.wordIdx = 0;
         };
-        LineLexer.prototype.nextToken = function () {
+        Lexer.prototype.nextToken = function () {
             this.skipWhitespace();
             if (this.pos >= this.input.length) {
                 return null;
@@ -122,9 +123,9 @@
                     return this.scanWord();
             }
         };
-        return LineLexer;
+        return Lexer;
     }());
-    exports.LineLexer = LineLexer;
+    exports.Lexer = Lexer;
     var EndWordType;
     (function (EndWordType) {
         EndWordType[EndWordType["CONTINUE"] = 0] = "CONTINUE";
