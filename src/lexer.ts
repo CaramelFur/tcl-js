@@ -11,26 +11,26 @@ export class Lexer {
     this.currentChar = input.charAt(0);
   }
 
-  read(): string {
+  private read(): string {
     let old = this.currentChar;
     this.pos += 1;
     this.currentChar = this.input.charAt(this.pos);
     return old;
   }
 
-  skipWhitespace() {
+  private skipWhitespace() {
     while (Is.Whitespace(this.currentChar)) {
       this.read();
     }
   }
 
-  skipComment() {
+  private skipComment() {
     while (this.pos < this.input.length && this.currentChar !== '\n') {
       this.read();
     }
   }
 
-  scanWord(delimiterIn?: string): WordToken {
+  private scanWord(delimiterIn?: string): WordToken {
     let delimiters: Array<string> = [];
     if (delimiterIn) delimiters.push(delimiterIn);
 
@@ -104,7 +104,7 @@ export class Lexer {
     return out;
   }
 
-  skipEndOfCommand() {
+  private skipEndOfCommand() {
     while (
       Is.CommandDelimiter(this.currentChar) ||
       Is.Whitespace(this.currentChar)
