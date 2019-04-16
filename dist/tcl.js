@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./commands", "./scope", "./io", "./lexer", "fs"], factory);
+        define(["require", "exports", "./commands", "./scope", "./io", "./parser", "fs"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -12,7 +12,7 @@
     var commands_1 = require("./commands");
     var scope_1 = require("./scope");
     var io_1 = require("./io");
-    var Lexer = require("./lexer");
+    var parser_1 = require("./parser");
     var fs = require("fs");
     var Tcl = (function () {
         function Tcl(disableCommands) {
@@ -24,14 +24,8 @@
             this.disabledCommands = disableCommands;
         }
         Tcl.prototype.run = function (input) {
-            var llexer = new Lexer.LineLexer(input);
-            while (true) {
-                var token = llexer.nextToken();
-                if (!token)
-                    break;
-                console.log(token);
-            }
-            return;
+            var parser = new parser_1.Parser(input);
+            return parser.get();
         };
         Tcl.prototype.runFile = function (location) {
             var buffer = fs.readFileSync(location, { encoding: 'utf-8' });
