@@ -58,8 +58,6 @@ export class Scope {
   }
 
   resolve(inputName: string): any {
-    console.log(this.members)
-
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
       throw new Error(`Can't read "${inputName}": invalid variable name`);

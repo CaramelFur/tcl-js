@@ -57,7 +57,6 @@
             return returnValue;
         };
         Scope.prototype.resolve = function (inputName) {
-            console.log(this.members);
             var regex = variableRegex.exec(inputName);
             if (!regex || !regex.groups)
                 throw new Error("Can't read \"" + inputName + "\": invalid variable name");
