@@ -34,6 +34,7 @@
             throw new Error('wrong # args: should be "puts ?-nonewline? ?channelId? string"');
         }
         interpreter.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
+        return string;
     };
     function Load(commandset) {
         for (var command in commands) {

@@ -8,7 +8,7 @@ let commands: { [index: string]: Function } = {};
  *
  * :: varName ?value?
  *
- * @see https://wiki.tcl.tk/1024
+ * @see https://wiki.tcl-lang.org/page/set
  */
 
 commands.set = (interpreter: Interpreter, args: Array<string>): any => {
@@ -20,11 +20,35 @@ commands.set = (interpreter: Interpreter, args: Array<string>): any => {
     interpreter.scope.define(varName, value);
     return value;
   } else if (args.length === 1) {
-    const symbol = interpreter.scope.resolve(varName);
-    return symbol.value;
+    return interpreter.scope.resolve(varName);
   }
 
   throw new Error('wrong # args: should be "set varName ?newValue?"');
+};
+
+/**
+ * unset — Delete variables
+ *
+ * :: ?-nocomplain? varName ?varName ...?
+ *
+ * @see https://wiki.tcl-lang.org/page/unset
+ */
+
+commands.unset = (interpreter: Interpreter, args: Array<string>): any => {
+  let nocomplain = false;
+  if (args[0] === '-nocomplain') {
+    nocomplain = true;
+    args.shift();
+  }
+
+  if (args.length === 0) throw new Error('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
+
+  let returnValue: any = 0;
+  for(let arg of args){
+    returnValue = interpreter.scope.undefine(arg);
+  }
+
+  return returnValue;
 };
 
 export function Load(commandset: CommandHandler) {

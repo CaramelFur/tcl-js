@@ -17,10 +17,24 @@
             return value;
         }
         else if (args.length === 1) {
-            var symbol = interpreter.scope.resolve(varName);
-            return symbol.value;
+            return interpreter.scope.resolve(varName);
         }
         throw new Error('wrong # args: should be "set varName ?newValue?"');
+    };
+    commands.unset = function (interpreter, args) {
+        var nocomplain = false;
+        if (args[0] === '-nocomplain') {
+            nocomplain = true;
+            args.shift();
+        }
+        if (args.length === 0)
+            throw new Error('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
+        var returnValue = 0;
+        for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+            var arg = args_1[_i];
+            returnValue = interpreter.scope.undefine(arg);
+        }
+        return returnValue;
     };
     function Load(commandset) {
         for (var command in commands) {
