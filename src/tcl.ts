@@ -1,7 +1,6 @@
 import { CommandHandler } from './commands';
 import { Scope } from './scope';
 import { IO } from './io';
-import { Parser } from './parser';
 import * as fs from 'fs';
 import { Interpreter } from './interpreter';
 

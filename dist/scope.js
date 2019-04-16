@@ -9,6 +9,7 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Scope = (function () {
         function Scope(parent) {
             this.parent = null;
@@ -18,18 +19,72 @@
         Scope.prototype.pop = function () {
             return this.parent;
         };
-        Scope.prototype.define = function (name, value) {
+        Scope.prototype.define = function (inputName, inputValue) {
+            var regex = variableRegex.exec(inputName);
+            if (!regex || !regex.groups)
+                throw new Error("Can't read \"" + inputName + "\": invalid variable name");
+            var name = regex.groups.name;
+            var value;
+            if (Object.prototype.hasOwnProperty.call(this.members, name)) {
+                value = this.members[name].value;
+            }
+            else if (this.parent !== null) {
+                value = this.parent.resolve(name).value;
+            }
+            if (regex.groups.object) {
+                if (!value)
+                    value = {};
+                value[regex.groups.object] = inputValue;
+            }
+            else if (regex.groups.array) {
+                if (!value)
+                    value = [];
+                var arrayNum = parseInt(regex.groups.array, 10);
+                value[arrayNum] = inputValue;
+            }
+            else {
+                value = inputValue;
+            }
             this.members[name] = new Value(name, value);
             return this;
         };
-        Scope.prototype.resolve = function (name) {
+        Scope.prototype.undefine = function (name, nocomplain) {
+            if (!Object.prototype.hasOwnProperty.call(this.members, name) &&
+                !nocomplain)
+                throw new Error("Can't delete \"" + name + "\": no such variable");
+            var returnValue = this.members[name];
+            delete this.members[name];
+            return returnValue;
+        };
+        Scope.prototype.resolve = function (inputName) {
+            console.log(this.members);
+            var regex = variableRegex.exec(inputName);
+            if (!regex || !regex.groups)
+                throw new Error("Can't read \"" + inputName + "\": invalid variable name");
+            var name = regex.groups.name;
+            var value;
             if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-                return this.members[name];
+                value = this.members[name].value;
             }
             else if (this.parent !== null) {
-                return this.parent.resolve(name).value;
+                value = this.parent.resolve(name).value;
             }
-            throw new Error("Can't read \"" + name + "\": no such variable");
+            if (!value)
+                throw new Error("Can't read \"" + name + "\": no such variable");
+            if (regex.groups.object) {
+                if (typeof value !== 'object')
+                    throw new Error("Can't read \"" + name + "\": variable is no object");
+                return value[regex.groups.object];
+            }
+            else if (regex.groups.array) {
+                if (!Array.isArray(value))
+                    throw new Error("Can't read \"" + name + "\": variable is no array");
+                var arrayNum = parseInt(regex.groups.array, 10);
+                return value[arrayNum];
+            }
+            else {
+                return value;
+            }
         };
         return Scope;
     }());
