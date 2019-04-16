@@ -13,13 +13,13 @@ function skipWhitespace(
   includeNewlines: boolean = false,
 ): number {
   let pos = start;
-  let c = input.charAt(pos);
+  let char = input.charAt(pos);
   while (
     pos < input.length &&
-    (Is.Whitespace(c) || (includeNewlines && c === '\n'))
+    (Is.Whitespace(char) || (includeNewlines && char === '\n'))
   ) {
     pos += 1;
-    c = input.charAt(pos);
+    char = input.charAt(pos);
   }
   return pos;
 }
@@ -29,13 +29,13 @@ function skipWhitespace(
  */
 function skipComment(input: string, start: number): number {
   let pos = skipWhitespace(input, start, true);
-  let c = input.charAt(pos);
-  if (c === '#') {
-    while (pos < input.length && c !== '\n') {
+  let char = input.charAt(pos);
+  if (char === '#') {
+    while (pos < input.length && char !== '\n') {
       pos += 1;
-      c = input.charAt(pos);
+      char = input.charAt(pos);
     }
-    if (c === '\n') {
+    if (char === '\n') {
       pos += 1;
     }
   }
@@ -61,13 +61,13 @@ function parseCommand(
 
 function parseOctal(input: string, start: number): Variable | null {
   let pos = start;
-  let c = input.charAt(pos);
+  let char = input.charAt(pos);
   let result = '';
 
-  while (pos < input.length && result.length <= 3 && Is.Octal(c)) {
-    result += c;
+  while (pos < input.length && result.length <= 3 && Is.Octal(char)) {
+    result += char;
     pos += 1;
-    c = input.charAt(pos);
+    char = input.charAt(pos);
   }
 
   if (!result) return null;
@@ -86,13 +86,13 @@ function parseHex(
   max: number,
 ): Variable | null {
   let pos = start;
-  let c = input.charAt(pos);
+  let char = input.charAt(pos);
   let result = '';
 
-  while (pos < input.length && result.length <= max && Is.Hex(c)) {
-    result += c;
+  while (pos < input.length && result.length <= max && Is.Hex(char)) {
+    result += char;
     pos += 1;
-    c = input.charAt(pos);
+    char = input.charAt(pos);
   }
 
   if (!result) return null;
@@ -106,32 +106,32 @@ function parseHex(
 }
 
 function parseBackslash(input: string, start: number): Variable {
-  let c = input.charAt(start + 1); // Assume first char is backslash
-  let result = c;
+  let char = input.charAt(start + 1); // Assume first char is backslash
+  let result = char;
   let end = start + 1;
   switch (true) {
-    case c === 'a':
+    case char === 'a':
       result = String.fromCharCode(7);
       break;
-    case c === 'b':
+    case char === 'b':
       result = '\b';
       break;
-    case c === 'f':
+    case char === 'f':
       result = '\f';
       break;
-    case c === 'n':
+    case char === 'n':
       result = '\n';
       break;
-    case c === 'r':
+    case char === 'r':
       result = '\r';
       break;
-    case c === 't':
+    case char === 't':
       result = '\t';
       break;
-    case c === 'v':
+    case char === 'v':
       result = '\v';
       break;
-    case c === 'x': {
+    case char === 'x': {
       const hex = parseHex(input, start + 2, 2);
       if (hex) {
         result = hex.value;
@@ -139,7 +139,7 @@ function parseBackslash(input: string, start: number): Variable {
       }
       break;
     }
-    case c === 'u': {
+    case char === 'u': {
       const hex = parseHex(input, start + 2, 4);
       if (hex) {
         result = hex.value;
@@ -147,7 +147,7 @@ function parseBackslash(input: string, start: number): Variable {
       }
       break;
     }
-    case c === 'U': {
+    case char === 'U': {
       const hex = parseHex(input, start + 2, 8);
       if (hex) {
         result = hex.value;
@@ -155,7 +155,7 @@ function parseBackslash(input: string, start: number): Variable {
       }
       break;
     }
-    case Is.Octal(c): {
+    case Is.Octal(char): {
       const octal = parseOctal(input, start + 1);
       if (octal) {
         result = octal.value;
@@ -177,16 +177,16 @@ function parseQuotedString(input: string, start: number) {}
 
 function parseBraces(input: string, start: number): Variable {
   let pos = start + 1;
-  let c = input.charAt(pos);
+  let char = input.charAt(pos);
   let level = 1;
   let result = '';
   let done = false;
 
   while (pos < input.length && !done) {
-    switch (c) {
+    switch (char) {
       case '{':
         level += 1;
-        result += c;
+        result += char;
         break;
 
       case '}':
@@ -194,7 +194,7 @@ function parseBraces(input: string, start: number): Variable {
         if (level === 0) {
           done = true;
         } else {
-          result += c;
+          result += char;
         }
         break;
 
@@ -206,11 +206,11 @@ function parseBraces(input: string, start: number): Variable {
       }
 
       default:
-        result += c;
+        result += char;
     }
 
     pos += 1;
-    c = input.charAt(pos);
+    char = input.charAt(pos);
   }
 
   if (level !== 0) {

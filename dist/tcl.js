@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./io", "./scope", "./commands", "./parser"], factory);
+        define(["require", "exports", "./io", "./scope", "./commands", "./parser", "fs"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -13,6 +13,7 @@
     var scope_1 = require("./scope");
     var commands_1 = require("./commands");
     var parser_1 = require("./parser");
+    var fs = require("fs");
     var Tcl = (function () {
         function Tcl(disableCommands) {
             this.currentScope = new scope_1.Scope();
@@ -24,13 +25,17 @@
         }
         Tcl.prototype.run = function (input) {
             var ast = parser_1.Parse(input);
-            console.log(ast);
+            console.log(JSON.stringify(ast));
             for (var _i = 0, _a = ast.statements; _i < _a.length; _i++) {
                 var statement = _a[_i];
                 var _b = statement.words.map(this.mapWord), cmd = _b[0], args = _b.slice(1);
                 this.lastResult = this.commands.invoke(cmd, args) || '';
             }
             return this.lastResult;
+        };
+        Tcl.prototype.runFile = function (location) {
+            var buffer = fs.readFileSync(location, { encoding: 'utf-8' });
+            return this.run(buffer);
         };
         Tcl.prototype.mapWord = function (word) {
             var _this = this;
