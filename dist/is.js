@@ -17,7 +17,11 @@
     exports.WordSeparator = WordSeparator;
     var Subs = function (c) { return c === '$' || c === '\\' || c === '['; };
     exports.Subs = Subs;
-    var Brace = function (c) { return c === '{' || c === '}'; };
+    var OpenBrace = function (c) { return c === '{' || c === '[' || c === '<'; };
+    exports.OpenBrace = OpenBrace;
+    var CloseBrace = function (c) { return c === ']' || c === '}' || c === '>'; };
+    exports.CloseBrace = CloseBrace;
+    var Brace = function (c) { return OpenBrace(c) || CloseBrace(c); };
     exports.Brace = Brace;
     var BareWord = function (c) {
         return (c >= 'A' && c <= 'Z') ||

@@ -63,3 +63,7 @@ typings/
 testing/
 
 .vscode/
+
+temp/
+
+report.*.json

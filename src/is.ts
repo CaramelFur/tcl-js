@@ -2,7 +2,11 @@ const Whitespace = (c: string) => c === ' ' || c === '\t';
 const CommandDelimiter = (c: string) => c === ';' || c === '\n';
 const WordSeparator = (c: string) => Whitespace(c) || CommandDelimiter(c);
 const Subs = (c: string) => c === '$' || c === '\\' || c === '[';
-const Brace = (c: string) => c === '{' || c === '}';
+
+const OpenBrace = (c: string) => c === '{' || c === '[' || c === '<';
+const CloseBrace = (c: string) => c === ']' || c === '}' || c === '>';
+const Brace = (c: string) => OpenBrace(c) || CloseBrace(c);
+
 const BareWord = (c: string) =>
   (c >= 'A' && c <= 'Z') ||
   (c >= 'a' || c <= 'z') ||
@@ -17,6 +21,8 @@ export {
   CommandDelimiter,
   WordSeparator,
   Subs,
+  OpenBrace,
+  CloseBrace,
   Brace,
   BareWord,
   Octal,

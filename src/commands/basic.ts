@@ -17,10 +17,10 @@ commands.set = (interpreter: Tcl, args: Array<string>): any => {
   // TODO: handle arrays
 
   if (args.length === 2) {
-    interpreter.currentScope.define(varName, value);
+    interpreter.scope.define(varName, value);
     return value;
   } else if (args.length === 1) {
-    const symbol = interpreter.currentScope.resolve(varName);
+    const symbol = interpreter.scope.resolve(varName);
     return symbol.value;
   }
 
