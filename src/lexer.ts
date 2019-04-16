@@ -1,99 +1,146 @@
 import * as Is from './is';
 
-export interface ILexer {
-  nextToken: () => WordToken | null;
-}
+export class LineLexer {
+  pos = 0;
+  wordIdx = 0;
+  currentChar: string;
+  input: string;
 
-export function Lexer(input: string): ILexer {
-  let pos = 0;
-  let currentChar = input.charAt(0);
-  let wordIdx = 0;
-
-  function read(): string {
-    const val = currentChar;
-    pos += 1;
-    currentChar = input.charAt(pos);
-    return val;
+  constructor(input: string) {
+    this.input = input;
+    this.currentChar = input.charAt(0);
   }
 
-  function skipWhitespace() {
-    while (Is.Whitespace(currentChar)) {
-      read();
+  read(): string {
+    let old = this.currentChar;
+    this.pos += 1;
+    this.currentChar = this.input.charAt(this.pos);
+    return old;
+  }
+
+  skipWhitespace() {
+    while (Is.Whitespace(this.currentChar)) {
+      this.read();
     }
   }
 
-  function skipComment() {
-    while (pos < input.length && currentChar !== '\n') {
-      read();
+  skipComment() {
+    while (this.pos < this.input.length && this.currentChar !== '\n') {
+      this.read();
     }
   }
 
-  function scanWord(delimiter?: string): WordToken {
-    let value = '';
-    let hasVariable = false;
-    let hasSubExpr = false;
-    const index = wordIdx;
-    const testEndOfWord: Function = delimiter
-      ? (ch: string) => ch === delimiter
-      : Is.WordSeparator;
+  scanWord(delimiterIn?: string): WordToken {
+    let delimiters: Array<string> = [];
+    if (delimiterIn) delimiters.push(delimiterIn);
 
-    while (pos < input.length && !testEndOfWord(currentChar)) {
-      hasVariable = delimiter !== '}' && (hasVariable || currentChar === '$');
-      hasSubExpr = delimiter !== '}' && (hasSubExpr || currentChar === '[');
-      value += read();
+    let out: WordToken = {
+      value: '',
+      hasVariable: false,
+      hasSubExpr: false,
+      index: this.wordIdx,
+    };
+
+    function testDelimiters(test: string): number {
+      switch (test) {
+        case '{':
+          delimiters.push('}');
+          return delimiters.length;
+        case '"':
+          delimiters.push('"');
+          return delimiters.length;
+        case '[':
+          delimiters.push(']');
+          return delimiters.length;
+      }
+      return 0;
     }
 
-    if (delimiter) {
-      if (!testEndOfWord(currentChar)) {
+    function testEndOfWord(test: string): EndWordType {
+      if (delimiters.length > 0) {
+        let delimiter = delimiters[delimiters.length - 1];
+        if (test === delimiter) {
+          delimiters.pop();
+          if (delimiters.length === 0) return EndWordType.END;
+          return EndWordType.POPPED;
+        }
+        return EndWordType.CONTINUE;
+      }
+      return Is.WordSeparator(test) ? EndWordType.END : EndWordType.CONTINUE;
+    }
+
+    while (this.pos < this.input.length) {
+      let isEnd = testEndOfWord(this.currentChar);
+      if (isEnd === EndWordType.END) {
+        this.read();
+        break;
+      }
+
+      out.hasVariable =
+        delimiters[0] !== '}' && (out.hasVariable || this.currentChar === '$');
+      out.hasSubExpr =
+        delimiters[0] !== '}' && (out.hasSubExpr || this.currentChar === '[');
+
+      if (isEnd !== EndWordType.POPPED) {
+        let newLength = testDelimiters(this.currentChar);
+        if (newLength === 1) {
+          this.read();
+          continue;
+        }
+      }
+
+      out.value += this.read();
+    }
+
+    if (delimiters.length > 0) {
+      if (!testEndOfWord(this.currentChar)) {
+        console.log(delimiters);
         throw new Error('Parse error: unexpected end of input');
       }
-      read();
+      this.read();
     }
 
-    wordIdx += 1;
-    return new WordToken({ value, index, hasVariable, hasSubExpr });
+    this.wordIdx += 1;
+    return out;
   }
 
-  function skipEndOfCommand() {
-    while (Is.CommandDelimiter(currentChar) || Is.Whitespace(currentChar)) {
-      read();
+  skipEndOfCommand() {
+    while (
+      Is.CommandDelimiter(this.currentChar) ||
+      Is.Whitespace(this.currentChar)
+    ) {
+      this.read();
     }
-    wordIdx = 0;
+    this.wordIdx = 0;
   }
 
-  function nextToken(): WordToken | null {
-    skipWhitespace();
-    if (pos >= input.length) {
+  nextToken(): WordToken | null {
+    this.skipWhitespace();
+    if (this.pos >= this.input.length) {
       return null;
     }
     switch (true) {
-      case wordIdx === 0 && currentChar === '#':
-        skipComment();
-        return nextToken();
-      case Is.CommandDelimiter(currentChar):
-        skipEndOfCommand();
-        return nextToken();
-      case currentChar === '"':
-        read();
-        return scanWord('"');
-      case currentChar === '{':
-        read();
-        return scanWord('}');
+      case this.wordIdx === 0 && this.currentChar === '#':
+        this.skipComment();
+        return this.nextToken();
+      case Is.CommandDelimiter(this.currentChar):
+        this.skipEndOfCommand();
+        return this.nextToken();
       default:
-        return scanWord();
+        return this.scanWord();
     }
   }
-
-  return { nextToken };
 }
 
-export class WordToken {
-  type: string = 'Word';
-  index: any;
-  value: any;
-  hasVariable: boolean = false;
+export interface WordToken {
+  value: string;
+  index: number;
+  hasVariable: boolean;
+  hasSubExpr: boolean;
+}
 
-  constructor(attrs: any) {
-    Object.assign(this, attrs);
-  }
+enum EndWordType {
+  CONTINUE,
+  END,
+  POPPED,
 }

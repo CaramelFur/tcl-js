@@ -10,87 +10,126 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Is = require("./is");
-    function Lexer(input) {
-        var pos = 0;
-        var currentChar = input.charAt(0);
-        var wordIdx = 0;
-        function read() {
-            var val = currentChar;
-            pos += 1;
-            currentChar = input.charAt(pos);
-            return val;
+    var LineLexer = (function () {
+        function LineLexer(input) {
+            this.pos = 0;
+            this.wordIdx = 0;
+            this.input = input;
+            this.currentChar = input.charAt(0);
         }
-        function skipWhitespace() {
-            while (Is.Whitespace(currentChar)) {
-                read();
+        LineLexer.prototype.read = function () {
+            var old = this.currentChar;
+            this.pos += 1;
+            this.currentChar = this.input.charAt(this.pos);
+            return old;
+        };
+        LineLexer.prototype.skipWhitespace = function () {
+            while (Is.Whitespace(this.currentChar)) {
+                this.read();
             }
-        }
-        function skipComment() {
-            while (pos < input.length && currentChar !== '\n') {
-                read();
+        };
+        LineLexer.prototype.skipComment = function () {
+            while (this.pos < this.input.length && this.currentChar !== '\n') {
+                this.read();
             }
-        }
-        function scanWord(delimiter) {
-            var value = '';
-            var hasVariable = false;
-            var hasSubExpr = false;
-            var index = wordIdx;
-            var testEndOfWord = delimiter
-                ? function (ch) { return ch === delimiter; }
-                : Is.WordSeparator;
-            while (pos < input.length && !testEndOfWord(currentChar)) {
-                hasVariable = delimiter !== '}' && (hasVariable || currentChar === '$');
-                hasSubExpr = delimiter !== '}' && (hasSubExpr || currentChar === '[');
-                value += read();
+        };
+        LineLexer.prototype.scanWord = function (delimiterIn) {
+            var delimiters = [];
+            if (delimiterIn)
+                delimiters.push(delimiterIn);
+            var out = {
+                value: '',
+                hasVariable: false,
+                hasSubExpr: false,
+                index: this.wordIdx,
+            };
+            function testDelimiters(test) {
+                switch (test) {
+                    case '{':
+                        delimiters.push('}');
+                        return delimiters.length;
+                    case '"':
+                        delimiters.push('"');
+                        return delimiters.length;
+                    case '[':
+                        delimiters.push(']');
+                        return delimiters.length;
+                }
+                return 0;
             }
-            if (delimiter) {
-                if (!testEndOfWord(currentChar)) {
+            function testEndOfWord(test) {
+                if (delimiters.length > 0) {
+                    var delimiter = delimiters[delimiters.length - 1];
+                    if (test === delimiter) {
+                        delimiters.pop();
+                        if (delimiters.length === 0)
+                            return EndWordType.END;
+                        return EndWordType.POPPED;
+                    }
+                    return EndWordType.CONTINUE;
+                }
+                return Is.WordSeparator(test) ? EndWordType.END : EndWordType.CONTINUE;
+            }
+            while (this.pos < this.input.length) {
+                var isEnd = testEndOfWord(this.currentChar);
+                if (isEnd === EndWordType.END) {
+                    this.read();
+                    break;
+                }
+                out.hasVariable =
+                    delimiters[0] !== '}' && (out.hasVariable || this.currentChar === '$');
+                out.hasSubExpr =
+                    delimiters[0] !== '}' && (out.hasSubExpr || this.currentChar === '[');
+                if (isEnd !== EndWordType.POPPED) {
+                    var newLength = testDelimiters(this.currentChar);
+                    if (newLength === 1) {
+                        this.read();
+                        continue;
+                    }
+                }
+                out.value += this.read();
+            }
+            if (delimiters.length > 0) {
+                if (!testEndOfWord(this.currentChar)) {
+                    console.log(delimiters);
                     throw new Error('Parse error: unexpected end of input');
                 }
-                read();
+                this.read();
             }
-            wordIdx += 1;
-            return new WordToken({ value: value, index: index, hasVariable: hasVariable, hasSubExpr: hasSubExpr });
-        }
-        function skipEndOfCommand() {
-            while (Is.CommandDelimiter(currentChar) || Is.Whitespace(currentChar)) {
-                read();
+            this.wordIdx += 1;
+            return out;
+        };
+        LineLexer.prototype.skipEndOfCommand = function () {
+            while (Is.CommandDelimiter(this.currentChar) ||
+                Is.Whitespace(this.currentChar)) {
+                this.read();
             }
-            wordIdx = 0;
-        }
-        function nextToken() {
-            skipWhitespace();
-            if (pos >= input.length) {
+            this.wordIdx = 0;
+        };
+        LineLexer.prototype.nextToken = function () {
+            this.skipWhitespace();
+            if (this.pos >= this.input.length) {
                 return null;
             }
             switch (true) {
-                case wordIdx === 0 && currentChar === '#':
-                    skipComment();
-                    return nextToken();
-                case Is.CommandDelimiter(currentChar):
-                    skipEndOfCommand();
-                    return nextToken();
-                case currentChar === '"':
-                    read();
-                    return scanWord('"');
-                case currentChar === '{':
-                    read();
-                    return scanWord('}');
+                case this.wordIdx === 0 && this.currentChar === '#':
+                    this.skipComment();
+                    return this.nextToken();
+                case Is.CommandDelimiter(this.currentChar):
+                    this.skipEndOfCommand();
+                    return this.nextToken();
                 default:
-                    return scanWord();
+                    return this.scanWord();
             }
-        }
-        return { nextToken: nextToken };
-    }
-    exports.Lexer = Lexer;
-    var WordToken = (function () {
-        function WordToken(attrs) {
-            this.type = 'Word';
-            this.hasVariable = false;
-            Object.assign(this, attrs);
-        }
-        return WordToken;
+        };
+        return LineLexer;
     }());
-    exports.WordToken = WordToken;
+    exports.LineLexer = LineLexer;
+    var EndWordType;
+    (function (EndWordType) {
+        EndWordType[EndWordType["CONTINUE"] = 0] = "CONTINUE";
+        EndWordType[EndWordType["END"] = 1] = "END";
+        EndWordType[EndWordType["POPPED"] = 2] = "POPPED";
+    })(EndWordType || (EndWordType = {}));
 });
 //# sourceMappingURL=lexer.js.map

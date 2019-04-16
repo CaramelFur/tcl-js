@@ -4,12 +4,11 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./value"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var value_1 = require("./value");
     var Scope = (function () {
         function Scope(parent) {
             this.parent = null;
@@ -20,7 +19,7 @@
             return this.parent;
         };
         Scope.prototype.define = function (name, value) {
-            this.members[name] = new value_1.Value(name, value);
+            this.members[name] = new Value(name, value);
             return this;
         };
         Scope.prototype.resolve = function (name) {
@@ -28,12 +27,20 @@
                 return this.members[name];
             }
             else if (this.parent !== null) {
-                return this.parent.resolve(name);
+                return this.parent.resolve(name).value;
             }
             throw new Error("Can't read \"" + name + "\": no such variable");
         };
         return Scope;
     }());
     exports.Scope = Scope;
+    var Value = (function () {
+        function Value(name, value) {
+            this.name = name;
+            this.value = value;
+        }
+        return Value;
+    }());
+    exports.Value = Value;
 });
 //# sourceMappingURL=scope.js.map

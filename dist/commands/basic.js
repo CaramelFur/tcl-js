@@ -13,11 +13,11 @@
     commands.set = function (interpreter, args) {
         var varName = args[0], value = args[1];
         if (args.length === 2) {
-            interpreter.currentScope.define(varName, value);
+            interpreter.scope.define(varName, value);
             return value;
         }
         else if (args.length === 1) {
-            var symbol = interpreter.currentScope.resolve(varName);
+            var symbol = interpreter.scope.resolve(varName);
             return symbol.value;
         }
         throw new Error('wrong # args: should be "set varName ?newValue?"');
