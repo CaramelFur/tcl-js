@@ -1,48 +1,66 @@
-interface ValuesObject {
-  [index: string]: Value;
-}
+import {
+  TclVariableHolder,
+  TclVariable,
+  TclObject,
+  TclArray,
+  TclSimple,
+} from './types';
 
 const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
 
 export class Scope {
   parent: Scope | null = null;
-  members: ValuesObject = {};
+  members: TclVariableHolder = {};
 
   constructor(parent?: Scope) {
-    parent = parent;
+    if (parent) this.parent = parent;
   }
 
   pop(): Scope | null {
     return this.parent;
   }
 
-  define(inputName: string, inputValue: any): Scope {
+  define(inputName: string, inputValue: string): Scope {
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
       throw new Error(`Can't read "${inputName}": invalid variable name`);
 
     let name = regex.groups.name;
 
-    let value: any;
+    let input = new TclSimple(inputValue, name);
+
+    let value: TclVariable | undefined;
 
     if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-      value = this.members[name].value;
+      value = this.members[name];
     } else if (this.parent !== null) {
-      value = this.parent.resolve(name).value;
+      value = this.parent.resolve(name);
     }
 
     if (regex.groups.object) {
-      if (!value) value = {};
-      value[regex.groups.object] = inputValue;
+      let obj: TclObject | undefined =
+        value instanceof TclObject ? value : undefined;
+
+      if (!obj) obj = new TclObject(undefined, name);
+
+      obj.set(regex.groups.object, input);
+
+      value = obj;
     } else if (regex.groups.array) {
-      if (!value) value = [];
+      let arr: TclArray | undefined =
+        value instanceof TclArray ? value : undefined;
+
+      if (!arr) arr = new TclArray(undefined, name);
+
       let arrayNum = parseInt(regex.groups.array, 10);
-      value[arrayNum] = inputValue;
+      arr.set(arrayNum, input);
+
+      value = arr;
     } else {
-      value = inputValue;
+      value = input;
     }
 
-    this.members[name] = new Value(name, value);
+    this.members[name] = value;
     return this;
   }
 
@@ -57,46 +75,36 @@ export class Scope {
     return returnValue;
   }
 
-  resolve(inputName: string): any {
+  resolve(inputName: string): TclVariable {
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
       throw new Error(`Can't read "${inputName}": invalid variable name`);
 
     let name = regex.groups.name;
 
-    let value: any;
+    let testValue: TclVariable | undefined;
 
     if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-      value = this.members[name].value;
+      testValue = this.members[name];
     } else if (this.parent !== null) {
-      value = this.parent.resolve(name).value;
+      testValue = this.parent.resolve(name);
     }
 
-    if (!value) throw new Error(`Can't read "${name}": no such variable`);
+    if (!testValue) throw new Error(`Can't read "${name}": no such variable`);
+
+    let value: TclVariable = testValue;
 
     if (regex.groups.object) {
-      if (typeof value !== 'object')
+      if (!(value instanceof TclObject))
         throw new Error(`Can't read "${name}": variable is no object`);
-      return value[regex.groups.object];
+      return value.getSubValue(regex.groups.object);
     } else if (regex.groups.array) {
-      if (!Array.isArray(value))
+      if (!(value instanceof TclArray))
         throw new Error(`Can't read "${name}": variable is no array`);
       let arrayNum = parseInt(regex.groups.array, 10);
-      return value[arrayNum];
+      return value.getSubValue(arrayNum);
     } else {
-      if (typeof value === 'object') return 'Object';
-      if (Array.isArray(value)) return 'Array';
       return value;
     }
-  }
-}
-
-export class Value {
-  name: string;
-  value: any;
-
-  constructor(name: string, value: any) {
-    this.name = name;
-    this.value = value;
   }
 }

@@ -4,22 +4,21 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./parser", "./scope"], factory);
+        define(["require", "exports", "./parser", "./scope", "./types"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var parser_1 = require("./parser");
     var scope_1 = require("./scope");
+    var types_1 = require("./types");
     var variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
             var parser = new parser_1.Parser(input);
             this.program = parser.get();
-            this.scope = new scope_1.Scope(scope);
+            this.scope = scope;
             this.tcl = tcl;
-            this.io = tcl.io;
-            this.commands = tcl.commands;
         }
         Interpreter.prototype.run = function () {
             for (var _i = 0, _a = this.program.commands; _i < _a.length; _i++) {
@@ -30,25 +29,32 @@
         };
         Interpreter.prototype.processCommand = function (command) {
             var _this = this;
-            for (var _i = 0, _a = command.args; _i < _a.length; _i++) {
-                var arg = _a[_i];
+            var args = command.args.map(function (arg) {
                 if (arg.hasVariable) {
+                    var match = arg.value.match(variableRegex);
+                    if (match && match.length === 1 && match[0] === arg.value) {
+                        var regex = variableRegex.exec(arg.value);
+                        if (!regex || !regex.groups || !regex.groups.fullname)
+                            throw new Error('Error parsing variable');
+                        return _this.scope.resolve(regex.groups.fullname);
+                    }
                     arg.value = arg.value.replace(variableRegex, function () {
                         var regex = [];
                         for (var _i = 0; _i < arguments.length; _i++) {
                             regex[_i] = arguments[_i];
                         }
                         var groups = regex[regex.length - 1];
-                        return "" + _this.scope.resolve(groups.fullname);
+                        return "" + _this.scope.resolve(groups.fullname).getValue();
                     });
                 }
                 if (arg.hasSubExpr) {
-                    var subInterpreter = new Interpreter(this.tcl, arg.value, this.scope);
+                    var subInterpreter = new Interpreter(_this.tcl, arg.value, new scope_1.Scope(_this.scope));
                     arg.value = subInterpreter.run();
                 }
-            }
-            var args = command.args.map(function (value) { return value.value; });
-            return this.commands.invoke(this, command.command, args);
+                return new types_1.TclSimple(arg.value);
+            });
+            var wordArgs = args.map(function (arg) { return arg.getValue(); });
+            return this.tcl.commands.invoke(this, command.command, wordArgs, args);
         };
         return Interpreter;
     }());

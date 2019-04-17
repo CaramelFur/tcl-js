@@ -1,5 +1,6 @@
 import { CommandHandler } from './';
 import { Interpreter } from '../interpreter';
+import { TclVariable } from '../types';
 
 let commands: { [index: string]: Function } = {};
 
@@ -11,7 +12,11 @@ let commands: { [index: string]: Function } = {};
  * @see https://wiki.tcl.tk/919
  */
 
-commands.puts = (interpreter: Interpreter, args: Array<string>) => {
+commands.puts = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+) => {
   let nonewline = false;
   let channelId = 'stdout';
   let string = '';
@@ -38,8 +43,8 @@ commands.puts = (interpreter: Interpreter, args: Array<string>) => {
   // can be forced with a flush command. I'm not going to worry about this
   // right now.
 
-  interpreter.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
-  
+  interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
+
   return string;
 };
 

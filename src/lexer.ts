@@ -77,9 +77,12 @@ export class Lexer {
       }
 
       out.hasVariable =
-        delimiters[0] !== '}' && (out.hasVariable || this.currentChar === '$');
+        delimiters.indexOf('}') < 0 &&
+        delimiters.indexOf(']') < 0 &&
+        (out.hasVariable || this.currentChar === '$');
       out.hasSubExpr =
-        delimiters[0] !== '}' && (out.hasSubExpr || this.currentChar === '[');
+        delimiters.indexOf('}') < 0 &&
+        (out.hasSubExpr || delimiters[0] === ']');
 
       if (isEnd !== EndWordType.POPPED) {
         let newLength = testDelimiters(this.currentChar);
@@ -94,7 +97,6 @@ export class Lexer {
 
     if (delimiters.length > 0) {
       if (!testEndOfWord(this.currentChar)) {
-        console.log(delimiters);
         throw new Error('Parse error: unexpected end of input');
       }
       this.read();

@@ -10,7 +10,7 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var commands = {};
-    commands.puts = function (interpreter, args) {
+    commands.puts = function (interpreter, args, varArgs) {
         var nonewline = false;
         var channelId = 'stdout';
         var string = '';
@@ -33,7 +33,7 @@
         else {
             throw new Error('wrong # args: should be "puts ?-nonewline? ?channelId? string"');
         }
-        interpreter.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
+        interpreter.tcl.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
         return string;
     };
     function Load(commandset) {

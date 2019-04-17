@@ -22,11 +22,11 @@
             this.commands[name] = fn;
             return this;
         };
-        CommandHandler.prototype.invoke = function (interpreter, cmd, args) {
+        CommandHandler.prototype.invoke = function (interpreter, cmd, wordArgs, args) {
             if (!Object.prototype.hasOwnProperty.call(this.commands, cmd)) {
                 throw new Error("invalid command name " + cmd);
             }
-            return this.commands[cmd](interpreter, args);
+            return this.commands[cmd](interpreter, wordArgs, args);
         };
         return CommandHandler;
     }());

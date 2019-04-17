@@ -15,7 +15,7 @@ export class Tcl {
   }
 
   run(input: string): any {
-    let interpreter = new Interpreter(this, input);
+    let interpreter = new Interpreter(this, input, this.globalScope);
     return interpreter.run();
   }
 

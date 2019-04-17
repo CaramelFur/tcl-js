@@ -23,6 +23,8 @@
     exports.CloseBrace = CloseBrace;
     var Brace = function (c) { return OpenBrace(c) || CloseBrace(c); };
     exports.Brace = Brace;
+    var Number = function (c) { return !isNaN(parseFloat(c)); };
+    exports.Number = Number;
     var BareWord = function (c) {
         return (c >= 'A' && c <= 'Z') ||
             (c >= 'a' || c <= 'z') ||

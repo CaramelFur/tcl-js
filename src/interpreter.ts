@@ -1,9 +1,8 @@
 import { Program, Parser, CommandToken } from './parser';
 import { Scope } from './scope';
 import { Tcl } from './tcl';
-import { IO } from './io';
-import { CommandHandler } from './commands';
 import { WordToken } from './lexer';
+import { TclSimple } from './types';
 
 const variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
 
@@ -12,17 +11,13 @@ export class Interpreter {
   scope: Scope;
   lastValue: any;
   tcl: Tcl;
-  io: IO;
-  commands: CommandHandler;
 
-  constructor(tcl: Tcl, input: string, scope?: Scope) {
+  constructor(tcl: Tcl, input: string, scope: Scope) {
     let parser = new Parser(input);
 
     this.program = parser.get();
-    this.scope = new Scope(scope);
+    this.scope = scope;
     this.tcl = tcl;
-    this.io = tcl.io;
-    this.commands = tcl.commands;
   }
 
   run(): any {
@@ -33,22 +28,36 @@ export class Interpreter {
   }
 
   private processCommand(command: CommandToken): any {
-    for (let arg of command.args) {
+    let args = command.args.map((arg: WordToken) => {
       if (arg.hasVariable) {
+        let match = arg.value.match(variableRegex);
+        if (match && match.length === 1 && match[0] === arg.value) {
+          let regex = variableRegex.exec(arg.value);
+          if (!regex || !regex.groups || !regex.groups.fullname)
+            throw new Error('Error parsing variable');
+          return this.scope.resolve(regex.groups.fullname);
+        }
+
         arg.value = arg.value.replace(variableRegex, (...regex) => {
           let groups: RegexVariable = regex[regex.length - 1];
-          return `${this.scope.resolve(groups.fullname)}`;
+          return `${this.scope.resolve(groups.fullname).getValue()}`;
         });
       }
 
       if (arg.hasSubExpr) {
-        let subInterpreter = new Interpreter(this.tcl, arg.value, this.scope);
+        let subInterpreter = new Interpreter(
+          this.tcl,
+          arg.value,
+          new Scope(this.scope),
+        );
         arg.value = subInterpreter.run();
       }
-    }
 
-    let args = command.args.map((value: WordToken) => value.value);
-    return this.commands.invoke(this, command.command, args);
+      return new TclSimple(arg.value);
+    });
+
+    let wordArgs = args.map((arg) => arg.getValue());
+    return this.tcl.commands.invoke(this, command.command, wordArgs, args);
   }
 }
 

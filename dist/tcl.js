@@ -23,7 +23,7 @@
             this.disabledCommands = disableCommands;
         }
         Tcl.prototype.run = function (input) {
-            var interpreter = new interpreter_1.Interpreter(this, input);
+            var interpreter = new interpreter_1.Interpreter(this, input, this.globalScope);
             return interpreter.run();
         };
         Tcl.prototype.runFile = function (location) {

@@ -4,17 +4,19 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "./types"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var types_1 = require("./types");
     var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Scope = (function () {
         function Scope(parent) {
             this.parent = null;
             this.members = {};
-            parent = parent;
+            if (parent)
+                this.parent = parent;
         }
         Scope.prototype.pop = function () {
             return this.parent;
@@ -24,28 +26,33 @@
             if (!regex || !regex.groups)
                 throw new Error("Can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
+            var input = new types_1.TclSimple(inputValue, name);
             var value;
             if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-                value = this.members[name].value;
+                value = this.members[name];
             }
             else if (this.parent !== null) {
-                value = this.parent.resolve(name).value;
+                value = this.parent.resolve(name);
             }
             if (regex.groups.object) {
-                if (!value)
-                    value = {};
-                value[regex.groups.object] = inputValue;
+                var obj = value instanceof types_1.TclObject ? value : undefined;
+                if (!obj)
+                    obj = new types_1.TclObject(undefined, name);
+                obj.set(regex.groups.object, input);
+                value = obj;
             }
             else if (regex.groups.array) {
-                if (!value)
-                    value = [];
+                var arr = value instanceof types_1.TclArray ? value : undefined;
+                if (!arr)
+                    arr = new types_1.TclArray(undefined, name);
                 var arrayNum = parseInt(regex.groups.array, 10);
-                value[arrayNum] = inputValue;
+                arr.set(arrayNum, input);
+                value = arr;
             }
             else {
-                value = inputValue;
+                value = input;
             }
-            this.members[name] = new Value(name, value);
+            this.members[name] = value;
             return this;
         };
         Scope.prototype.undefine = function (name, nocomplain) {
@@ -61,44 +68,33 @@
             if (!regex || !regex.groups)
                 throw new Error("Can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
-            var value;
+            var testValue;
             if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-                value = this.members[name].value;
+                testValue = this.members[name];
             }
             else if (this.parent !== null) {
-                value = this.parent.resolve(name).value;
+                testValue = this.parent.resolve(name);
             }
-            if (!value)
+            if (!testValue)
                 throw new Error("Can't read \"" + name + "\": no such variable");
+            var value = testValue;
             if (regex.groups.object) {
-                if (typeof value !== 'object')
+                if (!(value instanceof types_1.TclObject))
                     throw new Error("Can't read \"" + name + "\": variable is no object");
-                return value[regex.groups.object];
+                return value.getSubValue(regex.groups.object);
             }
             else if (regex.groups.array) {
-                if (!Array.isArray(value))
+                if (!(value instanceof types_1.TclArray))
                     throw new Error("Can't read \"" + name + "\": variable is no array");
                 var arrayNum = parseInt(regex.groups.array, 10);
-                return value[arrayNum];
+                return value.getSubValue(arrayNum);
             }
             else {
-                if (typeof value === 'object')
-                    return 'Object';
-                if (Array.isArray(value))
-                    return 'Array';
                 return value;
             }
         };
         return Scope;
     }());
     exports.Scope = Scope;
-    var Value = (function () {
-        function Value(name, value) {
-            this.name = name;
-            this.value = value;
-        }
-        return Value;
-    }());
-    exports.Value = Value;
 });
 //# sourceMappingURL=scope.js.map

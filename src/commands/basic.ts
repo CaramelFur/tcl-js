@@ -1,6 +1,7 @@
 import { CommandHandler } from './';
 import { Interpreter } from '../interpreter';
 import * as math from 'mathjs';
+import { TclVariable } from '../types';
 
 let commands: { [index: string]: Function } = {};
 
@@ -12,10 +13,12 @@ let commands: { [index: string]: Function } = {};
  * @see https://wiki.tcl-lang.org/page/set
  */
 
-commands.set = (interpreter: Interpreter, args: Array<string>): any => {
+commands.set = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+): any => {
   const [varName, value] = args;
-
-  // TODO: handle arrays
 
   if (args.length === 2) {
     interpreter.scope.define(varName, value);
@@ -35,7 +38,11 @@ commands.set = (interpreter: Interpreter, args: Array<string>): any => {
  * @see https://wiki.tcl-lang.org/page/unset
  */
 
-commands.unset = (interpreter: Interpreter, args: Array<string>): any => {
+commands.unset = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+): any => {
   let nocomplain = false;
   if (args[0] === '-nocomplain') {
     nocomplain = true;
@@ -63,17 +70,47 @@ commands.unset = (interpreter: Interpreter, args: Array<string>): any => {
  * @see https://wiki.tcl-lang.org/page/expr
  */
 
-commands.expr = (interpreter: Interpreter, args: Array<string>): any => {
+commands.expr = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+): any => {
   if (args.length === 0)
     throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
 
   let expression = args.join(' ');
-  
-  try{
+
+  try {
     return math.eval(expression);
-  }catch(e){
-    throw new Error('invalid expression')
+  } catch (e) {
+    throw new Error('invalid expression');
   }
+};
+
+/**
+ * info — provides information about the state of a Tcl interpreter
+ *
+ * :: option ?arg arg ...?
+ *
+ * @see https://wiki.tcl-lang.org/page/info
+ */
+
+commands.info = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+): any => {
+  if (args.length === 0)
+    throw new Error('wrong # args: should be "info option ?arg arg ...?"');
+
+  let type = args.shift();
+
+  switch (type) {
+    case 'commands':
+      return 'commands';
+  }
+
+  return '';
 };
 
 export function Load(commandset: CommandHandler) {

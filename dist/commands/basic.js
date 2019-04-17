@@ -11,7 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     var math = require("mathjs");
     var commands = {};
-    commands.set = function (interpreter, args) {
+    commands.set = function (interpreter, args, varArgs) {
         var varName = args[0], value = args[1];
         if (args.length === 2) {
             interpreter.scope.define(varName, value);
@@ -22,7 +22,7 @@
         }
         throw new Error('wrong # args: should be "set varName ?newValue?"');
     };
-    commands.unset = function (interpreter, args) {
+    commands.unset = function (interpreter, args, varArgs) {
         var nocomplain = false;
         if (args[0] === '-nocomplain') {
             nocomplain = true;
@@ -37,7 +37,7 @@
         }
         return returnValue;
     };
-    commands.expr = function (interpreter, args) {
+    commands.expr = function (interpreter, args, varArgs) {
         if (args.length === 0)
             throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
         var expression = args.join(' ');
@@ -47,6 +47,16 @@
         catch (e) {
             throw new Error('invalid expression');
         }
+    };
+    commands.info = function (interpreter, args, varArgs) {
+        if (args.length === 0)
+            throw new Error('wrong # args: should be "info option ?arg arg ...?"');
+        var type = args.shift();
+        switch (type) {
+            case 'commands':
+                return 'commands';
+        }
+        return '';
     };
     function Load(commandset) {
         for (var command in commands) {
