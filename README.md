@@ -1,6 +1,8 @@
 # tcl-js
 
-`A native javascript tcl interpreter`
+```text
+A native javascript tcl interpreter```
+
 [![tcl-js](https://img.shields.io/npm/v/tcl-js.svg?style=flat&color)](https://www.npmjs.com/package/tcl-js)
 
 ## Important
@@ -9,6 +11,10 @@ I can not guarantee that everything works as it should, and the api will probabl
 Therefore it is not recommended  use this package in production yet.
 
 But it would be highly appreciated if this package was heavily tested, cause it is impossible for me to test every scenario.
+
+## Documentation
+
+You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/documentation/index.html)
 
 ## Status
 
