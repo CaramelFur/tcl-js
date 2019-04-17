@@ -57,7 +57,7 @@ export class Interpreter {
     });
 
     let wordArgs = args.map((arg) => arg.getValue());
-    return this.tcl.commands.invoke(this, command.command, wordArgs, args);
+    return this.scope.resolveProc(command.command).callback(this, wordArgs, args);
   }
 }
 

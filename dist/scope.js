@@ -4,19 +4,27 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./types"], factory);
+        define(["require", "exports", "./types", "./commands"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var types_1 = require("./types");
+    var commands_1 = require("./commands");
     var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Scope = (function () {
         function Scope(parent) {
             this.parent = null;
             this.members = {};
+            this.procedures = {};
             if (parent)
                 this.parent = parent;
+            else {
+                for (var _i = 0, LoadFunctions_1 = commands_1.LoadFunctions; _i < LoadFunctions_1.length; _i++) {
+                    var loadFunc = LoadFunctions_1[_i];
+                    loadFunc(this);
+                }
+            }
         }
         Scope.prototype.pop = function () {
             return this.parent;
@@ -27,13 +35,7 @@
                 throw new Error("Can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
             var input = new types_1.TclSimple(inputValue, name);
-            var value;
-            if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-                value = this.members[name];
-            }
-            else if (this.parent !== null) {
-                value = this.parent.resolve(name);
-            }
+            var value = this._resolve(name);
             if (regex.groups.object) {
                 var obj = value instanceof types_1.TclObject ? value : undefined;
                 if (!obj)
@@ -62,6 +64,14 @@
             var returnValue = this.members[name];
             delete this.members[name];
             return returnValue;
+        };
+        Scope.prototype._resolve = function (name) {
+            if (Object.prototype.hasOwnProperty.call(this.members, name)) {
+                return this.members[name];
+            }
+            else if (this.parent !== null) {
+                return this.parent._resolve(name);
+            }
         };
         Scope.prototype.resolve = function (inputName) {
             var regex = variableRegex.exec(inputName);
@@ -92,6 +102,18 @@
             else {
                 return value;
             }
+        };
+        Scope.prototype.defineProc = function (name, callback) {
+            this.procedures[name] = new types_1.TclProc(name, callback);
+        };
+        Scope.prototype.resolveProc = function (name) {
+            if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
+                return this.procedures[name];
+            }
+            else if (this.parent !== null) {
+                return this.parent.resolveProc(name);
+            }
+            throw new Error("invalid command name " + name);
         };
         return Scope;
     }());

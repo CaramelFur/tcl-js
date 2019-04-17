@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "prestart": "npm run build",
-    "start": "node testing/test.js"
+    "start": "ts-node testing/test.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/node": "^11.13.4",
     "chai": "^4.2.0",
+    "ts-node": "^8.1.0",
     "typescript": "^3.4.3"
   },
   "dependencies": {

@@ -12,7 +12,7 @@
     var types_1 = require("../types");
     var commands = {};
     commands.list = function (interpreter, args, varArgs) {
-        args = args.map(function (arg) { return "{" + arg + "}"; });
+        args = args.map(function (arg) { return arg.indexOf(" ") > -1 ? "{" + arg + "}" : arg; });
         return args.join(' ');
     };
     commands.lindex = function (interpreter, args, varArgs) {
@@ -33,9 +33,9 @@
         return (_a = simple
             .getList()).getSubValue.apply(_a, numArr).getValue();
     };
-    function Load(commandset) {
+    function Load(scope) {
         for (var command in commands) {
-            commandset.define(command, commands[command]);
+            scope.defineProc(command, commands[command]);
         }
     }
     exports.Load = Load;

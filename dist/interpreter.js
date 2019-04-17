@@ -54,7 +54,7 @@
                 return new types_1.TclSimple(arg.value);
             });
             var wordArgs = args.map(function (arg) { return arg.getValue(); });
-            return this.tcl.commands.invoke(this, command.command, wordArgs, args);
+            return this.scope.resolveProc(command.command).callback(this, wordArgs, args);
         };
         return Interpreter;
     }());

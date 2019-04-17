@@ -4,16 +4,25 @@ import {
   TclObject,
   TclArray,
   TclSimple,
+  TclProc,
+  TclProcHolder,
 } from './types';
+import { LoadFunctions } from './commands';
 
 const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
 
 export class Scope {
   parent: Scope | null = null;
   members: TclVariableHolder = {};
+  procedures: TclProcHolder = {};
 
   constructor(parent?: Scope) {
     if (parent) this.parent = parent;
+    else {
+      for (let loadFunc of LoadFunctions) {
+        loadFunc(this);
+      }
+    }
   }
 
   pop(): Scope | null {
@@ -29,13 +38,7 @@ export class Scope {
 
     let input = new TclSimple(inputValue, name);
 
-    let value: TclVariable | undefined;
-
-    if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-      value = this.members[name];
-    } else if (this.parent !== null) {
-      value = this.parent.resolve(name);
-    }
+    let value: TclVariable | undefined = this._resolve(name);
 
     if (regex.groups.object) {
       let obj: TclObject | undefined =
@@ -75,6 +78,14 @@ export class Scope {
     return returnValue;
   }
 
+  _resolve(name: string): TclVariable | undefined {
+    if (Object.prototype.hasOwnProperty.call(this.members, name)) {
+      return this.members[name];
+    } else if (this.parent !== null) {
+      return this.parent._resolve(name);
+    }
+  }
+
   resolve(inputName: string): TclVariable {
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
@@ -106,5 +117,18 @@ export class Scope {
     } else {
       return value;
     }
+  }
+
+  defineProc(name: string, callback: Function) {
+    this.procedures[name] = new TclProc(name, callback);
+  }
+
+  resolveProc(name: string): TclProc {
+    if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
+      return this.procedures[name];
+    } else if (this.parent !== null) {
+      return this.parent.resolveProc(name);
+    }
+    throw new Error(`invalid command name ${name}`);
   }
 }

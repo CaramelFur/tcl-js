@@ -13,6 +13,13 @@ Currently working tcl commands:
 * unset
 * expr
 * puts
+* lindex
+* list
+* proc
+
+Partially working commands:
+
+* info
 
 Other working parts:
 

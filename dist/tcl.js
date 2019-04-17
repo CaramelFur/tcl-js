@@ -4,19 +4,17 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./commands", "./scope", "./io", "fs", "./interpreter"], factory);
+        define(["require", "exports", "./scope", "./io", "fs", "./interpreter"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var commands_1 = require("./commands");
     var scope_1 = require("./scope");
     var io_1 = require("./io");
     var fs = require("fs");
     var interpreter_1 = require("./interpreter");
     var Tcl = (function () {
         function Tcl(disableCommands) {
-            this.commands = new commands_1.CommandHandler();
             this.globalScope = new scope_1.Scope();
             this.io = new io_1.IO();
             this.disabledCommands = [];

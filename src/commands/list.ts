@@ -1,8 +1,6 @@
-import { CommandHandler } from './';
 import { Interpreter } from '../interpreter';
-import * as math from 'mathjs';
 import { TclVariable, TclSimple } from '../types';
-import { type } from 'os';
+import { Scope } from '../scope';
 
 let commands: { [index: string]: Function } = {};
 
@@ -19,7 +17,7 @@ commands.list = (
   args: Array<string>,
   varArgs: Array<TclVariable>,
 ): any => {
-  args = args.map((arg) => `{${arg}}`);
+  args = args.map((arg) => arg.indexOf(" ") > -1 ? `{${arg}}` : arg);
   return args.join(' ');
 };
 
@@ -61,8 +59,8 @@ commands.lindex = (
     .getValue();
 };
 
-export function Load(commandset: CommandHandler) {
+export function Load(scope: Scope) {
   for (let command in commands) {
-    commandset.define(command, commands[command]);
+    scope.defineProc(command, commands[command]);
   }
 }

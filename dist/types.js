@@ -240,5 +240,13 @@ var __extends = (this && this.__extends) || (function () {
         return TclArray;
     }(TclVariable));
     exports.TclArray = TclArray;
+    var TclProc = (function () {
+        function TclProc(name, callback) {
+            this.name = name;
+            this.callback = callback;
+        }
+        return TclProc;
+    }());
+    exports.TclProc = TclProc;
 });
 //# sourceMappingURL=types.js.map

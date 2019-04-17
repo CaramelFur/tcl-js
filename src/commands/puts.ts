@@ -1,6 +1,6 @@
-import { CommandHandler } from './';
 import { Interpreter } from '../interpreter';
 import { TclVariable } from '../types';
+import { Scope } from '../scope';
 
 let commands: { [index: string]: Function } = {};
 
@@ -48,8 +48,8 @@ commands.puts = (
   return string;
 };
 
-export function Load(commandset: CommandHandler) {
+export function Load(scope: Scope) {
   for (let command in commands) {
-    commandset.define(command, commands[command]);
+    scope.defineProc(command, commands[command]);
   }
 }

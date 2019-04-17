@@ -1,11 +1,9 @@
-import { CommandHandler } from './commands';
 import { Scope } from './scope';
 import { IO } from './io';
 import * as fs from 'fs';
 import { Interpreter } from './interpreter';
 
 export class Tcl {
-  commands = new CommandHandler();
   globalScope: Scope = new Scope();
   io: IO = new IO();
   disabledCommands: Array<string> = [];

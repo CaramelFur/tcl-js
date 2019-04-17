@@ -219,3 +219,17 @@ export class TclArray extends TclVariable {
     return this.value.length;
   }
 }
+
+export interface TclProcHolder {
+  [index: string]: TclProc;
+}
+
+export class TclProc {
+  name: string;
+  callback: Function;
+
+  constructor(name: string, callback: Function) {
+    this.name = name;
+    this.callback = callback;
+  }
+}

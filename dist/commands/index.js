@@ -4,32 +4,16 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./commands"], factory);
+        define(["require", "exports", "./puts", "./basic", "./list", "./proc"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var commands_1 = require("./commands");
-    var CommandHandler = (function () {
-        function CommandHandler() {
-            this.commands = {};
-            for (var _i = 0, LoadFunctions_1 = commands_1.LoadFunctions; _i < LoadFunctions_1.length; _i++) {
-                var loadFunc = LoadFunctions_1[_i];
-                loadFunc(this);
-            }
-        }
-        CommandHandler.prototype.define = function (name, fn) {
-            this.commands[name] = fn;
-            return this;
-        };
-        CommandHandler.prototype.invoke = function (interpreter, cmd, wordArgs, args) {
-            if (!Object.prototype.hasOwnProperty.call(this.commands, cmd)) {
-                throw new Error("invalid command name " + cmd);
-            }
-            return this.commands[cmd](interpreter, wordArgs, args);
-        };
-        return CommandHandler;
-    }());
-    exports.CommandHandler = CommandHandler;
+    var puts_1 = require("./puts");
+    var basic_1 = require("./basic");
+    var list_1 = require("./list");
+    var proc_1 = require("./proc");
+    var LoadFunctions = [puts_1.Load, basic_1.Load, list_1.Load, proc_1.Load];
+    exports.LoadFunctions = LoadFunctions;
 });
 //# sourceMappingURL=index.js.map

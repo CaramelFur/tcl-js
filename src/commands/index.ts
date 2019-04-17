@@ -1,25 +1,9 @@
-import {LoadFunctions} from './commands';
-import { Interpreter } from '../interpreter';
-import { TclVariable } from '../types';
+import { Load as puts } from './puts';
+import { Load as basic } from './basic';
+import { Load as list } from './list';
+import { Load as proc } from './proc';
+import { Scope } from '../scope';
 
-export class CommandHandler {
-  commands: { [index: string]: Function } = {};
+let LoadFunctions: Array<(scope: Scope) => void> = [puts, basic, list, proc];
 
-  constructor() {
-    for(let loadFunc of LoadFunctions){
-      loadFunc(this);
-    }
-  }
-
-  define(name: string, fn: Function): CommandHandler {
-    this.commands[name] = fn;
-    return this;
-  }
-
-  invoke(interpreter: Interpreter, cmd: string, wordArgs: Array<string>, args: Array<TclVariable>) {
-    if (!Object.prototype.hasOwnProperty.call(this.commands, cmd)) {
-      throw new Error(`invalid command name ${cmd}`);
-    }
-    return this.commands[cmd](interpreter, wordArgs, args);
-  }
-}
+export { LoadFunctions };
