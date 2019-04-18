@@ -14,7 +14,8 @@
     var tclerror_1 = require("./tclerror");
     var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Scope = (function () {
-        function Scope(parent) {
+        function Scope(parent, disableProcs) {
+            if (disableProcs === void 0) { disableProcs = []; }
             this.parent = null;
             this.members = {};
             this.procedures = {};
@@ -25,6 +26,10 @@
                     var loadFunc = LoadFunctions_1[_i];
                     loadFunc(this);
                 }
+                for (var _a = 0, disableProcs_1 = disableProcs; _a < disableProcs_1.length; _a++) {
+                    var disFunc = disableProcs_1[_a];
+                    this.disableProc(disFunc);
+                }
             }
         }
         Scope.prototype.pop = function () {
@@ -33,35 +38,54 @@
         Scope.prototype.define = function (inputName, inputValue) {
             var regex = variableRegex.exec(inputName);
             if (!regex || !regex.groups)
-                throw new tclerror_1.TclError("Can't read \"" + inputName + "\": invalid variable name");
+                throw new tclerror_1.TclError("can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
             var input = new types_1.TclSimple(inputValue, name);
-            var value = this._resolve(name);
+            var existingValue = this._resolve(name);
             if (regex.groups.object) {
-                var obj = value instanceof types_1.TclObject ? value : undefined;
-                if (!obj)
-                    obj = new types_1.TclObject(undefined, name);
+                if (existingValue) {
+                    if (!(existingValue instanceof types_1.TclObject))
+                        throw new tclerror_1.TclError("cant' set \"" + inputName + ": variable isn't object\"");
+                    existingValue.set(regex.groups.object, input);
+                    return this;
+                }
+                var obj = new types_1.TclObject(undefined, name);
                 obj.set(regex.groups.object, input);
-                value = obj;
+                existingValue = obj;
             }
             else if (regex.groups.array) {
-                var arr = value instanceof types_1.TclArray ? value : undefined;
-                if (!arr)
-                    arr = new types_1.TclArray(undefined, name);
                 var arrayNum = parseInt(regex.groups.array, 10);
+                if (existingValue) {
+                    if (!(existingValue instanceof types_1.TclArray))
+                        throw new tclerror_1.TclError("cant' set \"" + inputName + ": variable isn't array\"");
+                    existingValue.set(arrayNum, input);
+                    return this;
+                }
+                var arr = new types_1.TclArray(undefined, name);
                 arr.set(arrayNum, input);
-                value = arr;
+                existingValue = arr;
             }
             else {
-                value = input;
+                if (existingValue instanceof types_1.TclObject)
+                    throw new tclerror_1.TclError("cant' set \"" + inputName + "\": variable is object");
+                if (existingValue instanceof types_1.TclArray)
+                    throw new tclerror_1.TclError("cant' set \"" + inputName + "\": variable is array");
+                if (existingValue) {
+                    existingValue.setValue(inputValue);
+                    return this;
+                }
+                existingValue = input;
             }
-            this.members[name] = value;
+            this.members[name] = existingValue;
             return this;
         };
         Scope.prototype.undefine = function (name, nocomplain) {
-            if (!Object.prototype.hasOwnProperty.call(this.members, name) &&
-                !nocomplain)
-                throw new tclerror_1.TclError("Can't delete \"" + name + "\": no such variable");
+            if (!Object.prototype.hasOwnProperty.call(this.members, name)) {
+                if (this.parent)
+                    return this.parent.undefine(name, nocomplain);
+                else if (!nocomplain)
+                    throw new tclerror_1.TclError("can't unset \"" + name + "\": no such variable");
+            }
             var returnValue = this.members[name];
             delete this.members[name];
             return returnValue;
@@ -77,7 +101,7 @@
         Scope.prototype.resolve = function (inputName) {
             var regex = variableRegex.exec(inputName);
             if (!regex || !regex.groups)
-                throw new tclerror_1.TclError("Can't read \"" + inputName + "\": invalid variable name");
+                throw new tclerror_1.TclError("can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
             var testValue;
             if (Object.prototype.hasOwnProperty.call(this.members, name)) {
@@ -87,16 +111,16 @@
                 testValue = this.parent.resolve(name);
             }
             if (!testValue)
-                throw new tclerror_1.TclError("Can't read \"" + name + "\": no such variable");
+                throw new tclerror_1.TclError("can't read \"" + name + "\": no such variable");
             var value = testValue;
             if (regex.groups.object) {
                 if (!(value instanceof types_1.TclObject))
-                    throw new tclerror_1.TclError("Can't read \"" + name + "\": variable is no object");
+                    throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't object");
                 return value.getSubValue(regex.groups.object);
             }
             else if (regex.groups.array) {
                 if (!(value instanceof types_1.TclArray))
-                    throw new tclerror_1.TclError("Can't read \"" + name + "\": variable is no array");
+                    throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't array");
                 var arrayNum = parseInt(regex.groups.array, 10);
                 return value.getSubValue(arrayNum);
             }
@@ -112,7 +136,7 @@
                 delete this.procedures[name];
             }
             else {
-                throw new tclerror_1.TclError("Can't disable \"" + name + "\": no such function");
+                throw new tclerror_1.TclError("can't disable \"" + name + "\": no such function");
             }
         };
         Scope.prototype.resolveProc = function (name) {
@@ -122,7 +146,7 @@
             else if (this.parent !== null) {
                 return this.parent.resolveProc(name);
             }
-            throw new tclerror_1.TclError("invalid command name " + name);
+            throw new tclerror_1.TclError("invalid command name \"" + name + "\"");
         };
         return Scope;
     }());

@@ -29,7 +29,9 @@ var __extends = (this && this.__extends) || (function () {
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i] = arguments[_i];
             }
-            return _super.apply(this, args) || this;
+            var _this = _super.apply(this, args) || this;
+            _this.name = "TclError";
+            return _this;
         }
         return TclError;
     }(Error));

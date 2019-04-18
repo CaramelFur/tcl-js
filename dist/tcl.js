@@ -15,10 +15,10 @@
     var interpreter_1 = require("./interpreter");
     var Tcl = (function () {
         function Tcl(disableCommands) {
-            this.globalScope = new scope_1.Scope();
             this.io = new io_1.IO();
             this.disabledCommands = [];
             this.disabledCommands = disableCommands;
+            this.globalScope = new scope_1.Scope(undefined, disableCommands);
         }
         Tcl.prototype.run = function (input) {
             var interpreter = new interpreter_1.Interpreter(this, input, this.globalScope);

@@ -1,5 +1,6 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
+import { Interpreter } from './interpreter';
 
 export class TclVariable {
   protected value: any = '';
@@ -23,6 +24,17 @@ export class TclVariable {
    */
   getValue(): string {
     return this.value;
+  }
+
+  /**
+   * Set the value of any tcl type, this can be anything
+   *
+   * @param  {any} value
+   * @returns any
+   */
+  setValue(value: any): any {
+    this.value = value;
+    return value;
   }
 
   /**
@@ -303,15 +315,6 @@ export class TclSimple extends TclVariable {
   }
 
   /**
-   * This is the default getValue function to retrieve the internal string
-   *
-   * @returns string - The value
-   */
-  getValue(): string {
-    return this.value;
-  }
-
-  /**
    * A function to create a list from a TclSimple object
    *
    * @returns TclList - The created list
@@ -384,12 +387,12 @@ export class TclObject extends TclVariable {
   }
 
   /**
-   * Function to return the value in string form, because this is an object it will return '[Object]'
+   * You are not meant to directly get the value of an object, so throw an error
    *
    * @returns string
    */
   getValue(): string {
-    return '[Object]';
+    throw new TclError(`can't read "${this.getName()}": variable is object`);
   }
 
   /**
@@ -420,7 +423,7 @@ export class TclObject extends TclVariable {
 export class TclArray extends TclVariable {
   /**
    * Construct a new TclArray and set the value to an empty array if it is not set
-   * 
+   *
    * @param  {Array<TclVariable>} value?
    * @param  {string} name?
    */
@@ -431,7 +434,7 @@ export class TclArray extends TclVariable {
 
   /**
    * Set a value to a specified index in the array and return the value
-   * 
+   *
    * @param  {number} index - The index you want the value to be set at
    * @param  {TclVariable} value? - The value you want to set, leave empty to remove the index
    * @returns TclVariable - The value specified
@@ -453,7 +456,7 @@ export class TclArray extends TclVariable {
   }
   /**
    * Remove an index from the array
-   * 
+   *
    * @param  {number} index
    * @returns void
    */
@@ -463,17 +466,17 @@ export class TclArray extends TclVariable {
   }
 
   /**
-   * Function to return the value in string form, because this is an array it will return '[Array]'
+   * You are not meant to directly get the value of an array, so throw an error
    *
    * @returns string
    */
   getValue(): string {
-    return '[Array]';
+    throw new TclError(`can't read "${this.getName()}": variable is array`);
   }
 
   /**
    * Get the value at a specified index
-   * 
+   *
    * @param  {number} index - The index you want the value from
    * @returns TclVariable - The found value
    */
@@ -489,7 +492,7 @@ export class TclArray extends TclVariable {
 
   /**
    * Get the length of the array
-   * 
+   *
    * @returns number
    */
   getLength(): number {
@@ -507,17 +510,23 @@ export interface TclProcHolder {
   [index: string]: TclProc;
 }
 
+export type TclProcFunction = (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+) => any;
+
 export class TclProc {
   name: string;
-  callback: Function;
+  callback: TclProcFunction;
 
   /**
    * The constructor to assign the name and callback
    *
    * @param  {string} name
-   * @param  {Function} callback
+   * @param  {TclProcFunction} callback
    */
-  constructor(name: string, callback: Function) {
+  constructor(name: string, callback: TclProcFunction) {
     this.name = name;
     this.callback = callback;
   }

@@ -4,22 +4,23 @@ import * as fs from 'fs';
 import { Interpreter } from './interpreter';
 
 export class Tcl {
-  globalScope: Scope = new Scope();
+  globalScope: Scope;
   io: IO = new IO();
   disabledCommands: Array<string> = [];
-  
+
   /**
    * Initialize a full tcl interpreter, and disable any unwanted tcl commands
-   * 
+   *
    * @param  {Array<string>} disableCommands
    */
   constructor(disableCommands: Array<string>) {
     this.disabledCommands = disableCommands;
+    this.globalScope = new Scope(undefined, disableCommands);
   }
 
   /**
    * Run a string containing tcl code and return the last expression
-   * 
+   *
    * @param  {string} input
    * @returns any
    */
@@ -30,7 +31,7 @@ export class Tcl {
 
   /**
    * Run a file containing tcl code and return the last expression
-   * 
+   *
    * @param  {string} location
    * @returns any
    */

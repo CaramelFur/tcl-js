@@ -1,9 +1,9 @@
 import { Interpreter } from '../interpreter';
-import { TclVariable, TclSimple } from '../types';
+import { TclVariable, TclSimple, TclProcFunction } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 
-let commands: { [index: string]: Function } = {};
+let commands: { [index: string]: TclProcFunction } = {};
 
 /**
  * list - creates a list
@@ -60,6 +60,11 @@ commands.lindex = (
     .getValue();
 };
 
+/**
+ * Function to load the procs into the scope
+ * 
+ * @param  {Scope} scope
+ */
 export function Load(scope: Scope) {
   for (let command in commands) {
     scope.defineProc(command, commands[command]);

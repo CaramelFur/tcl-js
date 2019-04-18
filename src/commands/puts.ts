@@ -1,9 +1,9 @@
 import { Interpreter } from '../interpreter';
-import { TclVariable } from '../types';
+import { TclVariable, TclProcFunction } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 
-let commands: { [index: string]: Function } = {};
+let commands: { [index: string]: TclProcFunction } = {};
 
 /**
  * puts - Write to a channel.
@@ -49,6 +49,11 @@ commands.puts = (
   return string;
 };
 
+/**
+ * Function to load the procs into the scope
+ * 
+ * @param  {Scope} scope
+ */
 export function Load(scope: Scope) {
   for (let command in commands) {
     scope.defineProc(command, commands[command]);

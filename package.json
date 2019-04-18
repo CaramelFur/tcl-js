@@ -9,7 +9,7 @@
     "prestart": "npm run build",
     "start": "ts-node test/test.js",
     "startonly": "ts-node test/test.js",
-    "gendoc": "typedoc --name tcl-js --hideGenerator --out ./docs/ ./src/",
+    "gendoc": "typedoc --options ./typedoc.json ./src/",
     "prepublish": "npm run build & npm run gendoc"
   },
   "repository": {

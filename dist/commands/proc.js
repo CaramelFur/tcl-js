@@ -26,7 +26,7 @@
         var commandFunction = function (parsedInterpreter, parsedArgs, parsedVarArgs) {
             if (parsedVarArgs.length !== commandArgs.getLength())
                 throw new tclerror_1.TclError("wrong # args on function \"" + command + "\"");
-            var newScope = new scope_1.Scope(parsedInterpreter.scope);
+            var newScope = new scope_1.Scope(undefined, interpreter.tcl.disabledCommands);
             for (var i = 0; i < parsedVarArgs.length; i++) {
                 var argName = commandArgs.getSubValue(i).getValue();
                 var argValue = parsedVarArgs[i].getValue();

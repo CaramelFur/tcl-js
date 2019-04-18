@@ -35,6 +35,10 @@ var __extends = (this && this.__extends) || (function () {
         TclVariable.prototype.getValue = function () {
             return this.value;
         };
+        TclVariable.prototype.setValue = function (value) {
+            this.value = value;
+            return value;
+        };
         TclVariable.prototype.getSubValue = function (key) {
             return undefined;
         };
@@ -164,9 +168,6 @@ var __extends = (this && this.__extends) || (function () {
         function TclSimple(value, name) {
             return _super.call(this, value, name) || this;
         }
-        TclSimple.prototype.getValue = function () {
-            return this.value;
-        };
         TclSimple.prototype.getList = function () {
             var list = new TclList(this.value, this.getName());
             return list;
@@ -205,7 +206,7 @@ var __extends = (this && this.__extends) || (function () {
             this.set(name);
         };
         TclObject.prototype.getValue = function () {
-            return '[Object]';
+            throw new tclerror_1.TclError("can't read \"" + this.getName() + "\": variable is object");
         };
         TclObject.prototype.getSubValue = function (name) {
             if (name === '')
@@ -243,7 +244,7 @@ var __extends = (this && this.__extends) || (function () {
             this.set(index);
         };
         TclArray.prototype.getValue = function () {
-            return '[Array]';
+            throw new tclerror_1.TclError("can't read \"" + this.getName() + "\": variable is array");
         };
         TclArray.prototype.getSubValue = function (index) {
             if (index === undefined || index === null)

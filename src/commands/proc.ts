@@ -1,9 +1,9 @@
 import { Interpreter } from '../interpreter';
-import { TclVariable, TclSimple } from '../types';
+import { TclVariable, TclSimple, TclProcFunction } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 
-let commands: { [index: string]: Function } = {};
+let commands: { [index: string]: TclProcFunction } = {};
 
 /**
  * proc - creates a new command
@@ -38,7 +38,7 @@ commands.proc = (
     if (parsedVarArgs.length !== commandArgs.getLength())
       throw new TclError(`wrong # args on function "${command}"`);
 
-    let newScope = new Scope(parsedInterpreter.scope);
+    let newScope = new Scope(undefined, interpreter.tcl.disabledCommands);
 
     for (let i = 0; i < parsedVarArgs.length; i++) {
       let argName = commandArgs.getSubValue(i).getValue();
@@ -56,6 +56,11 @@ commands.proc = (
   return '';
 };
 
+/**
+ * Function to load the procs into the scope
+ * 
+ * @param  {Scope} scope
+ */
 export function Load(scope: Scope) {
   for (let command in commands) {
     scope.defineProc(command, commands[command]);

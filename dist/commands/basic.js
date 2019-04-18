@@ -31,12 +31,11 @@
         }
         if (args.length === 0)
             throw new tclerror_1.TclError('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
-        var returnValue = 0;
         for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
             var arg = args_1[_i];
-            returnValue = interpreter.scope.undefine(arg);
+            interpreter.scope.undefine(arg);
         }
-        return returnValue;
+        return '';
     };
     commands.expr = function (interpreter, args, varArgs) {
         if (args.length === 0)

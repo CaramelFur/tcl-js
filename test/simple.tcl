@@ -19,20 +19,27 @@ set test {wow this is   a string       with    spaces}
 
 puts [lindex $test 5]
 
+unset test
+
 set test(0) index1
 set test(1) index2
 
 puts "$test(1) $test(0)"
-puts "$test"
 
 # Comments work too
+
+unset test
 
 set test hi
 
 puts "$test"
 
+unset test
+
 set test(a) indexa
 set test(b) indexb
 
 puts "$test(b) $test(a)"
-puts "$test"
+
+unset test
+

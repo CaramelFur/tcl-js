@@ -1,7 +1,14 @@
 import { TclError } from './tclerror';
 
 export class IO {
-  write(channelId: string, string: string) {
+  /**
+   * Write to console
+   * 
+   * @param  {string} channelId - The stream to write to: stdout or stderr
+   * @param  {string} string - The string to write
+   * @returns void
+   */
+  write(channelId: string, string: string): void {
     switch (channelId) {
       case 'stdout':
         process.stdout.write(string);
