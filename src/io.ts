@@ -1,3 +1,5 @@
+import { TclError } from './tclerror';
+
 export class IO {
   write(channelId: string, string: string) {
     switch (channelId) {
@@ -8,7 +10,7 @@ export class IO {
         process.stderr.write(string);
         break;
       default:
-        throw new Error(`can not find channel named "${channelId}"`);
+        throw new TclError(`can not find channel named "${channelId}"`);
     }
   }
 }

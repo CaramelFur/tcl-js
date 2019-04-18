@@ -2,6 +2,7 @@ import { Interpreter } from '../interpreter';
 import * as math from 'mathjs';
 import { TclVariable } from '../types';
 import { Scope } from '../scope';
+import { TclError } from '../tclerror';
 
 let commands: { [index: string]: Function } = {};
 
@@ -27,7 +28,7 @@ commands.set = (
     return interpreter.scope.resolve(varName);
   }
 
-  throw new Error('wrong # args: should be "set varName ?newValue?"');
+  throw new TclError('wrong # args: should be "set varName ?newValue?"');
 };
 
 /**
@@ -50,7 +51,7 @@ commands.unset = (
   }
 
   if (args.length === 0)
-    throw new Error(
+    throw new TclError(
       'wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"',
     );
 
@@ -76,14 +77,14 @@ commands.expr = (
   varArgs: Array<TclVariable>,
 ): any => {
   if (args.length === 0)
-    throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
+    throw new TclError('wrong # args: should be "unset arg ?arg arg ...?"');
 
   let expression = args.join(' ');
 
   try {
     return math.eval(expression);
   } catch (e) {
-    throw new Error('invalid expression');
+    throw new TclError('invalid expression');
   }
 };
 
@@ -101,7 +102,7 @@ commands.info = (
   varArgs: Array<TclVariable>,
 ): any => {
   if (args.length === 0)
-    throw new Error('wrong # args: should be "info option ?arg arg ...?"');
+    throw new TclError('wrong # args: should be "info option ?arg arg ...?"');
 
   let type = args.shift();
 

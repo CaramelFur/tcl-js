@@ -8,6 +8,7 @@ import {
   TclProcHolder,
 } from './types';
 import { LoadFunctions } from './commands';
+import { TclError } from './tclerror';
 
 const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
 
@@ -32,7 +33,7 @@ export class Scope {
   define(inputName: string, inputValue: string): Scope {
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
-      throw new Error(`Can't read "${inputName}": invalid variable name`);
+      throw new TclError(`Can't read "${inputName}": invalid variable name`);
 
     let name = regex.groups.name;
 
@@ -72,7 +73,7 @@ export class Scope {
       !Object.prototype.hasOwnProperty.call(this.members, name) &&
       !nocomplain
     )
-      throw new Error(`Can't delete "${name}": no such variable`);
+      throw new TclError(`Can't delete "${name}": no such variable`);
     let returnValue = this.members[name];
     delete this.members[name];
     return returnValue;
@@ -89,7 +90,7 @@ export class Scope {
   resolve(inputName: string): TclVariable {
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
-      throw new Error(`Can't read "${inputName}": invalid variable name`);
+      throw new TclError(`Can't read "${inputName}": invalid variable name`);
 
     let name = regex.groups.name;
 
@@ -101,17 +102,17 @@ export class Scope {
       testValue = this.parent.resolve(name);
     }
 
-    if (!testValue) throw new Error(`Can't read "${name}": no such variable`);
+    if (!testValue) throw new TclError(`Can't read "${name}": no such variable`);
 
     let value: TclVariable = testValue;
 
     if (regex.groups.object) {
       if (!(value instanceof TclObject))
-        throw new Error(`Can't read "${name}": variable is no object`);
+        throw new TclError(`Can't read "${name}": variable is no object`);
       return value.getSubValue(regex.groups.object);
     } else if (regex.groups.array) {
       if (!(value instanceof TclArray))
-        throw new Error(`Can't read "${name}": variable is no array`);
+        throw new TclError(`Can't read "${name}": variable is no array`);
       let arrayNum = parseInt(regex.groups.array, 10);
       return value.getSubValue(arrayNum);
     } else {
@@ -123,12 +124,20 @@ export class Scope {
     this.procedures[name] = new TclProc(name, callback);
   }
 
+  disableProc(name: string) {
+    if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
+      delete this.procedures[name];
+    }else{
+      throw new TclError(`Can't disable "${name}": no such function`)
+    }
+  }
+
   resolveProc(name: string): TclProc {
     if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
       return this.procedures[name];
     } else if (this.parent !== null) {
       return this.parent.resolveProc(name);
     }
-    throw new Error(`invalid command name ${name}`);
+    throw new TclError(`invalid command name ${name}`);
   }
 }

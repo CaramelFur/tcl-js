@@ -17,12 +17,13 @@ var __extends = (this && this.__extends) || (function () {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./is"], factory);
+        define(["require", "exports", "./is", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Is = require("./is");
+    var tclerror_1 = require("./tclerror");
     var TclVariable = (function () {
         function TclVariable(value, name) {
             this.value = '';
@@ -69,6 +70,7 @@ var __extends = (this && this.__extends) || (function () {
                 return old;
             }
             function parseBrace(depth) {
+                if (depth === void 0) { depth = 0; }
                 var returnVar = '';
                 read();
                 while (depth > 0) {
@@ -79,7 +81,7 @@ var __extends = (this && this.__extends) || (function () {
                         depth--;
                 }
                 if (depth < 0)
-                    throw new Error('incorrect brackets in list');
+                    throw new tclerror_1.TclError('incorrect brackets in list');
                 read();
                 return returnVar;
             }
@@ -89,29 +91,35 @@ var __extends = (this && this.__extends) || (function () {
                 while (!Is.WordSeparator(char) && idx < input.length) {
                     if (char === '{') {
                         if (tempWord !== '')
-                            throw new Error('unexpected {');
+                            throw new tclerror_1.TclError('unexpected {');
                         this.value[i] = new TclSimple(parseBrace(1));
                     }
                     else {
                         if (this.value[i])
-                            throw new Error('unexpected text after }');
+                            throw new tclerror_1.TclError('unexpected text after }');
                         tempWord += read();
                     }
                 }
-                this.value[i] = this.value[i] || new TclSimple(tempWord);
-                i++;
+                if (this.value[i] || tempWord !== '') {
+                    this.value[i] = this.value[i] || new TclSimple(tempWord);
+                    i++;
+                }
                 read();
             }
         };
         TclList.prototype.set = function (index, value) {
-            if (!value)
-                delete this.value[index];
-            else
+            if (!value) {
+                if (!this.value[index])
+                    throw new tclerror_1.TclError('cannot delete list item, item does not exist');
+                this.value.splice(index, 1);
+            }
+            else {
                 this.value[index] = value;
+            }
             return value;
         };
         TclList.prototype.unset = function (index) {
-            return this.set(index);
+            this.set(index);
         };
         TclList.prototype.getValue = function () {
             return this.value.map(function (val) { return val.getValue(); }).join(' ');
@@ -134,7 +142,7 @@ var __extends = (this && this.__extends) || (function () {
             for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
                 var arg = args_1[_a];
                 if (!tempList)
-                    throw new Error('item is no list');
+                    throw new tclerror_1.TclError('item is no list');
                 out = tempList.getSubValue(arg);
                 if (out instanceof TclSimple)
                     tempList = out.getList();
@@ -142,7 +150,7 @@ var __extends = (this && this.__extends) || (function () {
                     tempList = undefined;
             }
             if (!out)
-                throw new Error('no such element in array');
+                throw new tclerror_1.TclError('no such element in array');
             return out;
         };
         TclList.prototype.getLength = function () {
@@ -165,7 +173,7 @@ var __extends = (this && this.__extends) || (function () {
         };
         TclSimple.prototype.getNumber = function (isInt) {
             if (isInt === void 0) { isInt = false; }
-            if (this.isNumber)
+            if (this.isNumber())
                 return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
             else
                 return undefined;
@@ -179,11 +187,14 @@ var __extends = (this && this.__extends) || (function () {
     var TclObject = (function (_super) {
         __extends(TclObject, _super);
         function TclObject(value, name) {
-            return _super.call(this, value, name) || this;
+            var _this = _super.call(this, value, name) || this;
+            if (!_this.value)
+                _this.value = {};
+            return _this;
         }
         TclObject.prototype.set = function (name, value) {
-            if (!name)
-                throw new Error('invalid object key');
+            if (name === '')
+                throw new tclerror_1.TclError('invalid object key');
             if (!value)
                 delete this.value[name];
             else
@@ -191,16 +202,16 @@ var __extends = (this && this.__extends) || (function () {
             return value;
         };
         TclObject.prototype.unset = function (name) {
-            return this.set(name);
+            this.set(name);
         };
         TclObject.prototype.getValue = function () {
             return '[Object]';
         };
         TclObject.prototype.getSubValue = function (name) {
-            if (!name)
-                return new TclSimple('[Object]', this.getName());
+            if (name === '')
+                return new TclSimple(this.getValue(), this.getName());
             if (!this.value[name])
-                throw new Error('no value found at given key');
+                throw new tclerror_1.TclError('no value found at given key');
             return this.value[name];
         };
         TclObject.prototype.getSize = function () {
@@ -212,26 +223,33 @@ var __extends = (this && this.__extends) || (function () {
     var TclArray = (function (_super) {
         __extends(TclArray, _super);
         function TclArray(value, name) {
-            return _super.call(this, value, name) || this;
+            var _this = _super.call(this, value, name) || this;
+            if (!_this.value)
+                _this.value = [];
+            return _this;
         }
         TclArray.prototype.set = function (index, value) {
-            if (!value)
-                delete this.value[index];
-            else
+            if (!value) {
+                if (!this.value[index])
+                    throw new tclerror_1.TclError('cannot delete array item, item does not exist');
+                this.value.splice(index, 1);
+            }
+            else {
                 this.value[index] = value;
+            }
             return value;
         };
         TclArray.prototype.unset = function (index) {
-            return this.set(index);
+            this.set(index);
         };
         TclArray.prototype.getValue = function () {
             return '[Array]';
         };
         TclArray.prototype.getSubValue = function (index) {
             if (index === undefined || index === null)
-                return new TclSimple('[Array]', this.getName());
+                return new TclSimple(this.getValue(), this.getName());
             if (!this.value[index])
-                throw new Error('no value found at given index');
+                throw new tclerror_1.TclError('no value found at given index');
             return this.value[index];
         };
         TclArray.prototype.getLength = function () {

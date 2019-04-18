@@ -1,6 +1,7 @@
 import { Interpreter } from '../interpreter';
 import { TclVariable, TclSimple } from '../types';
 import { Scope } from '../scope';
+import { TclError } from '../tclerror';
 
 let commands: { [index: string]: Function } = {};
 
@@ -18,12 +19,12 @@ commands.proc = (
   varArgs: Array<TclVariable>,
 ): any => {
   if (varArgs.length !== 3)
-    throw new Error('wrong # args: should be "proc name arguments body"');
+    throw new TclError('wrong # args: should be "proc name arguments body"');
 
   let commandArgsString = varArgs[1];
 
   if (!(commandArgsString instanceof TclSimple))
-    throw new Error('invalid arguments argument');
+    throw new TclError('invalid arguments argument');
 
   let command = args[0];
   let commandArgs = commandArgsString.getList();
@@ -35,7 +36,7 @@ commands.proc = (
     parsedVarArgs: Array<TclVariable>,
   ) => {
     if (parsedVarArgs.length !== commandArgs.getLength())
-      throw new Error(`wrong # args on function "${command}"`);
+      throw new TclError(`wrong # args on function "${command}"`);
 
     let newScope = new Scope(parsedInterpreter.scope);
 

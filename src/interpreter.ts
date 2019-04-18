@@ -3,6 +3,7 @@ import { Scope } from './scope';
 import { Tcl } from './tcl';
 import { WordToken } from './lexer';
 import { TclSimple } from './types';
+import { TclError } from './tclerror';
 
 const variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
 
@@ -34,7 +35,7 @@ export class Interpreter {
         if (match && match.length === 1 && match[0] === arg.value) {
           let regex = variableRegex.exec(arg.value);
           if (!regex || !regex.groups || !regex.groups.fullname)
-            throw new Error('Error parsing variable');
+            throw new TclError('Error parsing variable');
           return this.scope.resolve(regex.groups.fullname);
         }
 

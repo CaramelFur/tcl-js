@@ -4,11 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.puts = function (interpreter, args, varArgs) {
         var nonewline = false;
@@ -31,7 +32,7 @@
             string = args[2];
         }
         else {
-            throw new Error('wrong # args: should be "puts ?-nonewline? ?channelId? string"');
+            throw new tclerror_1.TclError('wrong # args: should be "puts ?-nonewline? ?channelId? string"');
         }
         interpreter.tcl.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
         return string;

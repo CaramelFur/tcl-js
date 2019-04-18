@@ -186,7 +186,7 @@
             char = input.charAt(pos);
         }
         if (level !== 0) {
-            throw new Error('unmatched closing }');
+            throw new TclError('unmatched closing }');
         }
         return {
             type: 'Text',

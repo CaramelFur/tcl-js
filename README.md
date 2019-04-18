@@ -13,7 +13,7 @@ But it would be highly appreciated if this package was heavily tested, cause it 
 
 ## Documentation
 
-You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/documentation/index.html)
+You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html)
 
 ## Status
 

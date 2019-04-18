@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./parser", "./scope", "./types"], factory);
+        define(["require", "exports", "./parser", "./scope", "./types", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -12,6 +12,7 @@
     var parser_1 = require("./parser");
     var scope_1 = require("./scope");
     var types_1 = require("./types");
+    var tclerror_1 = require("./tclerror");
     var variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
@@ -35,7 +36,7 @@
                     if (match && match.length === 1 && match[0] === arg.value) {
                         var regex = variableRegex.exec(arg.value);
                         if (!regex || !regex.groups || !regex.groups.fullname)
-                            throw new Error('Error parsing variable');
+                            throw new tclerror_1.TclError('Error parsing variable');
                         return _this.scope.resolve(regex.groups.fullname);
                     }
                     arg.value = arg.value.replace(variableRegex, function () {

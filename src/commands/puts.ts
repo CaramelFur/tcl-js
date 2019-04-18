@@ -1,6 +1,7 @@
 import { Interpreter } from '../interpreter';
 import { TclVariable } from '../types';
 import { Scope } from '../scope';
+import { TclError } from '../tclerror';
 
 let commands: { [index: string]: Function } = {};
 
@@ -34,7 +35,7 @@ commands.puts = (
     channelId = args[1];
     string = args[2];
   } else {
-    throw new Error(
+    throw new TclError(
       'wrong # args: should be "puts ?-nonewline? ?channelId? string"',
     );
   }

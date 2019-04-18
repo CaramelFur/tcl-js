@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../interpreter", "../types", "../scope"], factory);
+        define(["require", "exports", "../interpreter", "../types", "../scope", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -12,19 +12,20 @@
     var interpreter_1 = require("../interpreter");
     var types_1 = require("../types");
     var scope_1 = require("../scope");
+    var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.proc = function (interpreter, args, varArgs) {
         if (varArgs.length !== 3)
-            throw new Error('wrong # args: should be "proc name arguments body"');
+            throw new tclerror_1.TclError('wrong # args: should be "proc name arguments body"');
         var commandArgsString = varArgs[1];
         if (!(commandArgsString instanceof types_1.TclSimple))
-            throw new Error('invalid arguments argument');
+            throw new tclerror_1.TclError('invalid arguments argument');
         var command = args[0];
         var commandArgs = commandArgsString.getList();
         var tclCode = args[2];
         var commandFunction = function (parsedInterpreter, parsedArgs, parsedVarArgs) {
             if (parsedVarArgs.length !== commandArgs.getLength())
-                throw new Error("wrong # args on function \"" + command + "\"");
+                throw new tclerror_1.TclError("wrong # args on function \"" + command + "\"");
             var newScope = new scope_1.Scope(parsedInterpreter.scope);
             for (var i = 0; i < parsedVarArgs.length; i++) {
                 var argName = commandArgs.getSubValue(i).getValue();

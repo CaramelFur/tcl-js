@@ -4,11 +4,12 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var tclerror_1 = require("./tclerror");
     var IO = (function () {
         function IO() {
         }
@@ -21,7 +22,7 @@
                     process.stderr.write(string);
                     break;
                 default:
-                    throw new Error("can not find channel named \"" + channelId + "\"");
+                    throw new tclerror_1.TclError("can not find channel named \"" + channelId + "\"");
             }
         };
         return IO;

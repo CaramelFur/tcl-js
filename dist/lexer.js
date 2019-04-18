@@ -4,12 +4,13 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./is"], factory);
+        define(["require", "exports", "./is", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Is = require("./is");
+    var tclerror_1 = require("./tclerror");
     var Lexer = (function () {
         function Lexer(input) {
             this.pos = 0;
@@ -95,7 +96,7 @@
             }
             if (delimiters.length > 0) {
                 if (!testEndOfWord(this.currentChar)) {
-                    throw new Error('Parse error: unexpected end of input');
+                    throw new tclerror_1.TclError('Parse error: unexpected end of input');
                 }
                 this.read();
             }

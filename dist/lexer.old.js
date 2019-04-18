@@ -45,7 +45,7 @@
             }
             if (delimiter) {
                 if (!testEndOfWord(currentChar)) {
-                    throw new Error('Parse error: unexpected end of input');
+                    throw new TclError('Parse error: unexpected end of input');
                 }
                 read();
             }

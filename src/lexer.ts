@@ -1,4 +1,5 @@
 import * as Is from './is';
+import { TclError } from './tclerror';
 
 export class Lexer {
   pos = 0;
@@ -97,7 +98,7 @@ export class Lexer {
 
     if (delimiters.length > 0) {
       if (!testEndOfWord(this.currentChar)) {
-        throw new Error('Parse error: unexpected end of input');
+        throw new TclError('Parse error: unexpected end of input');
       }
       this.read();
     }

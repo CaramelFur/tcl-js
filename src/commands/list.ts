@@ -1,6 +1,7 @@
 import { Interpreter } from '../interpreter';
 import { TclVariable, TclSimple } from '../types';
 import { Scope } from '../scope';
+import { TclError } from '../tclerror';
 
 let commands: { [index: string]: Function } = {};
 
@@ -36,16 +37,16 @@ commands.lindex = (
   varArgs: Array<TclVariable>,
 ): any => {
   if (args.length === 0)
-    throw new Error('wrong # args: should be "list list ?index ...?"');
+    throw new TclError('wrong # args: should be "list list ?index ...?"');
 
   if (!(varArgs[0] instanceof TclSimple))
-    throw new Error('expected list, did not receive list');
+    throw new TclError('expected list, did not receive list');
 
   let numArr: number[] = [];
 
   for (let i = 1; i < varArgs.length; i++) {
     if (!(varArgs[i] instanceof TclSimple && varArgs[i].isNumber()))
-      throw new Error('expected number, did not recieve number');
+      throw new TclError('expected number, did not recieve number');
     numArr[i - 1] = <number>varArgs[i].getNumber();
   }
 

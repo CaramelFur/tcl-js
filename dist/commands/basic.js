@@ -4,12 +4,13 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "mathjs"], factory);
+        define(["require", "exports", "mathjs", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var math = require("mathjs");
+    var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.set = function (interpreter, args, varArgs) {
         var varName = args[0], value = args[1];
@@ -20,7 +21,7 @@
         else if (args.length === 1) {
             return interpreter.scope.resolve(varName);
         }
-        throw new Error('wrong # args: should be "set varName ?newValue?"');
+        throw new tclerror_1.TclError('wrong # args: should be "set varName ?newValue?"');
     };
     commands.unset = function (interpreter, args, varArgs) {
         var nocomplain = false;
@@ -29,7 +30,7 @@
             args.shift();
         }
         if (args.length === 0)
-            throw new Error('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
+            throw new tclerror_1.TclError('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
         var returnValue = 0;
         for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
             var arg = args_1[_i];
@@ -39,18 +40,18 @@
     };
     commands.expr = function (interpreter, args, varArgs) {
         if (args.length === 0)
-            throw new Error('wrong # args: should be "unset arg ?arg arg ...?"');
+            throw new tclerror_1.TclError('wrong # args: should be "unset arg ?arg arg ...?"');
         var expression = args.join(' ');
         try {
             return math.eval(expression);
         }
         catch (e) {
-            throw new Error('invalid expression');
+            throw new tclerror_1.TclError('invalid expression');
         }
     };
     commands.info = function (interpreter, args, varArgs) {
         if (args.length === 0)
-            throw new Error('wrong # args: should be "info option ?arg arg ...?"');
+            throw new tclerror_1.TclError('wrong # args: should be "info option ?arg arg ...?"');
         var type = args.shift();
         switch (type) {
             case 'commands':

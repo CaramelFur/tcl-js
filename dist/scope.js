@@ -4,13 +4,14 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./types", "./commands"], factory);
+        define(["require", "exports", "./types", "./commands", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var types_1 = require("./types");
     var commands_1 = require("./commands");
+    var tclerror_1 = require("./tclerror");
     var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Scope = (function () {
         function Scope(parent) {
@@ -32,7 +33,7 @@
         Scope.prototype.define = function (inputName, inputValue) {
             var regex = variableRegex.exec(inputName);
             if (!regex || !regex.groups)
-                throw new Error("Can't read \"" + inputName + "\": invalid variable name");
+                throw new tclerror_1.TclError("Can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
             var input = new types_1.TclSimple(inputValue, name);
             var value = this._resolve(name);
@@ -60,7 +61,7 @@
         Scope.prototype.undefine = function (name, nocomplain) {
             if (!Object.prototype.hasOwnProperty.call(this.members, name) &&
                 !nocomplain)
-                throw new Error("Can't delete \"" + name + "\": no such variable");
+                throw new tclerror_1.TclError("Can't delete \"" + name + "\": no such variable");
             var returnValue = this.members[name];
             delete this.members[name];
             return returnValue;
@@ -76,7 +77,7 @@
         Scope.prototype.resolve = function (inputName) {
             var regex = variableRegex.exec(inputName);
             if (!regex || !regex.groups)
-                throw new Error("Can't read \"" + inputName + "\": invalid variable name");
+                throw new tclerror_1.TclError("Can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
             var testValue;
             if (Object.prototype.hasOwnProperty.call(this.members, name)) {
@@ -86,16 +87,16 @@
                 testValue = this.parent.resolve(name);
             }
             if (!testValue)
-                throw new Error("Can't read \"" + name + "\": no such variable");
+                throw new tclerror_1.TclError("Can't read \"" + name + "\": no such variable");
             var value = testValue;
             if (regex.groups.object) {
                 if (!(value instanceof types_1.TclObject))
-                    throw new Error("Can't read \"" + name + "\": variable is no object");
+                    throw new tclerror_1.TclError("Can't read \"" + name + "\": variable is no object");
                 return value.getSubValue(regex.groups.object);
             }
             else if (regex.groups.array) {
                 if (!(value instanceof types_1.TclArray))
-                    throw new Error("Can't read \"" + name + "\": variable is no array");
+                    throw new tclerror_1.TclError("Can't read \"" + name + "\": variable is no array");
                 var arrayNum = parseInt(regex.groups.array, 10);
                 return value.getSubValue(arrayNum);
             }
@@ -106,6 +107,14 @@
         Scope.prototype.defineProc = function (name, callback) {
             this.procedures[name] = new types_1.TclProc(name, callback);
         };
+        Scope.prototype.disableProc = function (name) {
+            if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
+                delete this.procedures[name];
+            }
+            else {
+                throw new tclerror_1.TclError("Can't disable \"" + name + "\": no such function");
+            }
+        };
         Scope.prototype.resolveProc = function (name) {
             if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
                 return this.procedures[name];
@@ -113,7 +122,7 @@
             else if (this.parent !== null) {
                 return this.parent.resolveProc(name);
             }
-            throw new Error("invalid command name " + name);
+            throw new tclerror_1.TclError("invalid command name " + name);
         };
         return Scope;
     }());
