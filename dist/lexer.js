@@ -38,14 +38,14 @@
             var delimiters = [];
             if (delimiterIn)
                 delimiters.push(delimiterIn);
-            var ignoreLastDelimiter = false;
+            var hasDelimiters = delimiters.length > 0;
             var out = {
                 value: '',
                 hasVariable: false,
                 hasSubExpr: false,
                 index: this.wordIdx,
             };
-            function testDelimiters(test) {
+            function testOpenDelimiters(test) {
                 switch (test) {
                     case '{':
                         delimiters.push('}');
@@ -57,28 +57,44 @@
                         delimiters.push(']');
                         return delimiters.length;
                 }
-                return 0;
+                return -1;
+            }
+            function testCloseDelimiters(test) {
+                if (test === delimiters[delimiters.length - 1]) {
+                    delimiters.pop();
+                    return delimiters.length;
+                }
+                return -1;
             }
             function testEndOfWord(test) {
                 if (delimiters.length > 0) {
-                    var delimiter = delimiters[delimiters.length - 1];
-                    if (test === delimiter) {
-                        if (delimiters.length === 1)
-                            return EndWordType.END;
-                        delimiters.pop();
-                        return EndWordType.POPPED;
-                    }
-                    return EndWordType.CONTINUE;
+                    return false;
                 }
-                return Is.WordSeparator(test) ? EndWordType.END : EndWordType.CONTINUE;
+                return Is.WordSeparator(test);
             }
             while (this.pos < this.input.length) {
-                var isEnd = testEndOfWord(this.currentChar);
-                if (isEnd === EndWordType.END) {
-                    if (this.currentChar === delimiters.pop())
-                        this.read();
-                    break;
+                if (out.value === '' || hasDelimiters) {
+                    var closing = testCloseDelimiters(this.currentChar);
+                    if (closing !== -1) {
+                        if (closing === 0) {
+                            this.read();
+                            continue;
+                        }
+                    }
+                    else {
+                        var opening = testOpenDelimiters(this.currentChar);
+                        if (opening > 0)
+                            hasDelimiters = true;
+                        if (opening === 1) {
+                            this.read();
+                            continue;
+                        }
+                    }
                 }
+                if (testEndOfWord(this.currentChar))
+                    break;
+                if (hasDelimiters && delimiters.length === 0)
+                    throw new tclerror_1.TclError('extra characters after close-brace');
                 out.hasVariable =
                     delimiters.indexOf('}') < 0 &&
                         delimiters.indexOf(']') < 0 &&
@@ -86,22 +102,10 @@
                 out.hasSubExpr =
                     delimiters.indexOf('}') < 0 &&
                         (out.hasSubExpr || delimiters[0] === ']');
-                if (isEnd !== EndWordType.POPPED) {
-                    var newLength = testDelimiters(this.currentChar);
-                    if (out.value === '' && newLength === 1) {
-                        ignoreLastDelimiter = true;
-                        this.read();
-                        continue;
-                    }
-                }
                 out.value += this.read();
             }
-            if (delimiters.length > 0) {
-                if (testEndOfWord(this.currentChar) !== EndWordType.END) {
-                    throw new tclerror_1.TclError('parse error: unexpected end of input');
-                }
-                this.read();
-            }
+            if (delimiters.length > 0)
+                throw new tclerror_1.TclError('parse error: unexpected end of input');
             this.wordIdx += 1;
             return out;
         };

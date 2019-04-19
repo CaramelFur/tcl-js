@@ -35,7 +35,7 @@
             throw new tclerror_1.TclError('wrong # args: should be "puts ?-nonewline? ?channelId? string"');
         }
         interpreter.tcl.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
-        return string;
+        return '';
     };
     function Load(scope) {
         for (var command in commands) {

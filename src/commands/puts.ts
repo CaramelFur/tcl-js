@@ -46,7 +46,7 @@ commands.puts = (
 
   interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
 
-  return string;
+  return '';
 };
 
 /**

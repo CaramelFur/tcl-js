@@ -19,7 +19,6 @@
             this.lexer = new lexer_1.Lexer(input);
             var toProcess = this.lexer.nextToken();
             while (toProcess) {
-                console.log(toProcess);
                 if (toProcess.index === 0) {
                     this.program.commands.push({
                         command: toProcess.value,

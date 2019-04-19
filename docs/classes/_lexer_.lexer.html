@@ -1010,13 +1010,23 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L8">lexer.ts:8</a></li>
+								<li>Defined in lexer.ts:12</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create a new lexer with the given code</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>input: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Tcl code to be run over by the lexer</p>
+									</div>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_lexer_.lexer.html" class="tsd-signature-type">Lexer</a></h4>
@@ -1032,7 +1042,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">current<wbr>Char<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L7">lexer.ts:7</a></li>
+						<li>Defined in lexer.ts:11</li>
 					</ul>
 				</aside>
 			</section>
@@ -1042,7 +1052,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L8">lexer.ts:8</a></li>
+						<li>Defined in lexer.ts:12</li>
 					</ul>
 				</aside>
 			</section>
@@ -1052,7 +1062,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">pos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L5">lexer.ts:5</a></li>
+						<li>Defined in lexer.ts:7</li>
 					</ul>
 				</aside>
 			</section>
@@ -1062,7 +1072,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">word<wbr>Idx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L6">lexer.ts:6</a></li>
+						<li>Defined in lexer.ts:9</li>
 					</ul>
 				</aside>
 			</section>
@@ -1079,13 +1089,19 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L120">lexer.ts:120</a></li>
+								<li>Defined in lexer.ts:218</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Makes the lexer process the input until a new complete word is found</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a>
 							<span class="tsd-signature-symbol"> | </span>
 							<span class="tsd-signature-type">null</span>
 						</h4>
+						<p>WordToken - Returns null when the end of the input is hit</p>
 					</li>
 				</ul>
 			</section>
@@ -1099,10 +1115,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L15">lexer.ts:15</a></li>
+								<li>Defined in lexer.ts:30</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Progresses the currently processing char by one</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						<p>string - The previous character</p>
 					</li>
 				</ul>
 			</section>
@@ -1116,9 +1138,14 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L34">lexer.ts:34</a></li>
+								<li>Defined in lexer.ts:65</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Keep reading the input until a whole word has formed</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
@@ -1126,6 +1153,7 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></h4>
+						<p>WordToken - The found word</p>
 					</li>
 				</ul>
 			</section>
@@ -1139,10 +1167,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L28">lexer.ts:28</a></li>
+								<li>Defined in lexer.ts:53</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Keeps reading chars until an endline character</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						<p>void</p>
 					</li>
 				</ul>
 			</section>
@@ -1156,10 +1190,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L110">lexer.ts:110</a></li>
+								<li>Defined in lexer.ts:207</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Keeps reading chars until the next command is hit</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						<p>void</p>
 					</li>
 				</ul>
 			</section>
@@ -1173,10 +1213,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/lexer.ts#L22">lexer.ts:22</a></li>
+								<li>Defined in lexer.ts:42</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Keeps reading chars until the current char is not a whitespace character</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						<p>void</p>
 					</li>
 				</ul>
 			</section>

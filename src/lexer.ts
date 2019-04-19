@@ -1,5 +1,6 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
+import { read } from 'fs';
 
 export class Lexer {
   // Initialize current read position
@@ -57,7 +58,7 @@ export class Lexer {
 
   /**
    * Keep reading the input until a whole word has formed
-   * 
+   *
    * @param  {string} delimiterIn? - A delimiter to already add to the delimiter list
    * @returns WordToken - The found word
    */
@@ -69,8 +70,8 @@ export class Lexer {
     // E.g. `this is {some "code {to}" parse} with [the lexer]` => ['this', 'is', 'some "code {to}" parse', 'with', 'the lexer']
     // and not `this is {some "code {to}" parse} with [the lexer]` => ['this', 'is', 'some "code {to', '}" parse}', 'with', 'the lexer']
 
-    // Initialize variable to tell code to ignore most outer delimiters
-    let ignoreLastDelimiter = false;
+    // Initialize variable to tell the code to search for delimiters
+    let hasDelimiters = delimiters.length > 0;
 
     // Initialize an empty wordtoken to eventually return
     let out: WordToken = {
@@ -79,14 +80,14 @@ export class Lexer {
       hasSubExpr: false,
       index: this.wordIdx,
     };
- 
+
     /**
-     * Tests a char for being a delimiter adds the necessary end delimiters to the array
-     * 
-     * @param  {string} test - The char to test for delimiters
+     * Tests a char for being an opening delimiter adds the necessary end delimiters to the array
+     *
+     * @param  {string} test - The char to test for opening delimiters
      * @returns number - If a delimiter was added: the amount of delimiters, If not: 0
      */
-    function testDelimiters(test: string): number {
+    function testOpenDelimiters(test: string): number {
       switch (test) {
         case '{':
           delimiters.push('}');
@@ -98,57 +99,81 @@ export class Lexer {
           delimiters.push(']');
           return delimiters.length;
       }
-      return 0;
+      return -1;
+    }
+
+    /**
+     * Tests a char for being a closing delimiter removes the necessary end delimiters from the array
+     *
+     * @param  {string} test - The char to test for closing delimiters
+     * @returns number - If a delimiter was removed: the amount of delimiters, If not: 0
+     */
+    function testCloseDelimiters(test: string): number {
+      if (test === delimiters[delimiters.length - 1]) {
+        delimiters.pop();
+        return delimiters.length;
+      }
+      return -1;
     }
 
     /**
      * Check if the wordscanner has hit the end of the word
-     * Returns an EndWordType:
-     * - CONTINUE: Nothing happend, continue reading chars
-     * - END: There are no more chars to read, return the word you currently have
-     * - POPPED: We have exited a delimiter, 
-     * 
+     * Returns a boolean:
+     * - false: Nothing happend, continue reading chars
+     * - true: There are no more chars to read, return the word you currently have
+     *
      * @param  {string} test
-     * @returns EndWordType - State of word
+     * @returns boolean - Is end of word
      */
-    function testEndOfWord(test: string): EndWordType {
+    function testEndOfWord(test: string): boolean {
       // Check if we are currently in any delimiters
       if (delimiters.length > 0) {
-        // Create a new variable with the last delimiter
-        let delimiter = delimiters[delimiters.length - 1];
-
-        // Check if the current character is that delimiter
-        if (test === delimiter) {
-          // Check if there is only 1 delimiter left
-          // If so keep it in the array and return the END enum
-          if (delimiters.length === 1) return EndWordType.END;
-
-          // If there are more than 1 delimiters left, pop 1 delimiter and return the POPPED enum
-          delimiters.pop();
-          return EndWordType.POPPED;
-        }
-
-        // The current character is not the delimiter so just return CONTINUE
-        return EndWordType.CONTINUE;
+        // If so return false
+        return false;
       }
 
-      // If not just check if the current character is a wordseperator or not
-      return Is.WordSeparator(test) ? EndWordType.END : EndWordType.CONTINUE;
+      // If not check if the current character is a wordseperator or not
+      return Is.WordSeparator(test);
     }
 
     // Keep reading chars as long as there is input
     while (this.pos < this.input.length) {
-      // Set the current endwordstate to a variable
-      let isEnd = testEndOfWord(this.currentChar);
+      // Only check for delimiters if previous ones have been found, or we are at the first character of the word
+      if (out.value === '' || hasDelimiters) {
+        // Test for closing delimiters
+        let closing = testCloseDelimiters(this.currentChar);
 
-      // Check if the state is END
-      if (isEnd === EndWordType.END) {
-        // Check if the current char is equals to the last delimiter
-        // If so skip that char
-        if (this.currentChar === delimiters.pop()) this.read();
-        // Exit the reading loop
-        break;
+        // Check if closing delmiters are found
+        if (closing !== -1) {
+          // If it was the last delimiter, dont add it to the output
+          if (closing === 0) {
+            this.read();
+            continue;
+          }
+        } 
+        // If not
+        else {
+          // Test for opening delimiters
+          let opening = testOpenDelimiters(this.currentChar);
+
+          // If they are found tell the program to keep searching
+          if (opening > 0) hasDelimiters = true;
+
+          // If it was the first one, dont add it to the output
+          if (opening === 1) {
+            this.read();
+            continue;
+          }
+        }
       }
+
+      // Check if this is the end and leave if so
+      if (testEndOfWord(this.currentChar)) break;
+
+      // If the program has previously found delimiters but the delimiter array is empty, throw an error
+      // This will only happen if someone appends text after a brace: E.g. `puts {hello}world`
+      if (hasDelimiters && delimiters.length === 0)
+        throw new TclError('extra characters after close-brace');
 
       // Set the hasvariable boolean if
       out.hasVariable =
@@ -161,37 +186,13 @@ export class Lexer {
         delimiters.indexOf('}') < 0 && // We are not within {}
         (out.hasSubExpr || delimiters[0] === ']'); // The most outer delimiter is [] or it was already true
 
-      // Check if the last test did not pop a delimiter of the array
-      // This is done so we dont immediately add it back to array causing errors
-      if (isEnd !== EndWordType.POPPED) {
-        // Test for delimiters and add the new array length to a variable
-        let newLength = testDelimiters(this.currentChar);
-
-        // Check if the newlength is 1 and the outvalue still empty, meaning that the first char is a delimiter
-        if (out.value === '' && newLength === 1) {
-          // Tell code to ignore the last delimiter
-          ignoreLastDelimiter = true;
-
-          // Skip the character and go to the next loop
-          this.read();
-          continue;
-        }
-      }
-
       // Add the character to the outbuffer
       out.value += this.read();
     }
 
-    // If there are still delimiters left, that means that there are non matching brackets or there is one left to not parse
-    if (delimiters.length > 0) {
-      // If it is not the end of the word, throw an error
-      if (testEndOfWord(this.currentChar) !== EndWordType.END) {
-        throw new TclError('parse error: unexpected end of input');
-      }
-
-      // Otherwise just skip the last delimiter
-      this.read();
-    }
+    // If there are still delimiters left, that means that there are non matching brackets
+    if (delimiters.length > 0)
+      throw new TclError('parse error: unexpected end of input');
 
     // Change the word index
     this.wordIdx += 1;

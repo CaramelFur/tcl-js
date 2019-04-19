@@ -928,6 +928,9 @@ img { max-width: 100%; }
 					<a href="_interpreter_.interpreter.html#tcl" class="tsd-kind-icon">tcl</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_interpreter_.interpreter.html#processarg" class="tsd-kind-icon">process<wbr>Arg</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_interpreter_.interpreter.html#processcommand" class="tsd-kind-icon">process<wbr>Command</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -975,6 +978,7 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processarg" class="tsd-kind-icon">process<wbr>Arg</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processcommand" class="tsd-kind-icon">process<wbr>Command</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#run" class="tsd-kind-icon">run</a></li>
 						</ul>
@@ -994,19 +998,39 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L14">interpreter.ts:14</a></li>
+								<li>Defined in interpreter.ts:15</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Create a new interpreter with with a given code and scope</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>tcl: <a href="_tcl_.tcl.html" class="tsd-signature-type">Tcl</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The parent Tcl for keeping certain variables</p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>input: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The input code you want to interpret</p>
+									</div>
+								</div>
 							</li>
 							<li>
 								<h5>scope: <a href="_scope_.scope.html" class="tsd-signature-type">Scope</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>The scope you wat</p>
+									</div>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_interpreter_.interpreter.html" class="tsd-signature-type">Interpreter</a></h4>
@@ -1022,7 +1046,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">last<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L13">interpreter.ts:13</a></li>
+						<li>Defined in interpreter.ts:14</li>
 					</ul>
 				</aside>
 			</section>
@@ -1032,7 +1056,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">program<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_parser_.program.html" class="tsd-signature-type">Program</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L11">interpreter.ts:11</a></li>
+						<li>Defined in interpreter.ts:12</li>
 					</ul>
 				</aside>
 			</section>
@@ -1042,7 +1066,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">scope<span class="tsd-signature-symbol">:</span> <a href="_scope_.scope.html" class="tsd-signature-type">Scope</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L12">interpreter.ts:12</a></li>
+						<li>Defined in interpreter.ts:13</li>
 					</ul>
 				</aside>
 			</section>
@@ -1052,13 +1076,36 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">tcl<span class="tsd-signature-symbol">:</span> <a href="_tcl_.tcl.html" class="tsd-signature-type">Tcl</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L14">interpreter.ts:14</a></li>
+						<li>Defined in interpreter.ts:15</li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="processarg" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> process<wbr>Arg</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">process<wbr>Arg<span class="tsd-signature-symbol">(</span>arg<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in interpreter.ts:71</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>arg: <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 				<a name="processcommand" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> process<wbr>Command</h3>
@@ -1069,16 +1116,25 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L31">interpreter.ts:31</a></li>
+								<li>Defined in interpreter.ts:50</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Internal function to process commands</p>
+							</div>
+						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>command: <a href="../interfaces/_parser_.commandtoken.html" class="tsd-signature-type">CommandToken</a></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>Command to process</p>
+								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						<p>any - Processed result</p>
 					</li>
 				</ul>
 			</section>
@@ -1092,10 +1148,16 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/67647f3/src/interpreter.ts#L24">interpreter.ts:24</a></li>
+								<li>Defined in interpreter.ts:37</li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Actually runs the code</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						<p>any - Value of the last command ran</p>
 					</li>
 				</ul>
 			</section>

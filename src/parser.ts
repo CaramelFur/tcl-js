@@ -19,8 +19,6 @@ export class Parser {
     // Loop over every available token
     let toProcess = this.lexer.nextToken();
     while (toProcess) {
-      console.log(toProcess)
-
       // Check if the index of the current token is zero, this means that the token is a command and not an argument
       if (toProcess.index === 0) {
         // Push an empty commandtoken to the commands array
