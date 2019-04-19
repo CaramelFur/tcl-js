@@ -135,11 +135,5 @@
         return Lexer;
     }());
     exports.Lexer = Lexer;
-    var EndWordType;
-    (function (EndWordType) {
-        EndWordType[EndWordType["CONTINUE"] = 0] = "CONTINUE";
-        EndWordType[EndWordType["END"] = 1] = "END";
-        EndWordType[EndWordType["POPPED"] = 2] = "POPPED";
-    })(EndWordType || (EndWordType = {}));
 });
 //# sourceMappingURL=lexer.js.map

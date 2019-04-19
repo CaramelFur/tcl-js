@@ -1,1 +1,2 @@
-list one two {three four} {six}fsd seven [eight nine ten"eleven" twelve "thirteen fourteen"]
+set hi ass
+puts [eval set hi]

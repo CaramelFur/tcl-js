@@ -514,7 +514,7 @@ export type TclProcFunction = (
   interpreter: Interpreter,
   args: Array<string>,
   varArgs: Array<TclVariable>,
-) => any;
+) => string;
 
 export class TclProc {
   name: string;

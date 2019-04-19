@@ -13,7 +13,7 @@
     var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.list = function (interpreter, args, varArgs) {
-        args = args.map(function (arg) { return arg.indexOf(" ") > -1 ? "{" + arg + "}" : arg; });
+        args = args.map(function (arg) { return (arg.indexOf(' ') > -1 ? "{" + arg + "}" : arg); });
         return args.join(' ');
     };
     commands.lindex = function (interpreter, args, varArgs) {
@@ -29,8 +29,6 @@
             numArr[i - 1] = varArgs[i].getNumber();
         }
         var simple = varArgs[0];
-        if (args.length === 1)
-            return simple.getValue();
         return (_a = simple
             .getList()).getSubValue.apply(_a, numArr).getValue();
     };

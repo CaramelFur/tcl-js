@@ -4,12 +4,14 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "mathjs", "../tclerror"], factory);
+        define(["require", "exports", "../interpreter", "mathjs", "../scope", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    var interpreter_1 = require("../interpreter");
     var math = require("mathjs");
+    var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.set = function (interpreter, args, varArgs) {
@@ -19,7 +21,7 @@
             return value;
         }
         else if (args.length === 1) {
-            return interpreter.scope.resolve(varName);
+            return interpreter.scope.resolve(varName).getValue();
         }
         throw new tclerror_1.TclError('wrong # args: should be "set varName ?newValue?"');
     };
@@ -41,12 +43,19 @@
         if (args.length === 0)
             throw new tclerror_1.TclError('wrong # args: should be "unset arg ?arg arg ...?"');
         var expression = args.join(' ');
-        try {
-            return math.eval(expression);
-        }
-        catch (e) {
-            throw new tclerror_1.TclError('invalid expression');
-        }
+        var result = math.eval(expression);
+        if (typeof result !== 'number')
+            throw new tclerror_1.TclError('expression result is not a number');
+        if (result === Infinity)
+            throw new tclerror_1.TclError('expression result is Infinity');
+        return "" + result;
+    };
+    commands.eval = function (interpreter, args, varArgs) {
+        if (args.length === 0)
+            throw new tclerror_1.TclError('wrong # args: should be "eval arg ?arg arg ...?"');
+        var code = args.join(' ');
+        var newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
+        return newInterpreter.run();
     };
     commands.info = function (interpreter, args, varArgs) {
         if (args.length === 0)

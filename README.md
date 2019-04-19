@@ -21,13 +21,14 @@ You can find the documentation [here](https://htmlpreview.github.io/?https://git
 
 These commands should be fully working according to the tcl wiki
 
-- set
-- unset
+- eval
 - expr
-- puts
 - lindex
 - list
 - proc
+- puts
+- set
+- unset
 
 ### Partially working commands
 
@@ -46,3 +47,4 @@ These are not commands but just general parts of the interpreter, if they are li
 - list variables
 - custom functions
 - scoping
+- interpreter

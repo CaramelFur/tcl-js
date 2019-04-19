@@ -22,6 +22,7 @@ commands.puts = (
   let channelId = 'stdout';
   let string = '';
 
+  // Check for every corresponding argument mix and set variables accordingly
   if (args.length === 1) {
     string = args[0];
   } else if (args.length === 2 && args[0] === '-nonewline') {
@@ -44,6 +45,7 @@ commands.puts = (
   // can be forced with a flush command. I'm not going to worry about this
   // right now.
 
+  // Write the values to the console with the correct settings
   interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
 
   return '';
@@ -51,7 +53,7 @@ commands.puts = (
 
 /**
  * Function to load the procs into the scope
- * 
+ *
  * @param  {Scope} scope
  */
 export function Load(scope: Scope) {

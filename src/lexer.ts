@@ -1,6 +1,5 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
-import { read } from 'fs';
 
 export class Lexer {
   // Initialize current read position
@@ -254,11 +253,4 @@ export interface WordToken {
   index: number;
   hasVariable: boolean;
   hasSubExpr: boolean;
-}
-
-// An enum to differentiate between what happend
-enum EndWordType {
-  CONTINUE,
-  END,
-  POPPED,
 }
