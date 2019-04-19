@@ -3,6 +3,9 @@
 > A native javascript tcl interpreter
 
 [![tcl-js](https://img.shields.io/npm/v/tcl-js.svg?style=flat&color)](https://www.npmjs.com/package/tcl-js)
+[![Build Status](https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat)](https://travis-ci.org/rubikscraft/tcl-js)
+[![Coverage](https://img.shields.io/codecov/c/github/rubikscraft/tcl-js.svg&style=flat)](https://codecov.io/gh/rubikscraft/tcl-js)
+[![install size](https://packagephobia.now.sh/badge?p=tcl-js)](https://packagephobia.now.sh/result?p=tcl-js&style=flat)
 
 ## Important
 
