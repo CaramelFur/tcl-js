@@ -29,33 +29,43 @@
             return this.lastValue;
         };
         Interpreter.prototype.processCommand = function (command) {
-            var _this = this;
-            var args = command.args.map(function (arg) {
-                if (arg.hasVariable) {
-                    var match = arg.value.match(variableRegex);
-                    if (match && match.length === 1 && match[0] === arg.value) {
-                        var regex = variableRegex.exec(arg.value);
-                        if (!regex || !regex.groups || !regex.groups.fullname)
-                            throw new tclerror_1.TclError('Error parsing variable');
-                        return _this.scope.resolve(regex.groups.fullname);
-                    }
-                    arg.value = arg.value.replace(variableRegex, function () {
-                        var regex = [];
-                        for (var _i = 0; _i < arguments.length; _i++) {
-                            regex[_i] = arguments[_i];
-                        }
-                        var groups = regex[regex.length - 1];
-                        return "" + _this.scope.resolve(groups.fullname).getValue();
-                    });
+            var args = command.args.map(this.processArg.bind(this));
+            var wordArgs = args.map(function (arg) {
+                try {
+                    return arg.getValue();
                 }
-                if (arg.hasSubExpr) {
-                    var subInterpreter = new Interpreter(_this.tcl, arg.value, new scope_1.Scope(_this.scope));
-                    arg.value = subInterpreter.run();
+                catch (e) {
+                    return '';
                 }
-                return new types_1.TclSimple(arg.value);
             });
-            var wordArgs = args.map(function (arg) { return arg.getValue(); });
-            return this.scope.resolveProc(command.command).callback(this, wordArgs, args);
+            return this.scope
+                .resolveProc(command.command)
+                .callback(this, wordArgs, args);
+        };
+        Interpreter.prototype.processArg = function (arg) {
+            var _this = this;
+            if (arg.hasVariable) {
+                var match = arg.value.match(variableRegex);
+                if (match && match.length === 1 && match[0] === arg.value) {
+                    var regex = variableRegex.exec(arg.value);
+                    if (!regex || !regex.groups || !regex.groups.fullname)
+                        throw new tclerror_1.TclError('Error parsing variable');
+                    return this.scope.resolve(regex.groups.fullname);
+                }
+                arg.value = arg.value.replace(variableRegex, function () {
+                    var regex = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        regex[_i] = arguments[_i];
+                    }
+                    var groups = regex[regex.length - 1];
+                    return "" + _this.scope.resolve(groups.fullname).getValue();
+                });
+            }
+            if (arg.hasSubExpr) {
+                var subInterpreter = new Interpreter(this.tcl, arg.value, new scope_1.Scope(this.scope));
+                arg.value = subInterpreter.run();
+            }
+            return new types_1.TclSimple(arg.value);
         };
         return Interpreter;
     }());

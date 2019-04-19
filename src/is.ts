@@ -1,3 +1,5 @@
+// Just a general file to have some easy to use checks for characters
+
 const Whitespace = (c: string) => c === ' ' || c === '\t';
 const CommandDelimiter = (c: string) => c === ';' || c === '\n';
 const WordSeparator = (c: string) => Whitespace(c) || CommandDelimiter(c);

@@ -38,6 +38,7 @@
             var delimiters = [];
             if (delimiterIn)
                 delimiters.push(delimiterIn);
+            var ignoreLastDelimiter = false;
             var out = {
                 value: '',
                 hasVariable: false,
@@ -87,7 +88,8 @@
                         (out.hasSubExpr || delimiters[0] === ']');
                 if (isEnd !== EndWordType.POPPED) {
                     var newLength = testDelimiters(this.currentChar);
-                    if (newLength === 1) {
+                    if (out.value === '' && newLength === 1) {
+                        ignoreLastDelimiter = true;
                         this.read();
                         continue;
                     }
@@ -95,8 +97,8 @@
                 out.value += this.read();
             }
             if (delimiters.length > 0) {
-                if (!testEndOfWord(this.currentChar)) {
-                    throw new tclerror_1.TclError('Parse error: unexpected end of input');
+                if (testEndOfWord(this.currentChar) !== EndWordType.END) {
+                    throw new tclerror_1.TclError('parse error: unexpected end of input');
                 }
                 this.read();
             }
@@ -104,26 +106,26 @@
             return out;
         };
         Lexer.prototype.skipEndOfCommand = function () {
-            while (Is.CommandDelimiter(this.currentChar) ||
-                Is.Whitespace(this.currentChar)) {
+            while (Is.WordSeparator(this.currentChar)) {
                 this.read();
             }
-            this.wordIdx = 0;
         };
         Lexer.prototype.nextToken = function () {
             this.skipWhitespace();
             if (this.pos >= this.input.length) {
                 return null;
             }
-            switch (true) {
-                case this.wordIdx === 0 && this.currentChar === '#':
-                    this.skipComment();
-                    return this.nextToken();
-                case Is.CommandDelimiter(this.currentChar):
-                    this.skipEndOfCommand();
-                    return this.nextToken();
-                default:
-                    return this.scanWord();
+            if (this.wordIdx === 0 && this.currentChar === '#') {
+                this.skipComment();
+                return this.nextToken();
+            }
+            else if (Is.CommandDelimiter(this.currentChar)) {
+                this.skipEndOfCommand();
+                this.wordIdx = 0;
+                return this.nextToken();
+            }
+            else {
+                return this.scanWord();
             }
         };
         return Lexer;

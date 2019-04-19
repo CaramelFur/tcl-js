@@ -179,7 +179,6 @@ export class Scope {
     }
   }
 
-  
   /**
    * Resolves a variable and returns it
    * 
@@ -187,36 +186,44 @@ export class Scope {
    * @returns TclVariable - The variable requested
    */
   resolve(inputName: string): TclVariable {
-    // TODO: Add commenting to function
+    // Run inputName through regex to check if name is valid
     let regex = variableRegex.exec(inputName);
     if (!regex || !regex.groups)
       throw new TclError(`can't read "${inputName}": invalid variable name`);
 
+    // Extract the variable name from the regex
     let name = regex.groups.name;
 
-    let testValue: TclVariable | undefined;
+    // Try to resolve the name to a variable
+    let testValue: TclVariable | undefined = this._resolve(name);
 
-    if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-      testValue = this.members[name];
-    } else if (this.parent !== null) {
-      testValue = this.parent.resolve(name);
-    }
-
+    // Throw an error if the variable does not exist
     if (!testValue)
       throw new TclError(`can't read "${name}": no such variable`);
 
     let value: TclVariable = testValue;
 
+    // Check if an object key is present
     if (regex.groups.object) {
+      // Check if the value is indeed an object
       if (!(value instanceof TclObject))
         throw new TclError(`can't read "${name}": variable isn't object`);
+      
+      // Return the value at the given key
       return value.getSubValue(regex.groups.object);
-    } else if (regex.groups.array) {
+    }
+    // Check if an array index is present
+    else if (regex.groups.array) {
+      // Check if the value is indeed an array
       if (!(value instanceof TclArray))
         throw new TclError(`can't read "${name}": variable isn't array`);
+      
+      // Return the value at the given index
       let arrayNum = parseInt(regex.groups.array, 10);
       return value.getSubValue(arrayNum);
-    } else {
+    } 
+    // If none are present, just return the value
+    else {
       return value;
     }
   }

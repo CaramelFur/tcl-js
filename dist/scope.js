@@ -103,13 +103,7 @@
             if (!regex || !regex.groups)
                 throw new tclerror_1.TclError("can't read \"" + inputName + "\": invalid variable name");
             var name = regex.groups.name;
-            var testValue;
-            if (Object.prototype.hasOwnProperty.call(this.members, name)) {
-                testValue = this.members[name];
-            }
-            else if (this.parent !== null) {
-                testValue = this.parent.resolve(name);
-            }
+            var testValue = this._resolve(name);
             if (!testValue)
                 throw new tclerror_1.TclError("can't read \"" + name + "\": no such variable");
             var value = testValue;
