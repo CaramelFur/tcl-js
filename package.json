@@ -4,17 +4,15 @@
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
-    "pretest": "npm run build",
+    "pretest": "npm run tsbuild",
     "run": "ts-node test/test.js",
     "test": "npm run run",
-
     "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
-    
     "start": "echo Error: There is nothing to start & exit 1",
-    
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "codecov": "codecov"
   },
   "repository": {
     "type": "git",
@@ -36,12 +34,13 @@
   },
   "homepage": "https://github.com/rubikscraft/tcl-js#readme",
   "devDependencies": {
+    "@types/mathjs": "^5.0.1",
     "@types/node": "^11.13.4",
     "chai": "^4.2.0",
+    "codecov": "^3.3.0",
     "ts-node": "^8.1.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.4.3",
-    "@types/mathjs": "^5.0.1"
+    "typescript": "^3.4.3"
   },
   "dependencies": {
     "mathjs": "^5.9.0"
