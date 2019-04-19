@@ -4,13 +4,17 @@
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "ts-node test/test.js",
-    "startonly": "ts-node test/test.js",
+    "pretest": "npm run build",
+    "run": "ts-node test/test.js",
+    "test": "npm run run",
+
+    "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
-    "prepublish": "npm run build & npm run gendoc"
+    "build": "npm run tsbuild & npm run gendoc",
+    
+    "start": "echo Error: There is nothing to start & exit 1",
+    
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
