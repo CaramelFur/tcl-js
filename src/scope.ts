@@ -27,7 +27,7 @@ export class Scope {
    * @param  {Scope} parent? - Parent scope, it will extract variables from here if it doesnt have then itself
    * @param  {Array<string>=[]} disableProcs - A list of procs you want disabled
    */
-  constructor(parent?: Scope, disableProcs: Array<string> = []) {
+  public constructor(parent?: Scope, disableProcs: Array<string> = []) {
     // Set the scope if present
     if (parent) this.parent = parent;
     else {
@@ -48,7 +48,7 @@ export class Scope {
    *
    * @returns Scope
    */
-  pop(): Scope | null {
+  public pop(): Scope | null {
     return this.parent;
   }
 
@@ -59,7 +59,7 @@ export class Scope {
    * @param  {string} inputValue - The raw string value you want to put in the variable
    * @returns Scope - The current scope
    */
-  define(inputName: string, inputValue: string): Scope {
+  public define(inputName: string, inputValue: string): Scope {
     // Run the variableRegex over the inputname
     let regex = variableRegex.exec(inputName);
 
@@ -149,7 +149,7 @@ export class Scope {
    * @param  {boolean} nocomplain? - If true, will throw error if variable does not exist
    * @returns any - The value of the deleted variable
    */
-  undefine(name: string, nocomplain?: boolean): any {
+  public undefine(name: string, nocomplain?: boolean): any {
     // Check if variable exists
     if (!Object.prototype.hasOwnProperty.call(this.members, name)){
       // If there is a parent, run their undefine function
@@ -234,7 +234,7 @@ export class Scope {
    * @param  {string} name - The name of the procedure
    * @param  {TclProcFunction} callback - The js function that will be called to process the procedure
    */
-  defineProc(name: string, callback: TclProcFunction) {
+  public defineProc(name: string, callback: TclProcFunction) {
     this.procedures[name] = new TclProc(name, callback);
   }
 
@@ -243,7 +243,7 @@ export class Scope {
    *
    * @param  {string} name - The name of the procedure
    */
-  disableProc(name: string) {
+  public disableProc(name: string) {
     // Remove the procedure if it exists, if not throw an error
     if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
       delete this.procedures[name];
@@ -258,7 +258,7 @@ export class Scope {
    * @param  {string} name - The name of the procedure you want to get
    * @returns TclProc - An object containing the callback with its name
    */
-  resolveProc(name: string): TclProc {
+  public resolveProc(name: string): TclProc {
     // Check if this scope has the function and return if so
     if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
       return this.procedures[name];

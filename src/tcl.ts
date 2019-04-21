@@ -13,7 +13,7 @@ export class Tcl {
    *
    * @param  {Array<string>} disableCommands
    */
-  constructor(disableCommands: Array<string>) {
+  public constructor(disableCommands: Array<string>) {
     this.disabledCommands = disableCommands;
     this.globalScope = new Scope(undefined, disableCommands);
   }
@@ -22,9 +22,9 @@ export class Tcl {
    * Run a string containing tcl code and return the last expression
    *
    * @param  {string} input
-   * @returns any
+   * @returns Promise - Returns last string
    */
-  run(input: string): any {
+  public async run(input: string): Promise<string> {
     let interpreter = new Interpreter(this, input, this.globalScope);
     return interpreter.run();
   }
@@ -33,9 +33,9 @@ export class Tcl {
    * Run a file containing tcl code and return the last expression
    *
    * @param  {string} location
-   * @returns any
+   * @returns Promise - Returns last string
    */
-  runFile(location: string): any {
+  public async runFile(location: string): Promise<string> {
     let buffer: string = fs.readFileSync(location, { encoding: 'utf-8' });
     return this.run(buffer);
   }

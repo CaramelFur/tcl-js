@@ -15,7 +15,7 @@ export class Lexer {
    *
    * @param  {string} input - Tcl code to be run over by the lexer
    */
-  constructor(input: string) {
+  public constructor(input: string) {
     this.input = input;
     // Set the currently processing char
     this.currentChar = input.charAt(0);
@@ -214,7 +214,7 @@ export class Lexer {
    *
    * @returns WordToken - Returns null when the end of the input is hit
    */
-  nextToken(): WordToken | null {
+  public nextToken(): WordToken | null {
     // Get rid of all whitespace
     this.skipWhitespace();
 

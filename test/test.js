@@ -2,4 +2,4 @@ const { Tcl } = require('../');
 
 let tcl = new Tcl();
 
-let result = tcl.runFile('./test/simple.tcl');
+tcl.runFile('./test/simple.tcl').then(console.log).catch(console.error);

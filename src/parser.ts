@@ -12,7 +12,7 @@ export class Parser {
    * 
    * @param  {string} input - Tcl code
    */
-  constructor(input: string) {
+  public constructor(input: string) {
     // Initialize a new lexer with the given code
     this.lexer = new Lexer(input);
 
@@ -48,7 +48,7 @@ export class Parser {
    * 
    * @returns Program - Processed program
    */
-  get(): Program {
+  public get(): Program {
     return this.program;
   }
 }

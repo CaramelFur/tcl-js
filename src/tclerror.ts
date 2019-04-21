@@ -4,7 +4,7 @@ export class TclError extends Error {
    * 
    * @param  {any} ...args
    */
-  constructor(...args: any) {
+  public constructor(...args: any) {
     super(...args);
     this.name = "TclError";
   }

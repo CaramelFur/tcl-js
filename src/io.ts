@@ -8,7 +8,7 @@ export class IO {
    * @param  {string} string - The string to write
    * @returns void
    */
-  write(channelId: string, string: string): void {
+  public write(channelId: string, string: string): void {
     switch (channelId) {
       case 'stdout':
         process.stdout.write(string);

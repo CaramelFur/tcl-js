@@ -43,3 +43,4 @@ puts "$test(b) $test(a)"
 
 unset test
 
+expr 69 * 69

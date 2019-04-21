@@ -11,7 +11,7 @@ const variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|
 export class Interpreter {
   program: Program;
   scope: Scope;
-  lastValue: any;
+  lastValue: string = '';
   tcl: Tcl;
 
   /**
@@ -21,7 +21,7 @@ export class Interpreter {
    * @param  {string} input - The input code you want to interpret
    * @param  {Scope} scope - The scope you wat
    */
-  constructor(tcl: Tcl, input: string, scope: Scope) {
+  public constructor(tcl: Tcl, input: string, scope: Scope) {
     let parser = new Parser(input);
 
     this.program = parser.get();
@@ -32,11 +32,11 @@ export class Interpreter {
   /**
    * Actually runs the code
    *
-   * @returns any - Value of the last command ran
+   * @returns Promise - Value of the last command ran
    */
-  run(): any {
+  public async run(): Promise<string> {
     for (let command of this.program.commands) {
-      this.lastValue = this.processCommand(command);
+      this.lastValue = await this.processCommand(command);
     }
     return this.lastValue;
   }
@@ -45,22 +45,26 @@ export class Interpreter {
    * Internal function to process commands
    *
    * @param  {CommandToken} command - Command to process
-   * @returns any - Processed result
+   * @returns Promise - Processed result
    */
-  private processCommand(command: CommandToken): any {
+  private async processCommand(command: CommandToken): Promise<string> {
     // Map the args from wordtokens to tclvariables
-    // Also bind this to the process function, because the map function is being ran from somewhere else
-    let args = command.args.map(this.processArg.bind(this));
+    let args: TclVariable[] = [];
+    for (let i = 0; i < command.args.length; i++) {
+      args[i] = await this.processArg(command.args[i]);
+    }
 
     // Create an array with the values of the previous variables
-    let wordArgs = args.map((arg: TclVariable): string => {
-      // Use try catch incase we try to convert an object or array
-      try {
-        return arg.getValue();
-      } catch (e) {
-        return '';
-      }
-    });
+    let wordArgs = args.map(
+      (arg: TclVariable): string => {
+        // Use try catch incase we try to convert an object or array
+        try {
+          return arg.getValue();
+        } catch (e) {
+          return '';
+        }
+      },
+    );
 
     // Return the result of the associated function being called
     return this.scope
@@ -68,7 +72,13 @@ export class Interpreter {
       .callback(this, wordArgs, args);
   }
 
-  private processArg(arg: WordToken): TclVariable {
+  /**
+   * Processes arguments
+   *
+   * @param  {WordToken} arg
+   * @returns Promise
+   */
+  private async processArg(arg: WordToken): Promise<TclVariable> {
     // Check if lexer has already determined there might be a variable
     if (arg.hasVariable) {
       // If so run the regex over it
@@ -89,12 +99,15 @@ export class Interpreter {
       // Code goes here if only part of the string matches the regex
 
       // Replace the regex with a function
-      arg.value = arg.value.replace(variableRegex, (...regex: Array<any>): string => {
-        // Parse the regex groups
-        let groups: RegexVariable = regex[regex.length - 1];
-        // Return the resolved value to replace
-        return `${this.scope.resolve(groups.fullname).getValue()}`;
-      });
+      arg.value = arg.value.replace(
+        variableRegex,
+        (...regex: Array<any>): string => {
+          // Parse the regex groups
+          let groups: RegexVariable = regex[regex.length - 1];
+          // Return the resolved value to replace
+          return `${this.scope.resolve(groups.fullname).getValue()}`;
+        },
+      );
     }
 
     // Check if the lexer has determined this argument is a subexpression
@@ -107,7 +120,7 @@ export class Interpreter {
       );
 
       // Set the value to the output
-      arg.value = subInterpreter.run();
+      arg.value = await subInterpreter.run();
     }
 
     // Return a new TclSimple with the previously set output

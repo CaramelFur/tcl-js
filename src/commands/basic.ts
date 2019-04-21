@@ -3,6 +3,7 @@ import * as math from 'mathjs';
 import { TclVariable, TclProcFunction } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
+import { resolve } from 'dns';
 
 let commands: { [index: string]: TclProcFunction } = {};
 
@@ -108,11 +109,11 @@ commands.expr = (
  * @see https://wiki.tcl-lang.org/page/eval
  */
 
-commands.eval = (
+commands.eval = async (
   interpreter: Interpreter,
   args: Array<string>,
   varArgs: Array<TclVariable>,
-): string => {
+): Promise<string> => {
   // Check if there are enough arguments
   if (args.length === 0)
     throw new TclError('wrong # args: should be "eval arg ?arg arg ...?"');
@@ -121,7 +122,11 @@ commands.eval = (
   let code = args.join(' ');
 
   // Interpret the tcl code with a subscope
-  let newInterpreter = new Interpreter(interpreter.tcl, code, new Scope(interpreter.scope));
+  let newInterpreter = new Interpreter(
+    interpreter.tcl,
+    code,
+    new Scope(interpreter.scope),
+  );
 
   // Return the result
   return newInterpreter.run();
@@ -153,6 +158,17 @@ commands.info = (
   }
 
   return '';
+};
+
+commands.wait = async (
+  interpreter: Interpreter,
+  args: Array<string>,
+  varArgs: Array<TclVariable>,
+): Promise<string> => {
+  const timeout = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+  await timeout(2000);
+  return 'wow';
 };
 
 /**

@@ -12,7 +12,7 @@ export class TclVariable {
    * @param  {any} value
    * @param  {string} name?
    */
-  constructor(value: any, name?: string) {
+  public constructor(value: any, name?: string) {
     this.value = value;
     if (name) this.name = name;
   }
@@ -22,7 +22,7 @@ export class TclVariable {
    *
    * @returns string
    */
-  getValue(): string {
+  public getValue(): string {
     return this.value;
   }
 
@@ -32,7 +32,7 @@ export class TclVariable {
    * @param  {any} value
    * @returns any
    */
-  setValue(value: any): any {
+  public setValue(value: any): any {
     this.value = value;
     return value;
   }
@@ -44,7 +44,7 @@ export class TclVariable {
    * @param  {any} key?
    * @returns any
    */
-  getSubValue(key?: any): any {
+  public getSubValue(key?: any): any {
     return undefined;
   }
 
@@ -54,7 +54,7 @@ export class TclVariable {
    *
    * @returns any
    */
-  getRawValue(): any {
+  public getRawValue(): any {
     return this.value;
   }
 
@@ -63,7 +63,7 @@ export class TclVariable {
    *
    * @returns string
    */
-  getName(): string | undefined {
+  public getName(): string | undefined {
     return this.name;
   }
 
@@ -73,7 +73,7 @@ export class TclVariable {
    * @param  {boolean} isInt?
    * @returns number
    */
-  getNumber(isInt?: boolean): number | undefined {
+  public getNumber(isInt?: boolean): number | undefined {
     return undefined;
   }
 
@@ -82,7 +82,7 @@ export class TclVariable {
    *
    * @returns boolean
    */
-  isNumber(): boolean {
+  public isNumber(): boolean {
     return false;
   }
 }
@@ -94,7 +94,7 @@ export class TclList extends TclVariable {
    * @param  {string} value
    * @param  {string} name?
    */
-  constructor(value: string, name?: string) {
+  public constructor(value: string, name?: string) {
     super([], name);
     this.destruct(value);
   }
@@ -210,7 +210,7 @@ export class TclList extends TclVariable {
    * @param  {TclSimple} value? - The value you want to add, if this empty the item will be removed
    * @returns TclSimple - The value you sent via the value argument
    */
-  set(index: number, value?: TclSimple): TclSimple | undefined {
+  public set(index: number, value?: TclSimple): TclSimple | undefined {
     // If the value is nonexitant we want to delete the item
     if (!value) {
       // We cannot delete an item that does not exist
@@ -232,7 +232,7 @@ export class TclList extends TclVariable {
    * @param  {number} index
    * @returns void
    */
-  unset(index: number): void {
+  public unset(index: number): void {
     // Use the set function to delete
     this.set(index);
   }
@@ -242,7 +242,7 @@ export class TclList extends TclVariable {
    *
    * @returns string - The joined array
    */
-  getValue(): string {
+  public getValue(): string {
     return this.value.map((val: TclSimple) => val.getValue()).join(' ');
   }
 
@@ -252,7 +252,7 @@ export class TclList extends TclVariable {
    * @param  {Array<number>} ...args - The indexes of the lists
    * @returns TclSimple - The eventually retrieved value
    */
-  getSubValue(...args: Array<number>): TclSimple {
+  public getSubValue(...args: Array<number>): TclSimple {
     // There are no arguments, so just return a TclSimple with the current value
     if (args.length === 0)
       return new TclSimple(this.getValue(), this.getName());
@@ -296,7 +296,7 @@ export class TclList extends TclVariable {
    *
    * @returns number
    */
-  getLength(): number {
+  public getLength(): number {
     return this.value.length;
   }
 }
@@ -319,7 +319,7 @@ export class TclSimple extends TclVariable {
    *
    * @returns TclList - The created list
    */
-  getList(): TclList {
+  public getList(): TclList {
     let list = new TclList(this.value, this.getName());
     return list;
   }
@@ -330,7 +330,7 @@ export class TclSimple extends TclVariable {
    * @param  {boolean=false} isInt - Tell the function to return an int or a float
    * @returns number - The returned number
    */
-  getNumber(isInt: boolean = false): number | undefined {
+  public getNumber(isInt: boolean = false): number | undefined {
     if (this.isNumber())
       return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
     else return undefined;
@@ -341,7 +341,7 @@ export class TclSimple extends TclVariable {
    *
    * @returns boolean
    */
-  isNumber(): boolean {
+  public isNumber(): boolean {
     return Is.Number(this.value);
   }
 }
@@ -365,7 +365,7 @@ export class TclObject extends TclVariable {
    * @param  {TclVariable} value?
    * @returns TclVariable - The value parsed
    */
-  set(name: string, value?: TclVariable): TclVariable | undefined {
+  public set(name: string, value?: TclVariable): TclVariable | undefined {
     // Throw error when name is ''
     if (name === '') throw new TclError('invalid object key');
 
@@ -382,7 +382,7 @@ export class TclObject extends TclVariable {
    * @param  {string} name - The key you want to remove
    * @returns void
    */
-  unset(name: string): void {
+  public unset(name: string): void {
     this.set(name);
   }
 
@@ -391,7 +391,7 @@ export class TclObject extends TclVariable {
    *
    * @returns string
    */
-  getValue(): string {
+  public getValue(): string {
     throw new TclError(`can't read "${this.getName()}": variable is object`);
   }
 
@@ -401,7 +401,7 @@ export class TclObject extends TclVariable {
    * @param  {string} name - The key you want the value from
    * @returns TclVariable - The value
    */
-  getSubValue(name: string): TclVariable {
+  public getSubValue(name: string): TclVariable {
     // Return this value when no name is specified
     if (name === '') return new TclSimple(this.getValue(), this.getName());
 
@@ -415,7 +415,7 @@ export class TclObject extends TclVariable {
    *
    * @returns number - Size
    */
-  getSize(): number {
+  public getSize(): number {
     return Object.keys(this.value).length;
   }
 }
@@ -427,7 +427,7 @@ export class TclArray extends TclVariable {
    * @param  {Array<TclVariable>} value?
    * @param  {string} name?
    */
-  constructor(value?: Array<TclVariable>, name?: string) {
+  public constructor(value?: Array<TclVariable>, name?: string) {
     super(value, name);
     if (!this.value) this.value = [];
   }
@@ -439,7 +439,7 @@ export class TclArray extends TclVariable {
    * @param  {TclVariable} value? - The value you want to set, leave empty to remove the index
    * @returns TclVariable - The value specified
    */
-  set(index: number, value?: TclVariable): TclVariable | undefined {
+  public set(index: number, value?: TclVariable): TclVariable | undefined {
     // If the value is nonexitant we want to delete the item
     if (!value) {
       // We cannot delete an item that does not exist
@@ -460,7 +460,7 @@ export class TclArray extends TclVariable {
    * @param  {number} index
    * @returns void
    */
-  unset(index: number): void {
+  public unset(index: number): void {
     // Use the set function to remove the index
     this.set(index);
   }
@@ -470,7 +470,7 @@ export class TclArray extends TclVariable {
    *
    * @returns string
    */
-  getValue(): string {
+  public getValue(): string {
     throw new TclError(`can't read "${this.getName()}": variable is array`);
   }
 
@@ -480,7 +480,7 @@ export class TclArray extends TclVariable {
    * @param  {number} index - The index you want the value from
    * @returns TclVariable - The found value
    */
-  getSubValue(index: number): TclVariable {
+  public getSubValue(index: number): TclVariable {
     // If index is not correct return the value of this variable
     if (index === undefined || index === null)
       return new TclSimple(this.getValue(), this.getName());
@@ -495,7 +495,7 @@ export class TclArray extends TclVariable {
    *
    * @returns number
    */
-  getLength(): number {
+  public getLength(): number {
     return this.value.length;
   }
 }
@@ -510,11 +510,17 @@ export interface TclProcHolder {
   [index: string]: TclProc;
 }
 
-export type TclProcFunction = (
-  interpreter: Interpreter,
-  args: Array<string>,
-  varArgs: Array<TclVariable>,
-) => string;
+export type TclProcFunction =
+  | ((
+      interpreter: Interpreter,
+      args: Array<string>,
+      varArgs: Array<TclVariable>,
+    ) => string)
+  | ((
+      interpreter: Interpreter,
+      args: Array<string>,
+      varArgs: Array<TclVariable>,
+    ) => Promise<string>);
 
 export class TclProc {
   name: string;
