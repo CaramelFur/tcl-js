@@ -72,7 +72,7 @@ export class Lexer {
 
   /**
    * Read a word that has brackets, it managages the bracket depth and checks if this is correct and eventually return the complete result
-   * 
+   *
    * @param  {boolean} keepOuterBracket - To include the most outer brackets in the returned string, or to leave them out
    * @param  {string} openingBracket - The opening bracket to use for checking
    * @param  {string} closingBracket - The closing bracket to use for checking
@@ -188,7 +188,7 @@ export class Lexer {
 
   /**
    * Reads the input until the next found quote
-   * 
+   *
    * @returns WordToken - The processed word
    */
   private nextQuoteWord(): WordToken {
@@ -227,7 +227,7 @@ export class Lexer {
     if (close !== '"') throw new TclError('missing "');
 
     // Check if the next char is word-seperator, if not there is incorrect user input
-    if (!Is.WordSeparator(this.currentChar))
+    if (!Is.WordSeparator(this.currentChar) && <string>this.currentChar !== '')
       throw new TclError('extra characters after close-quote');
 
     // Change the word index
@@ -237,7 +237,7 @@ export class Lexer {
 
   /**
    * Reads the input until a word seperator is found
-   * 
+   *
    * @returns WordToken - The processed word
    */
   private nextSimpleWord(): WordToken {

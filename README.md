@@ -21,20 +21,20 @@ You can easily start using the interpreter with this example
 ```js
 // Import the interpreter
 const { Tcl } = require('tcl-js');
-
+ 
 // Create a new interpreter
 // Every interpreter keeps it scope until destroyed
 let tcl = new Tcl();
-
+ 
 // The interpreter works async, so an async function is used
 async function main(){
   // Print "Hello World!" to the terminal
-  tcl.run('set w "World!"');
-  tcl.run('puts "Hello $w"')
+  await tcl.run('set w "World!"');
+  await tcl.run('puts "Hello $w"')
 }
-
+ 
 // Call the async function
-main();
+main().catch(console.error);
 ```
 
 ## Documentation

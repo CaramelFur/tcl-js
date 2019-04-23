@@ -119,7 +119,7 @@
             var close = this.read();
             if (close !== '"')
                 throw new tclerror_1.TclError('missing "');
-            if (!Is.WordSeparator(this.currentChar))
+            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
                 throw new tclerror_1.TclError('extra characters after close-quote');
             this.wordIdx += 1;
             return out;

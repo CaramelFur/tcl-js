@@ -1,2 +1,1 @@
-set hi ass
-puts [eval set hi]
+puts "hi"

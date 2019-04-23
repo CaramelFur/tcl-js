@@ -938,12 +938,12 @@ img { max-width: 100%; }
 <span class="hljs-comment">// The interpreter works async, so an async function is used</span>
 <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>)</span>{
   <span class="hljs-comment">// Print "Hello World!" to the terminal</span>
-  tcl.run(<span class="hljs-string">'set w "World!"'</span>);
-  tcl.run(<span class="hljs-string">'puts "Hello $w"'</span>)
+  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'set w "World!"'</span>);
+  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'puts "Hello $w"'</span>)
 }
 
 <span class="hljs-comment">// Call the async function</span>
-main();</code></pre>
+main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 			<h2 id="documentation">Documentation</h2>
 			<p>You can find the documentation <a href="https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html">here</a></p>
 			<h2 id="status">Status</h2>
