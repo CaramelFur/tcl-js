@@ -1,6 +1,7 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
 import { Interpreter } from './interpreter';
+import { CommandToken } from './parser';
 
 export class TclVariable {
   protected value: any = '';
@@ -515,11 +516,13 @@ export type TclProcFunction =
       interpreter: Interpreter,
       args: Array<string>,
       varArgs: Array<TclVariable>,
+      command: CommandToken,
     ) => string)
   | ((
       interpreter: Interpreter,
       args: Array<string>,
       varArgs: Array<TclVariable>,
+      command: CommandToken,
     ) => Promise<string>);
 
 export class TclProc {

@@ -14,6 +14,29 @@ Therefore it is not recommended use this package in production yet.
 
 But it would be highly appreciated if this package was heavily tested, cause it is impossible for me to test every scenario.
 
+## Getting started
+
+You can easily start using the interpreter with this example
+
+```js
+// Import the interpreter
+const { Tcl } = require('tcl-js');
+
+// Create a new interpreter
+// Every interpreter keeps it scope until destroyed
+let tcl = new Tcl();
+
+// The interpreter works async, so an async function is used
+async function main(){
+  // Print "Hello World!" to the terminal
+  tcl.run('set w "World!"');
+  tcl.run('puts "Hello $w"')
+}
+
+// Call the async function
+main();
+```
+
 ## Documentation
 
 You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html)

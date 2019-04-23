@@ -1,6 +1,6 @@
 {
   "name": "tcl-js",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
@@ -11,7 +11,6 @@
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
     "start": "echo Error: There is nothing to start & exit 1",
-    "prepublish": "npm run build",
     "codecov": "codecov"
   },
   "repository": {

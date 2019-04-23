@@ -4,6 +4,7 @@ import { TclVariable, TclProcFunction } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 import { resolve } from 'dns';
+import { CommandToken } from '../parser';
 
 let commands: { [index: string]: TclProcFunction } = {};
 
@@ -19,6 +20,7 @@ commands.set = (
   interpreter: Interpreter,
   args: Array<string>,
   varArgs: Array<TclVariable>,
+  command: CommandToken,
 ): string => {
   const [varName, value] = args;
 
@@ -33,7 +35,11 @@ commands.set = (
   }
 
   // If there are any other amount of variables throw an error
-  throw new TclError('wrong # args: should be "set varName ?newValue?"');
+  throw new TclError(
+    `wrong # args: should be "set varName ?newValue?"\nwhile reading: "${
+      command.codeLine
+    }"`,
+  );
 };
 
 /**

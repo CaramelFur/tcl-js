@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var scope_1 = require("./scope");
     var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
-    var variableRegex = /\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
+    var variableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
             this.lastValue = '';
@@ -112,24 +112,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             });
                             return [2, this.scope
                                     .resolveProc(command.command)
-                                    .callback(this, wordArgs, args)];
+                                    .callback(this, wordArgs, args, command)];
                     }
                 });
             });
         };
         Interpreter.prototype.processArg = function (arg) {
             return __awaiter(this, void 0, void 0, function () {
-                var match, regex, subInterpreter, _a;
+                var _a, match, regex;
                 var _this = this;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
+                            if (!arg.hasSubExpr) return [3, 2];
+                            _a = arg;
+                            return [4, this.processSquareBrackets(arg.value)];
+                        case 1:
+                            _a.value = _b.sent();
+                            _b.label = 2;
+                        case 2:
                             if (arg.hasVariable) {
                                 match = arg.value.match(variableRegex);
                                 if (match && match.length === 1 && match[0] === arg.value) {
                                     regex = variableRegex.exec(arg.value);
                                     if (!regex || !regex.groups || !regex.groups.fullname)
                                         throw new tclerror_1.TclError('Error parsing variable');
+                                    if (regex.groups.escaped === '\\')
+                                        return [2, new types_1.TclSimple(arg.value.replace(/\\\$/g, '$'))];
                                     return [2, this.scope.resolve(regex.groups.fullname)];
                                 }
                                 arg.value = arg.value.replace(variableRegex, function () {
@@ -138,20 +147,138 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                         regex[_i] = arguments[_i];
                                     }
                                     var groups = regex[regex.length - 1];
+                                    if (groups.escaped === '\\')
+                                        return "$" + groups.fullname;
                                     return "" + _this.scope.resolve(groups.fullname).getValue();
                                 });
                             }
-                            if (!arg.hasSubExpr) return [3, 2];
-                            subInterpreter = new Interpreter(this.tcl, arg.value, new scope_1.Scope(this.scope));
-                            _a = arg;
-                            return [4, subInterpreter.run()];
-                        case 1:
-                            _a.value = _b.sent();
-                            _b.label = 2;
-                        case 2: return [2, new types_1.TclSimple(arg.value)];
+                            if (!arg.stopBackslash)
+                                arg.value = this.processBackSlash(arg.value);
+                            return [2, new types_1.TclSimple(arg.value)];
                     }
                 });
             });
+        };
+        Interpreter.prototype.processSquareBrackets = function (input) {
+            return __awaiter(this, void 0, void 0, function () {
+                function read() {
+                    position += 1;
+                    char = input.charAt(position);
+                }
+                var output, depth, position, char, lastExpression, subInterpreter, result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            output = input;
+                            depth = 0;
+                            position = 0;
+                            char = input.charAt(position);
+                            lastExpression = '';
+                            _a.label = 1;
+                        case 1:
+                            if (!(position < input.length)) return [3, 4];
+                            if (!(char === ']')) return [3, 3];
+                            depth--;
+                            if (!(depth === 0)) return [3, 3];
+                            if (!(lastExpression !== '')) return [3, 3];
+                            subInterpreter = new Interpreter(this.tcl, lastExpression, new scope_1.Scope(this.scope));
+                            return [4, subInterpreter.run()];
+                        case 2:
+                            result = _a.sent();
+                            output = output.replace("[" + lastExpression + "]", result);
+                            lastExpression = '';
+                            _a.label = 3;
+                        case 3:
+                            if (depth > 0) {
+                                lastExpression += char;
+                            }
+                            if (char === '[')
+                                depth++;
+                            read();
+                            return [3, 1];
+                        case 4:
+                            if (depth !== 0)
+                                throw new tclerror_1.TclError('incorrect amount of square brackets');
+                            return [2, output];
+                    }
+                });
+            });
+        };
+        Interpreter.prototype.processBackSlash = function (input) {
+            var simpleBackRegex = /\\(?<letter>[abfnrtv])/g;
+            var octalBackRegex = /\\0(?<octal>[0-7]{0,2})/g;
+            var unicodeBackRegex = /\\u(?<hexcode>[0-9a-fA-F]{1,4})/g;
+            var hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{0,2})/g;
+            var cleanUpBackRegex = /\\(?<character>.|\n)/g;
+            function codeToChar(hexCode) {
+                return String.fromCharCode(hexCode);
+            }
+            input = input.replace(simpleBackRegex, function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var groups = args[args.length - 1];
+                switch (groups.letter) {
+                    case 'a':
+                        return codeToChar(0x07);
+                    case 'b':
+                        return codeToChar(0x08);
+                    case 'f':
+                        return codeToChar(0x0c);
+                    case 'n':
+                        return codeToChar(0x0a);
+                    case 'r':
+                        return codeToChar(0x0d);
+                    case 't':
+                        return codeToChar(0x09);
+                    case 'v':
+                        return codeToChar(0x0b);
+                    default:
+                        throw new tclerror_1.TclError('program hit unreachable point');
+                }
+            });
+            input = input.replace(octalBackRegex, function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var groups = args[args.length - 1];
+                var octal = parseInt(groups.octal, 8);
+                return codeToChar(octal);
+            });
+            input = input.replace(unicodeBackRegex, function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var groups = args[args.length - 1];
+                var hex = parseInt(groups.hexcode, 16);
+                return codeToChar(hex);
+            });
+            input = input.replace(hexBackRegex, function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var groups = args[args.length - 1];
+                var hex = parseInt(groups.hexcode, 16);
+                return codeToChar(hex);
+            });
+            input = input.replace(cleanUpBackRegex, function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                var groups = args[args.length - 1];
+                switch (groups.character) {
+                    case '\n':
+                        return ' ';
+                    default:
+                        return groups.character;
+                }
+            });
+            return input;
         };
         return Interpreter;
     }());

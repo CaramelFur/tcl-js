@@ -23,12 +23,15 @@
                     this.program.commands.push({
                         command: toProcess.value,
                         args: [],
+                        codeLine: toProcess.lastSentence,
                     });
                 }
                 else {
                     if (this.program.commands.length === 0)
                         throw new tclerror_1.TclError('encountered argument but no command exists');
                     this.program.commands[this.program.commands.length - 1].args.push(toProcess);
+                    this.program.commands[this.program.commands.length - 1].codeLine =
+                        toProcess.lastSentence;
                 }
                 toProcess = this.lexer.nextToken();
             }

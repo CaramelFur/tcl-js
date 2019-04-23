@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
     var commands = {};
-    commands.set = function (interpreter, args, varArgs) {
+    commands.set = function (interpreter, args, varArgs, command) {
         var varName = args[0], value = args[1];
         if (args.length === 2) {
             interpreter.scope.define(varName, value);
@@ -59,7 +59,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         else if (args.length === 1) {
             return interpreter.scope.resolve(varName).getValue();
         }
-        throw new tclerror_1.TclError('wrong # args: should be "set varName ?newValue?"');
+        throw new tclerror_1.TclError("wrong # args: should be \"set varName ?newValue?\"\nwhile reading: \"" + command.codeLine + "\"");
     };
     commands.unset = function (interpreter, args, varArgs) {
         var nocomplain = false;

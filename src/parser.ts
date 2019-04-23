@@ -9,7 +9,7 @@ export class Parser {
 
   /**
    * Constructor for the parser, parses text with the lexer into a program
-   * 
+   *
    * @param  {string} input - Tcl code
    */
   public constructor(input: string) {
@@ -25,17 +25,23 @@ export class Parser {
         this.program.commands.push({
           command: toProcess.value,
           args: [],
+          codeLine: toProcess.lastSentence,
         });
-      } 
+      }
       // If not the token is an argument
       else {
         // Check if there is atleast 1 command in the commands array
-        if(this.program.commands.length === 0) throw new TclError('encountered argument but no command exists');
+        if (this.program.commands.length === 0)
+          throw new TclError('encountered argument but no command exists');
 
         // Add the argument to the last command in the command list
         this.program.commands[this.program.commands.length - 1].args.push(
           toProcess,
         );
+
+        // Add the original tcl code
+        this.program.commands[this.program.commands.length - 1].codeLine =
+          toProcess.lastSentence;
       }
 
       // Process next token
@@ -45,7 +51,7 @@ export class Parser {
 
   /**
    * Return the processed program
-   * 
+   *
    * @returns Program - Processed program
    */
   public get(): Program {
@@ -60,6 +66,7 @@ export interface Program {
 export interface CommandToken {
   command: string;
   args: Array<WordToken>;
+  codeLine: string;
 }
 
 /*
