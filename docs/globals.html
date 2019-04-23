@@ -936,10 +936,10 @@ img { max-width: 100%; }
 <span class="hljs-keyword">let</span> tcl = <span class="hljs-keyword">new</span> Tcl();
 
 <span class="hljs-comment">// The interpreter works async, so an async function is used</span>
-<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>)</span>{
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-comment">// Print "Hello World!" to the terminal</span>
   <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'set w "World!"'</span>);
-  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'puts "Hello $w"'</span>)
+  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'puts "Hello $w"'</span>);
 }
 
 <span class="hljs-comment">// Call the async function</span>
