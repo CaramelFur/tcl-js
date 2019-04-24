@@ -1,5 +1,11 @@
-const { Tcl } = require('../');
+const chai = require('chai');  
+const assert = chai.assert;
 
-let tcl = new Tcl();
-
-tcl.runFile('./test/simple.tcl').then(console.log).catch(console.error);
+// This is only just a test
+describe('Array', function() {
+  describe('#indexOf()', function() {
+    it('should return -1 when the value is not present', function() {
+      assert.equal([1, 2, 3].indexOf(4), -1);
+    });
+  });
+});

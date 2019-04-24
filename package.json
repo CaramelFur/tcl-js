@@ -5,13 +5,14 @@
   "main": "dist/tcl.js",
   "scripts": {
     "pretest": "npm run tsbuild",
-    "run": "ts-node test/test.js",
-    "test": "npm run run",
+    "run": "npm run tsbuild & npm run runonly",
+    "runonly": "ts-node test/dev/test.js",
+    "test": "mocha",
     "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
     "start": "echo Error: There is nothing to start & exit 1",
-    "codecov": "codecov"
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
@@ -35,12 +36,14 @@
   "homepage": "https://github.com/rubikscraft/tcl-js#readme",
   "devDependencies": {
     "@types/mathjs": "^5.0.1",
-    "@types/node": "^11.13.4",
+    "@types/node": "^11.13.7",
     "chai": "^4.2.0",
     "codecov": "^3.3.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.0.0",
     "ts-node": "^8.1.0",
     "typedoc": "^0.14.2",
-    "typescript": "^3.4.3"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "mathjs": "^5.9.0"

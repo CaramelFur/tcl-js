@@ -37,7 +37,13 @@ export class Tcl {
    * @returns Promise - Returns last TclVariable
    */
   public async runFile(location: string): Promise<TclVariable> {
-    let buffer: string = fs.readFileSync(location, { encoding: 'utf-8' });
+    let buffer: string = await new Promise((resolve, reject) => {
+      fs.readFile(location, { encoding: 'utf-8' }, (err, data) => {
+        if(err) reject(err);
+        resolve(data);
+      });
+    });
+    
     return this.run(buffer);
   }
 }

@@ -68,8 +68,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             return __awaiter(this, void 0, void 0, function () {
                 var buffer;
                 return __generator(this, function (_a) {
-                    buffer = fs.readFileSync(location, { encoding: 'utf-8' });
-                    return [2, this.run(buffer)];
+                    switch (_a.label) {
+                        case 0: return [4, new Promise(function (resolve, reject) {
+                                fs.readFile(location, { encoding: 'utf-8' }, function (err, data) {
+                                    if (err)
+                                        reject(err);
+                                    resolve(data);
+                                });
+                            })];
+                        case 1:
+                            buffer = _a.sent();
+                            return [2, this.run(buffer)];
+                    }
                 });
             });
         };
