@@ -6,13 +6,13 @@
   "scripts": {
     "run": "npm run tsbuild & npm run runonly",
     "runonly": "ts-node test/dev/test.js",
-    "test": "mocha",
+    "test": "npm run build & nyc mocha",
     "posttest": "npm run report-coverage",
     "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
     "start": "echo Error: There is nothing to start & exit 1",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "report-coverage": "nyc report --reporter=json > coverage/coverage.json && codecov -f coverage/*.json"
   },
   "repository": {
     "type": "git",
