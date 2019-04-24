@@ -4,16 +4,16 @@
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
-    "run": "npm run tsbuild & npm run runonly",
+    "run": "npm run tsbuild && npm run runonly",
     "runonly": "ts-node test/dev/test.js",
-    "test": "npm run build & npm run nyc",
+    "test": "npm run build && npm run nyc",
     "posttest": "npm run report-coverage",
     "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
-    "build": "npm run tsbuild & npm run gendoc",
-    "start": "echo Error: There is nothing to start & exit 1",
+    "build": "npm run tsbuild && npm run gendoc",
+    "start": "echo Error: There is nothing to start && exit 1",
     "nyc": "nyc mocha",
-    "report-coverage": "nyc report --reporter=json && codecov -f coverage/*.json"
+    "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov --disable=gcov"
   },
   "repository": {
     "type": "git",
