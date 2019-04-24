@@ -1,0 +1,6 @@
+Hello, World - In quotes
+Hello, World - In Braces
+This is line 1
+this is line 2
+Hello, World; - With  a semicolon inside the quotes
+HelloWorld

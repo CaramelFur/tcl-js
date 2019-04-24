@@ -107,7 +107,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             }
             var stringArgs = args.map(function (arg) { return arg.getValue(); });
             var expression = stringArgs.join(' ');
-            var result = math.eval(expression);
+            var solvedExpression = interpreter.processVariables(expression);
+            if (typeof solvedExpression !== 'string')
+                throw new tclerror_1.TclError('expression resolved to variable instead of string');
+            var result = math.eval(solvedExpression);
             if (typeof result !== 'number')
                 throw new tclerror_1.TclError('expression result is not a number');
             if (result === Infinity)

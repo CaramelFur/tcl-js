@@ -2,5 +2,6 @@
   "sourceMap": true,
   "instument": true,
   "reporter": ["text-summary", "lcov", "json"],
-  "temp-directory": "./coverage/.nyc_output"
+  "temp-directory": "./coverage/.nyc_output",
+  "extension": ["ts"]
 }

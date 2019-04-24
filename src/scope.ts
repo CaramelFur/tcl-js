@@ -68,11 +68,12 @@ export class Scope {
    */
   public undefine(name: string, nocomplain?: boolean): TclVariable {
     // Check if variable exists
-    if (!Object.prototype.hasOwnProperty.call(this.members, name)){
+    if (!Object.prototype.hasOwnProperty.call(this.members, name)) {
       // If there is a parent, run their undefine function
-      if(this.parent) return this.parent.undefine(name, nocomplain);
+      if (this.parent) return this.parent.undefine(name, nocomplain);
       // If not the variable does not exist, depending on the nocomplain it will throw an error
-      else if(!nocomplain) throw new TclError(`can't unset "${name}": no such variable`);
+      else if (!nocomplain)
+        throw new TclError(`can't unset "${name}": no such variable`);
     }
 
     // Delete the variable and return its value
@@ -83,7 +84,7 @@ export class Scope {
 
   /**
    * Resolves a variable and returns it
-   * 
+   *
    * @param  {string} name - The name of the variable
    * @returns TclVariable - The variable requested, null if not found
    */
@@ -91,7 +92,7 @@ export class Scope {
     // Check this scope
     if (Object.prototype.hasOwnProperty.call(this.members, name)) {
       return this.members[name];
-    } 
+    }
     // Check the parent scopes recursively
     else if (this.parent !== null) {
       return this.parent.resolve(name);
@@ -99,6 +100,24 @@ export class Scope {
 
     // Return null if variable is not found
     return null;
+  }
+  
+  /**
+   * Function to fetch all stored variables
+   * 
+   * @returns TclVariable
+   */
+  public resolveAll(): TclVariable[] {
+    let out: TclVariable[] = [];
+
+    // Grab values from parent if exists
+    if(this.parent) out = this.parent.resolveAll();
+
+    // Grab own values
+    let values = Object.values(this.members);
+
+    // Stitch together and return
+    return [...out, ...values];
   }
 
   /**
@@ -108,7 +127,11 @@ export class Scope {
    * @param  {TclProcFunction} callback - The js function that will be called to process the procedure
    * @param  {TclProcOptions} options? - The options for the procedure
    */
-  public defineProc(name: string, callback: TclProcFunction, options?: TclProcOptions) {
+  public defineProc(
+    name: string,
+    callback: TclProcFunction,
+    options?: TclProcOptions,
+  ) {
     this.procedures[name] = new TclProc(name, callback, options);
   }
 

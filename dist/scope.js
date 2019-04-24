@@ -58,6 +58,13 @@
             }
             return null;
         };
+        Scope.prototype.resolveAll = function () {
+            var out = [];
+            if (this.parent)
+                out = this.parent.resolveAll();
+            var values = Object.values(this.members);
+            return out.concat(values);
+        };
         Scope.prototype.defineProc = function (name, callback, options) {
             this.procedures[name] = new types_1.TclProc(name, callback, options);
         };

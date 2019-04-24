@@ -74,15 +74,11 @@ export class Interpreter {
     let helpers: TclProcHelpers = {
       sendHelp: (helpType: string) => {
         let options = (<TclProc>proc).options;
-        let message = options.helpMessages[helpType] || "Error";
-        
-        if(options.pattern) message += `: should be "${options.pattern}"`;
+        let message = options.helpMessages[helpType] || 'Error';
 
-        throw new TclError(
-          `${message}\nwhile reading: "${
-            command.codeLine
-          }"`,
-        );
+        if (options.pattern) message += `: should be "${options.pattern}"`;
+
+        throw new TclError(`${message}\nwhile reading: "${command.codeLine}"`);
       },
     };
 
@@ -116,6 +112,9 @@ export class Interpreter {
     if (!arg.stopBackslash && typeof output === 'string')
       output = this.processBackSlash(output);
 
+    // Always replace escaped endlines
+    if (typeof output === 'string') output = output.replace(/\\\n/g, ' ');
+
     // Return a new TclSimple with the previously set output
     return typeof output === 'string' ? new TclSimple(output) : output;
   }
@@ -126,7 +125,7 @@ export class Interpreter {
    * @param  {string} input - The input argument
    * @returns TclVariable - The variable containing the resolved results
    */
-  private processVariables(input: string): TclVariable {
+  public processVariables(input: string): TclVariable | string {
     // If so run the regex over it
     let match = input.match(findVariableRegex);
 
@@ -163,8 +162,8 @@ export class Interpreter {
       },
     );
 
-    // Return a variable with the processed string
-    return new TclSimple(input);
+    // Return the processed string
+    return input;
   }
 
   /**
@@ -338,7 +337,7 @@ export class Interpreter {
             let subInterpreter = new Interpreter(
               this.tcl,
               lastExpression,
-              new Scope(this.scope),
+              this.scope,
             );
 
             // Grab the result
@@ -386,7 +385,7 @@ export class Interpreter {
     let octalBackRegex = /\\0(?<octal>[0-7]{0,2})/g;
     let unicodeBackRegex = /\\u(?<hexcode>[0-9a-fA-F]{1,4})/g;
     let hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{0,2})/g;
-    let cleanUpBackRegex = /\\(?<character>.|\n)/g;
+    let cleanUpBackRegex = /\\(?<character>.)/g;
 
     // Function to convert a number to the corresponding character
     function codeToChar(hexCode: number): string {
@@ -457,13 +456,7 @@ export class Interpreter {
       (...args: any[]): string => {
         let groups = args[args.length - 1];
 
-        // Check for exceptions
-        switch (groups.character) {
-          case '\n':
-            return ' ';
-          default:
-            return groups.character;
-        }
+        return groups.character;
       },
     );
 

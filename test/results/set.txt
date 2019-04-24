@@ -1,0 +1,4 @@
+This is a string
+1.24
+...............................
+The value in Y is:  1.24

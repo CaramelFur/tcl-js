@@ -1,0 +1,7 @@
+256 plus 100 is  356
+The square root of 256 is 16
+
+Because of the precedence rules "5 + -3 * 4"   is:
+   -7
+Because of the parentheses      "(5 + -3) * 4" is:
+   8

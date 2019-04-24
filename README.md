@@ -77,3 +77,4 @@ These are not commands but just general parts of the interpreter, if they are li
 - backslash escape sequences
 - advanced variables
 - asynchronous
+- expression variables

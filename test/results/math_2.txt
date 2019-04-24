@@ -1,0 +1,2 @@
+The hypotenuse of a triangle: 5
+Sine and cosine of pi/6: 0.49999999226497965 0.8660254082502546

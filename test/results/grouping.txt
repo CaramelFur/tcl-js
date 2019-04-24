@@ -1,0 +1,13 @@
+
+.............. examples of differences between  " and {
+The Capitol of New York is:  Albany
+$Z_LABEL $Z
+
+....... examples of differences in nesting { and " 
+The Capitol of New York is:  {Albany}
+Who said, "What this country needs is a good $0.05 cigar!"?
+
+.............. examples of escape strings
+Note: no substitutions done within braces \n \r \x0a \f \v
+But:
+The escaped newline at the end of a string is replaced by a space

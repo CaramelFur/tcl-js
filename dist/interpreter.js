@@ -39,13 +39,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./parser", "./scope", "./types", "./tclerror"], factory);
+        define(["require", "exports", "./parser", "./types", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var parser_1 = require("./parser");
-    var scope_1 = require("./scope");
     var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
     var findVariableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
@@ -109,7 +108,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             helpers = {
                                 sendHelp: function (helpType) {
                                     var options = proc.options;
-                                    var message = options.helpMessages[helpType] || "Error";
+                                    var message = options.helpMessages[helpType] || 'Error';
                                     if (options.pattern)
                                         message += ": should be \"" + options.pattern + "\"";
                                     throw new tclerror_1.TclError(message + "\nwhile reading: \"" + command.codeLine + "\"");
@@ -138,6 +137,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             }
                             if (!arg.stopBackslash && typeof output === 'string')
                                 output = this.processBackSlash(output);
+                            if (typeof output === 'string')
+                                output = output.replace(/\\\n/g, ' ');
                             return [2, typeof output === 'string' ? new types_1.TclSimple(output) : output];
                     }
                 });
@@ -164,7 +165,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     return "$" + groups.fullname;
                 return "" + _this.getVariable(groups.fullname).getValue();
             });
-            return new types_1.TclSimple(input);
+            return input;
         };
         Interpreter.prototype.getVariable = function (variableName) {
             var regex = variableRegex.exec(variableName);
@@ -253,7 +254,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             depth--;
                             if (!(depth === 0)) return [3, 3];
                             if (!(lastExpression !== '')) return [3, 3];
-                            subInterpreter = new Interpreter(this.tcl, lastExpression, new scope_1.Scope(this.scope));
+                            subInterpreter = new Interpreter(this.tcl, lastExpression, this.scope);
                             return [4, subInterpreter.run()];
                         case 2:
                             result = _a.sent();
@@ -284,7 +285,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             var octalBackRegex = /\\0(?<octal>[0-7]{0,2})/g;
             var unicodeBackRegex = /\\u(?<hexcode>[0-9a-fA-F]{1,4})/g;
             var hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{0,2})/g;
-            var cleanUpBackRegex = /\\(?<character>.|\n)/g;
+            var cleanUpBackRegex = /\\(?<character>.)/g;
             function codeToChar(hexCode) {
                 return String.fromCharCode(hexCode);
             }
@@ -346,12 +347,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     args[_i] = arguments[_i];
                 }
                 var groups = args[args.length - 1];
-                switch (groups.character) {
-                    case '\n':
-                        return ' ';
-                    default:
-                        return groups.character;
-                }
+                return groups.character;
             });
             return input;
         };

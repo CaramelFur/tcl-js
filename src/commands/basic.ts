@@ -133,8 +133,12 @@ export function Load(scope: Scope) {
       let stringArgs = args.map((arg) => arg.getValue());
       let expression = stringArgs.join(' ');
 
+      let solvedExpression = interpreter.processVariables(expression);
+      if (typeof solvedExpression !== 'string')
+        throw new TclError('expression resolved to variable instead of string');
+
       // Try to solve the expression and return the result
-      let result = math.eval(expression);
+      let result = math.eval(solvedExpression);
 
       //Check if the result is usable
       if (typeof result !== 'number')

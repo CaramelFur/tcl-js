@@ -1,0 +1,14 @@
+The Capitol of New York is:  Albany
+The Capitol of New York is:  $Z
+
+Ben Franklin is on the $100.00 bill
+Washington is not on the 100.00 bill
+Lincoln is not on the $100.00 bill
+Hamilton is not on the $a bill
+Ben Franklin is on the $100.00 bill
+
+................. examples of escape strings
+Tab	Tab	Tab
+This string prints out 
+on two lines
+This string comes out on a single line
