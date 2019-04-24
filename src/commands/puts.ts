@@ -1,55 +1,13 @@
 import { Interpreter } from '../interpreter';
-import { TclVariable, TclProcFunction } from '../types';
+import {
+  TclVariable,
+  TclProcFunction,
+  TclProcHelpers,
+  TclSimple,
+} from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
-
-let commands: { [index: string]: TclProcFunction } = {};
-
-/**
- * puts - Write to a channel.
- *
- * :: ?-nonewline? ?channelId? string
- *
- * @see https://wiki.tcl.tk/919
- */
-
-commands.puts = (
-  interpreter: Interpreter,
-  args: Array<string>,
-  varArgs: Array<TclVariable>,
-) => {
-  let nonewline = false;
-  let channelId = 'stdout';
-  let string = '';
-
-  // Check for every corresponding argument mix and set variables accordingly
-  if (args.length === 1) {
-    string = args[0];
-  } else if (args.length === 2 && args[0] === '-nonewline') {
-    nonewline = true;
-    string = args[1];
-  } else if (args.length === 2) {
-    channelId = args[0];
-    string = args[1];
-  } else if (args.length === 3 && args[0] === '-nonewline') {
-    nonewline = true;
-    channelId = args[1];
-    string = args[2];
-  } else {
-    throw new TclError(
-      'wrong # args: should be "puts ?-nonewline? ?channelId? string"',
-    );
-  }
-
-  // NOTE: Tcl buffers output, meaning it may not be written immediately, but
-  // can be forced with a flush command. I'm not going to worry about this
-  // right now.
-
-  // Write the values to the console with the correct settings
-  interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
-
-  return '';
-};
+import { CommandToken } from '../parser';
 
 /**
  * Function to load the procs into the scope
@@ -57,7 +15,65 @@ commands.puts = (
  * @param  {Scope} scope
  */
 export function Load(scope: Scope) {
-  for (let command in commands) {
-    scope.defineProc(command, commands[command]);
-  }
+  /**
+   * puts - Write to a channel.
+   *
+   * :: ?-nonewline? ?channelId? string
+   *
+   * @see https://wiki.tcl.tk/919
+   */
+  scope.defineProc(
+    'puts',
+    async (
+      interpreter: Interpreter,
+      args: Array<TclVariable>,
+      command: CommandToken,
+      helpers: TclProcHelpers,
+    ): Promise<TclVariable> => {
+      let nonewline = false;
+      let channelId = 'stdout';
+      let string = '';
+
+      // Check if arguments are correct
+      for (let arg of args) {
+        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
+      }
+
+      // Create a full expression by joining all arguments
+      let stringArgs = args.map((arg) => arg.getValue());
+
+      // Check for every corresponding argument mix and set variables accordingly
+      if (stringArgs.length === 1) {
+        string = stringArgs[0];
+      } else if (stringArgs.length === 2 && stringArgs[0] === '-nonewline') {
+        nonewline = true;
+        string = stringArgs[1];
+      } else if (stringArgs.length === 2) {
+        channelId = stringArgs[0];
+        string = stringArgs[1];
+      } else if (stringArgs.length === 3 && stringArgs[0] === '-nonewline') {
+        nonewline = true;
+        channelId = stringArgs[1];
+        string = stringArgs[2];
+      } else {
+        return helpers.sendHelp('wargs');
+      }
+
+      // NOTE: Tcl buffers output, meaning it may not be written immediately, but
+      // can be forced with a flush command. I'm not going to worry about this
+      // right now.
+
+      // Write the values to the console with the correct settings
+      interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
+
+      return new TclSimple('');
+    },
+    {
+      pattern: 'puts ?-nonewline? ?channelId? string',
+      helpMessages: {
+        wargs: `wrong # args`,
+        wtype: `wrong type`,
+      },
+    },
+  );
 }

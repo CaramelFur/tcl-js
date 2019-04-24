@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>tcl-js | tcl-js</title>
+	<title>TclProcOptions | tcl-js</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -879,7 +879,7 @@ img { max-width: 100%; }
 		<div class="container">
 			<div class="table-wrap">
 				<div class="table-cell">
-					<strong><a href="index.html">tcl-js</a></strong>
+					<strong><a href="../index.html">tcl-js</a></strong>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -909,102 +909,102 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tclarray.html" class="tsd-kind-icon">Tcl<wbr>Array</a>
+		</li>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tcllist.html" class="tsd-kind-icon">Tcl<wbr>List</a>
+		</li>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tclobject.html" class="tsd-kind-icon">Tcl<wbr>Object</a>
+		</li>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tclproc.html" class="tsd-kind-icon">Tcl<wbr>Proc</a>
+		</li>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tclsimple.html" class="tsd-kind-icon">Tcl<wbr>Simple</a>
+		</li>
+		<li class=" tsd-kind-class tsd-parent-kind-external-module">
+			<a href="../classes/_types_.tclvariable.html" class="tsd-kind-icon">Tcl<wbr>Variable</a>
+		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="_types_.tclprochelpers.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Helpers</a>
+		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="_types_.tclprocholder.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Holder</a>
+		</li>
+		<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="_types_.tclprocoptions.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Options</a>
+			<ul>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_types_.tclprocoptions.html#helpmessages" class="tsd-kind-icon">help<wbr>Messages</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_types_.tclprocoptions.html#pattern" class="tsd-kind-icon">pattern</a>
+				</li>
+			</ul>
+		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="_types_.tclvariableholder.html" class="tsd-kind-icon">Tcl<wbr>Variable<wbr>Holder</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+			<a href="../modules/_types_.html#tclprocfunction" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Function</a>
+		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<div class="tsd-panel tsd-typography">
-			<h1 id="tcl-js">tcl-js</h1>
-			<blockquote>
-				<p>A native javascript tcl interpreter</p>
-			</blockquote>
-			<p><a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/v/tcl-js.svg?style=flat&color" alt="tcl-js"></a>
-				<a href="https://travis-ci.org/rubikscraft/tcl-js"><img src="https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat" alt="Build Status"></a>
-				<a href="https://codecov.io/gh/rubikscraft/tcl-js"><img src="https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg" alt="codecov"></a>
-			<a href="https://packagephobia.now.sh/result?p=tcl-js"><img src="https://packagephobia.now.sh/badge?p=tcl-js&style=flat" alt="install size"></a></p>
-			<h2 id="important">Important</h2>
-			<p>I can not guarantee that everything works as it should, and the api will probably still change.
-			Therefore it is not recommended use this package in production yet.</p>
-			<p>But it would be highly appreciated if this package was heavily tested, cause it is impossible for me to test every scenario.</p>
-			<h2 id="getting-started">Getting started</h2>
-			<p>You can easily start using the interpreter with this example</p>
-			<pre><code class="language-js"><span class="hljs-comment">// Import the interpreter</span>
-<span class="hljs-keyword">const</span> { Tcl } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tcl-js'</span>);
-
-<span class="hljs-comment">// Create a new interpreter</span>
-<span class="hljs-comment">// Every interpreter keeps it scope until destroyed</span>
-<span class="hljs-keyword">let</span> tcl = <span class="hljs-keyword">new</span> Tcl();
-
-<span class="hljs-comment">// The interpreter works async, so an async function is used</span>
-<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-comment">// Print "Hello World!" to the terminal</span>
-  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'set w "World!"'</span>);
-  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">'puts "Hello $w"'</span>);
-}
-
-<span class="hljs-comment">// Call the async function</span>
-main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
-			<h2 id="documentation">Documentation</h2>
-			<p>You can find the documentation <a href="https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html">here</a></p>
-			<h2 id="status">Status</h2>
-			<h3 id="currently-working-tcl-commands">Currently working tcl commands</h3>
-			<p>These commands should be fully working according to the tcl wiki</p>
-			<ul>
-				<li>eval</li>
-				<li>expr</li>
-				<li>lindex</li>
-				<li>list</li>
-				<li>proc</li>
-				<li>puts</li>
-				<li>set</li>
-				<li>unset</li>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<span class="target">TclProcOptions</span>
+				</li>
 			</ul>
-			<h3 id="partially-working-commands">Partially working commands</h3>
-			<p>Only part of these commands are finished and may not work as expected</p>
-			<ul>
-				<li>info</li>
-			</ul>
-			<h3 id="other-working-parts">Other working parts</h3>
-			<p>These are not commands but just general parts of the interpreter, if they are listed they work</p>
-			<ul>
-				<li>lexer</li>
-				<li>parser</li>
-				<li>command handler</li>
-				<li>object and array variables</li>
-				<li>list variables</li>
-				<li>custom functions</li>
-				<li>scoping</li>
-				<li>interpreter</li>
-				<li>backslash escape sequences</li>
-				<li>advanced variables</li>
-				<li>asynchronous</li>
-			</ul>
-		</div>
-		<div style="position:relative;"><a name="typedoc-main-index" class="tsd-anchor"></a></div>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>External modules</h3>
+						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-external-module"><a href="modules/_commands_basic_.html" class="tsd-kind-icon">"commands/basic"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_commands_index_.html" class="tsd-kind-icon">"commands/index"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_commands_list_.html" class="tsd-kind-icon">"commands/list"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_commands_proc_.html" class="tsd-kind-icon">"commands/proc"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_commands_puts_.html" class="tsd-kind-icon">"commands/puts"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_interpreter_.html" class="tsd-kind-icon">"interpreter"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_io_.html" class="tsd-kind-icon">"io"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_is_.html" class="tsd-kind-icon">"is"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_lexer_.html" class="tsd-kind-icon">"lexer"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_parser_.html" class="tsd-kind-icon">"parser"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_scope_.html" class="tsd-kind-icon">"scope"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_tcl_.html" class="tsd-kind-icon">"tcl"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_tclerror_.html" class="tsd-kind-icon">"tclerror"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_types_.html" class="tsd-kind-icon">"types"</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.tclprocoptions.html#helpmessages" class="tsd-kind-icon">help<wbr>Messages</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_types_.tclprocoptions.html#pattern" class="tsd-kind-icon">pattern</a></li>
 						</ul>
 					</section>
 				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="helpmessages" class="tsd-anchor"></a>
+				<h3>help<wbr>Messages</h3>
+				<div class="tsd-signature tsd-kind-icon">help<wbr>Messages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/89de771/src/types.ts#L511">types.ts:511</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-index-signature">
+							<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></h5>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="pattern" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> pattern</h3>
+				<div class="tsd-signature tsd-kind-icon">pattern<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/89de771/src/types.ts#L510">types.ts:510</a></li>
+					</ul>
+				</aside>
 			</section>
 		</section>
 		<footer>

@@ -74,3 +74,6 @@ These are not commands but just general parts of the interpreter, if they are li
 - custom functions
 - scoping
 - interpreter
+- backslash escape sequences
+- advanced variables
+- asynchronous

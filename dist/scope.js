@@ -58,8 +58,8 @@
             }
             return null;
         };
-        Scope.prototype.defineProc = function (name, callback) {
-            this.procedures[name] = new types_1.TclProc(name, callback);
+        Scope.prototype.defineProc = function (name, callback, options) {
+            this.procedures[name] = new types_1.TclProc(name, callback, options);
         };
         Scope.prototype.disableProc = function (name) {
             if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {

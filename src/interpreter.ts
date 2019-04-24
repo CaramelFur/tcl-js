@@ -2,7 +2,15 @@ import { Program, Parser, CommandToken } from './parser';
 import { Scope } from './scope';
 import { Tcl } from './tcl';
 import { WordToken } from './lexer';
-import { TclSimple, TclVariable, TclObject, TclArray, TclList } from './types';
+import {
+  TclSimple,
+  TclVariable,
+  TclObject,
+  TclArray,
+  TclList,
+  TclProcHelpers,
+  TclProc,
+} from './types';
 import { TclError } from './tclerror';
 
 // A regex for finding variables in the code
@@ -14,7 +22,7 @@ const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?
 export class Interpreter {
   program: Program;
   scope: Scope;
-  lastValue: string = '';
+  lastValue: TclVariable = new TclSimple('');
   tcl: Tcl;
 
   /**
@@ -37,7 +45,7 @@ export class Interpreter {
    *
    * @returns Promise - Value of the last command ran
    */
-  public async run(): Promise<string> {
+  public async run(): Promise<TclVariable> {
     for (let command of this.program.commands) {
       this.lastValue = await this.processCommand(command);
     }
@@ -50,30 +58,36 @@ export class Interpreter {
    * @param  {CommandToken} command - Command to process
    * @returns Promise - Processed result
    */
-  private async processCommand(command: CommandToken): Promise<string> {
+  private async processCommand(command: CommandToken): Promise<TclVariable> {
     // Map the args from wordtokens to tclvariables
     let args: TclVariable[] = [];
     for (let i = 0; i < command.args.length; i++) {
       args[i] = await this.processArg(command.args[i]);
     }
 
-    // Create an array with the values of the previous variables
-    let wordArgs = args.map(
-      (arg: TclVariable): string => {
-        // Use try catch incase we try to convert an object or array
-        try {
-          return arg.getValue();
-        } catch (e) {
-          return '';
-        }
-      },
-    );
-
     // Return the result of the associated function being called
     let proc = this.scope.resolveProc(command.command);
     // First check if function exists
     if (!proc) throw new TclError(`invalid command name "${name}"`);
-    return proc.callback(this, wordArgs, args, command);
+
+    // Setup helper functions
+    let helpers: TclProcHelpers = {
+      sendHelp: (helpType: string) => {
+        let options = (<TclProc>proc).options;
+        let message = options.helpMessages[helpType] || "Error";
+        
+        if(options.pattern) message += `: should be "${options.pattern}"`;
+
+        throw new TclError(
+          `${message}\nwhile reading: "${
+            command.codeLine
+          }"`,
+        );
+      },
+    };
+
+    // Call the function
+    return proc.callback(this, args, command, helpers);
   }
 
   /**
@@ -87,13 +101,13 @@ export class Interpreter {
     let output: string | TclVariable = arg.value;
 
     // Check if the lexer has determined this argument has subexpressions
-    if (arg.hasSubExpr) {
+    if (arg.hasSubExpr && typeof output === 'string') {
       // Process all subexpressions and set the value accordingly
       output = await this.processSquareBrackets(output);
     }
 
     // Check if lexer has already determined there might be a variable
-    if (arg.hasVariable) {
+    if (arg.hasVariable && typeof output === 'string') {
       // If so, resolve those
       output = this.processVariables(output);
     }
@@ -108,7 +122,7 @@ export class Interpreter {
 
   /**
    * Function to resolve all variables in an argument
-   * 
+   *
    * @param  {string} input - The input argument
    * @returns TclVariable - The variable containing the resolved results
    */
@@ -155,7 +169,7 @@ export class Interpreter {
 
   /**
    * Grabs a variable with full name parsing: so "name" "name(obj)" and "name(3)" will all work
-   * 
+   *
    * @param  {string} variableName - The advanced variable name
    * @returns TclVariable - The resolved variable
    */
@@ -200,7 +214,7 @@ export class Interpreter {
 
   /**
    * Sets a variable with full name parsing
-   * 
+   *
    * @param  {string} variableName - The advanced variable name
    * @param  {TclVariable} variable - The variable to put at that index
    */
@@ -291,7 +305,9 @@ export class Interpreter {
    * @param  {string} input - The input string
    * @returns Promise - The processed output
    */
-  private async processSquareBrackets(input: string): Promise<string> {
+  private async processSquareBrackets(
+    input: string,
+  ): Promise<string | TclVariable> {
     // Initialize output string
     let output = input;
 
@@ -328,8 +344,11 @@ export class Interpreter {
             // Grab the result
             let result = await subInterpreter.run();
 
+            let replaceVal = `[${lastExpression}]`;
+            // If we just solved the entire string return the raw TclVariable
+            if (output === replaceVal) return result;
             // Replace the output with the correct value
-            output = output.replace(`[${lastExpression}]`, result);
+            output = output.replace(replaceVal, result.getValue());
 
             // Reset the expression for the next one
             lastExpression = '';

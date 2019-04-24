@@ -52,7 +52,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
-            this.lastValue = '';
+            this.lastValue = new types_1.TclSimple('');
             var parser = new parser_1.Parser(input);
             this.program = parser.get();
             this.scope = scope;
@@ -84,7 +84,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         Interpreter.prototype.processCommand = function (command) {
             return __awaiter(this, void 0, void 0, function () {
-                var args, i, _a, _b, wordArgs, proc;
+                var args, i, _a, _b, proc, helpers;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -103,18 +103,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             i++;
                             return [3, 1];
                         case 4:
-                            wordArgs = args.map(function (arg) {
-                                try {
-                                    return arg.getValue();
-                                }
-                                catch (e) {
-                                    return '';
-                                }
-                            });
                             proc = this.scope.resolveProc(command.command);
                             if (!proc)
                                 throw new tclerror_1.TclError("invalid command name \"" + name + "\"");
-                            return [2, proc.callback(this, wordArgs, args, command)];
+                            helpers = {
+                                sendHelp: function (helpType) {
+                                    var options = proc.options;
+                                    var message = options.helpMessages[helpType] || "Error";
+                                    if (options.pattern)
+                                        message += ": should be \"" + options.pattern + "\"";
+                                    throw new tclerror_1.TclError(message + "\nwhile reading: \"" + command.codeLine + "\"");
+                                },
+                            };
+                            return [2, proc.callback(this, args, command, helpers)];
                     }
                 });
             });
@@ -126,13 +127,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     switch (_a.label) {
                         case 0:
                             output = arg.value;
-                            if (!arg.hasSubExpr) return [3, 2];
+                            if (!(arg.hasSubExpr && typeof output === 'string')) return [3, 2];
                             return [4, this.processSquareBrackets(output)];
                         case 1:
                             output = _a.sent();
                             _a.label = 2;
                         case 2:
-                            if (arg.hasVariable) {
+                            if (arg.hasVariable && typeof output === 'string') {
                                 output = this.processVariables(output);
                             }
                             if (!arg.stopBackslash && typeof output === 'string')
@@ -236,7 +237,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     position += 1;
                     char = input.charAt(position);
                 }
-                var output, depth, position, char, lastExpression, subInterpreter, result;
+                var output, depth, position, char, lastExpression, subInterpreter, result, replaceVal;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -256,7 +257,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             return [4, subInterpreter.run()];
                         case 2:
                             result = _a.sent();
-                            output = output.replace("[" + lastExpression + "]", result);
+                            replaceVal = "[" + lastExpression + "]";
+                            if (output === replaceVal)
+                                return [2, result];
+                            output = output.replace(replaceVal, result.getValue());
                             lastExpression = '';
                             _a.label = 3;
                         case 3:

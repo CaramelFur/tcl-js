@@ -490,23 +490,41 @@ export interface TclProcHolder {
   [index: string]: TclProc;
 }
 
+// Types of functions a proc can have
 export type TclProcFunction =
   | ((
       interpreter: Interpreter,
-      args: Array<string>,
-      varArgs: Array<TclVariable>,
+      args: Array<TclVariable>,
       command: CommandToken,
-    ) => string)
+      helpers: TclProcHelpers,
+    ) => TclVariable)
   | ((
       interpreter: Interpreter,
-      args: Array<string>,
-      varArgs: Array<TclVariable>,
+      args: Array<TclVariable>,
       command: CommandToken,
-    ) => Promise<string>);
+      helpers: TclProcHelpers,
+    ) => Promise<TclVariable>);
 
+// The given options for a proc
+export interface TclProcOptions {
+  pattern?: string,
+  helpMessages: {
+    [index: string]: string
+  };
+}
+
+// The helper functions while running a proc
+export interface TclProcHelpers {
+  sendHelp: (helpType: string) => never;
+}
+
+// A tcl proc
 export class TclProc {
   name: string;
   callback: TclProcFunction;
+  options: TclProcOptions = {
+    helpMessages: {}
+  };
 
   /**
    * The constructor to assign the name and callback
@@ -514,8 +532,13 @@ export class TclProc {
    * @param  {string} name
    * @param  {TclProcFunction} callback
    */
-  constructor(name: string, callback: TclProcFunction) {
+  constructor(
+    name: string,
+    callback: TclProcFunction,
+    options?: TclProcOptions,
+  ) {
     this.name = name;
     this.callback = callback;
+    if (options) this.options = options;
   }
 }

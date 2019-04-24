@@ -4,6 +4,7 @@ import {
   TclProc,
   TclProcHolder,
   TclProcFunction,
+  TclProcOptions,
 } from './types';
 import { LoadFunctions } from './commands';
 import { TclError } from './tclerror';
@@ -105,9 +106,10 @@ export class Scope {
    *
    * @param  {string} name - The name of the procedure
    * @param  {TclProcFunction} callback - The js function that will be called to process the procedure
+   * @param  {TclProcOptions} options? - The options for the procedure
    */
-  public defineProc(name: string, callback: TclProcFunction) {
-    this.procedures[name] = new TclProc(name, callback);
+  public defineProc(name: string, callback: TclProcFunction, options?: TclProcOptions) {
+    this.procedures[name] = new TclProc(name, callback, options);
   }
 
   /**

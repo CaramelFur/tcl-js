@@ -2,6 +2,7 @@ import { Scope } from './scope';
 import { IO } from './io';
 import * as fs from 'fs';
 import { Interpreter } from './interpreter';
+import { TclVariable } from './types';
 
 export class Tcl {
   globalScope: Scope;
@@ -22,9 +23,9 @@ export class Tcl {
    * Run a string containing tcl code and return the last expression
    *
    * @param  {string} input
-   * @returns Promise - Returns last string
+   * @returns Promise - Returns last TclVariable
    */
-  public async run(input: string): Promise<string> {
+  public async run(input: string): Promise<TclVariable> {
     let interpreter = new Interpreter(this, input, this.globalScope);
     return interpreter.run();
   }
@@ -33,9 +34,9 @@ export class Tcl {
    * Run a file containing tcl code and return the last expression
    *
    * @param  {string} location
-   * @returns Promise - Returns last string
+   * @returns Promise - Returns last TclVariable
    */
-  public async runFile(location: string): Promise<string> {
+  public async runFile(location: string): Promise<TclVariable> {
     let buffer: string = fs.readFileSync(location, { encoding: 'utf-8' });
     return this.run(buffer);
   }

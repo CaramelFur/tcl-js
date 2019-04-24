@@ -43,88 +43,140 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 })(function (require, exports) {
     "use strict";
-    var _this = this;
     Object.defineProperty(exports, "__esModule", { value: true });
     var interpreter_1 = require("../interpreter");
     var math = require("mathjs");
     var types_1 = require("../types");
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
-    var commands = {};
-    commands.set = function (interpreter, args, varArgs, command) {
-        var varName = args[0], value = args[1];
-        if (args.length === 2) {
-            var tclValue = new types_1.TclSimple(value);
-            interpreter.setVariable(varName, tclValue);
-            return value;
-        }
-        else if (args.length === 1) {
-            return interpreter.getVariable(varName).getValue();
-        }
-        throw new tclerror_1.TclError("wrong # args: should be \"set varName ?newValue?\"\nwhile reading: \"" + command.codeLine + "\"");
-    };
-    commands.unset = function (interpreter, args, varArgs) {
-        var nocomplain = false;
-        if (args[0] === '-nocomplain') {
-            nocomplain = true;
-            args.shift();
-        }
-        if (args.length === 0)
-            throw new tclerror_1.TclError('wrong # args: should be "unset ?-nocomplain? varName ?varName ...?"');
-        for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
-            var arg = args_1[_i];
-            interpreter.scope.undefine(arg);
-        }
-        return '';
-    };
-    commands.expr = function (interpreter, args, varArgs) {
-        if (args.length === 0)
-            throw new tclerror_1.TclError('wrong # args: should be "unset arg ?arg arg ...?"');
-        var expression = args.join(' ');
-        var result = math.eval(expression);
-        if (typeof result !== 'number')
-            throw new tclerror_1.TclError('expression result is not a number');
-        if (result === Infinity)
-            throw new tclerror_1.TclError('expression result is Infinity');
-        return "" + result;
-    };
-    commands.eval = function (interpreter, args, varArgs) { return __awaiter(_this, void 0, void 0, function () {
-        var code, newInterpreter;
-        return __generator(this, function (_a) {
-            if (args.length === 0)
-                throw new tclerror_1.TclError('wrong # args: should be "eval arg ?arg arg ...?"');
-            code = args.join(' ');
-            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
-            return [2, newInterpreter.run()];
-        });
-    }); };
-    commands.info = function (interpreter, args, varArgs) {
-        if (args.length === 0)
-            throw new tclerror_1.TclError('wrong # args: should be "info option ?arg arg ...?"');
-        var type = args.shift();
-        switch (type) {
-            case 'commands':
-                return 'commands';
-        }
-        return '';
-    };
-    commands.wait = function (interpreter, args, varArgs) { return __awaiter(_this, void 0, void 0, function () {
-        var timeout;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    timeout = function (ms) { return new Promise(function (res) { return setTimeout(res, ms); }); };
-                    return [4, timeout(2000)];
-                case 1:
-                    _a.sent();
-                    return [2, 'wow'];
-            }
-        });
-    }); };
     function Load(scope) {
-        for (var command in commands) {
-            scope.defineProc(command, commands[command]);
-        }
+        var _this = this;
+        scope.defineProc('set', function (interpreter, args, command, helpers) {
+            var varName = args[0], tclValue = args[1];
+            if (args.length === 2) {
+                if (!(tclValue instanceof types_1.TclSimple) || !(varName instanceof types_1.TclSimple))
+                    return helpers.sendHelp('wtype');
+                interpreter.setVariable(varName.getValue(), tclValue);
+                return tclValue;
+            }
+            else if (args.length === 1) {
+                if (!(varName instanceof types_1.TclSimple))
+                    return helpers.sendHelp('wtype');
+                return interpreter.getVariable(varName.getValue());
+            }
+            return helpers.sendHelp('wargs');
+        }, {
+            pattern: 'set varName ?newValue?',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
+        scope.defineProc('unset', function (interpreter, args, command, helpers) {
+            if (args.length === 0)
+                return helpers.sendHelp('wargs');
+            for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+                var arg = args_1[_i];
+                if (!(arg instanceof types_1.TclSimple))
+                    return helpers.sendHelp('wtype');
+            }
+            var nocomplain = false;
+            if (args[0].getValue() === '-nocomplain') {
+                nocomplain = true;
+                args.shift();
+            }
+            for (var _a = 0, args_2 = args; _a < args_2.length; _a++) {
+                var arg = args_2[_a];
+                interpreter.scope.undefine(arg.getValue());
+            }
+            return new types_1.TclSimple('');
+        }, {
+            pattern: 'unset ?-nocomplain? varName ?varName ...?',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
+        scope.defineProc('expr', function (interpreter, args, command, helpers) {
+            if (args.length === 0)
+                return helpers.sendHelp('warg');
+            for (var _i = 0, args_3 = args; _i < args_3.length; _i++) {
+                var arg = args_3[_i];
+                if (!(arg instanceof types_1.TclSimple))
+                    return helpers.sendHelp('wtype');
+            }
+            var stringArgs = args.map(function (arg) { return arg.getValue(); });
+            var expression = stringArgs.join(' ');
+            var result = math.eval(expression);
+            if (typeof result !== 'number')
+                throw new tclerror_1.TclError('expression result is not a number');
+            if (result === Infinity)
+                throw new tclerror_1.TclError('expression result is infinity');
+            return new types_1.TclSimple("" + result);
+        }, {
+            pattern: 'expr arg ?arg arg ...?',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
+        scope.defineProc('eval', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
+            var _i, args_4, arg, stringArgs, code, newInterpreter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (args.length === 0)
+                            return [2, helpers.sendHelp('warg')];
+                        for (_i = 0, args_4 = args; _i < args_4.length; _i++) {
+                            arg = args_4[_i];
+                            if (!(arg instanceof types_1.TclSimple))
+                                return [2, helpers.sendHelp('wtype')];
+                        }
+                        stringArgs = args.map(function (arg) { return arg.getValue(); });
+                        code = stringArgs.join(' ');
+                        newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
+                        return [4, newInterpreter.run()];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        }); }, {
+            pattern: 'eval arg ?arg arg ...?',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
+        scope.defineProc('info', function (interpreter, args, command, helpers) {
+            if (args.length === 0)
+                return helpers.sendHelp('wargs');
+            var type = args.shift();
+            if (!(type instanceof types_1.TclSimple))
+                return helpers.sendHelp('wtype');
+            switch (type.getValue()) {
+                case 'commands':
+                    return new types_1.TclSimple('commands');
+            }
+            return new types_1.TclSimple('');
+        }, {
+            pattern: 'info option ?arg arg ...?',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
+        scope.defineProc('wait', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
+            var timeout;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        timeout = function (ms) { return new Promise(function (res) { return setTimeout(res, ms); }); };
+                        return [4, timeout(2000)];
+                    case 1:
+                        _a.sent();
+                        return [2, new types_1.TclSimple('wow')];
+                }
+            });
+        }); });
     }
     exports.Load = Load;
 });

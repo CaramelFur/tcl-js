@@ -254,9 +254,14 @@ var __extends = (this && this.__extends) || (function () {
     }(TclVariable));
     exports.TclArray = TclArray;
     var TclProc = (function () {
-        function TclProc(name, callback) {
+        function TclProc(name, callback, options) {
+            this.options = {
+                helpMessages: {}
+            };
             this.name = name;
             this.callback = callback;
+            if (options)
+                this.options = options;
         }
         return TclProc;
     }());
