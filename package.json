@@ -4,10 +4,10 @@
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
-    "pretest": "npm run tsbuild",
     "run": "npm run tsbuild & npm run runonly",
     "runonly": "ts-node test/dev/test.js",
     "test": "mocha",
+    "posttest": "npm run report-coverage",
     "tsbuild": "tsc",
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
