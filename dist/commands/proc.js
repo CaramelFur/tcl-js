@@ -29,7 +29,7 @@
             var newScope = new scope_1.Scope(undefined, interpreter.tcl.disabledCommands);
             for (var i = 0; i < parsedVarArgs.length; i++) {
                 var argName = commandArgs.getSubValue(i).getValue();
-                var argValue = parsedVarArgs[i].getValue();
+                var argValue = parsedVarArgs[i];
                 newScope.define(argName, argValue);
             }
             var newInterpreter = new interpreter_1.Interpreter(parsedInterpreter.tcl, tclCode, newScope);

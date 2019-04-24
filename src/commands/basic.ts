@@ -1,6 +1,6 @@
 import { Interpreter } from '../interpreter';
 import * as math from 'mathjs';
-import { TclVariable, TclProcFunction } from '../types';
+import { TclVariable, TclProcFunction, TclSimple } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 import { resolve } from 'dns';
@@ -26,12 +26,13 @@ commands.set = (
 
   // If there are 2 arguments, set the variable
   if (args.length === 2) {
-    interpreter.scope.define(varName, value);
+    let tclValue = new TclSimple(value);
+    interpreter.setVariable(varName, tclValue);
     return value;
   }
   // If there is 1 argument return the variable
   else if (args.length === 1) {
-    return interpreter.scope.resolve(varName).getValue();
+    return interpreter.getVariable(varName).getValue();
   }
 
   // If there are any other amount of variables throw an error

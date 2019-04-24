@@ -2,11 +2,14 @@ import { Program, Parser, CommandToken } from './parser';
 import { Scope } from './scope';
 import { Tcl } from './tcl';
 import { WordToken } from './lexer';
-import { TclSimple, TclVariable } from './types';
+import { TclSimple, TclVariable, TclObject, TclArray, TclList } from './types';
 import { TclError } from './tclerror';
 
 // A regex for finding variables in the code
-const variableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
+const findVariableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
+
+// A regex to convert a variable name to its base name with appended object keys or array indexes
+const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
 
 export class Interpreter {
   program: Program;
@@ -67,9 +70,10 @@ export class Interpreter {
     );
 
     // Return the result of the associated function being called
-    return this.scope
-      .resolveProc(command.command)
-      .callback(this, wordArgs, args, command);
+    let proc = this.scope.resolveProc(command.command);
+    // First check if function exists
+    if (!proc) throw new TclError(`invalid command name "${name}"`);
+    return proc.callback(this, wordArgs, args, command);
   }
 
   /**
@@ -79,56 +83,206 @@ export class Interpreter {
    * @returns Promise
    */
   private async processArg(arg: WordToken): Promise<TclVariable> {
+    // Define an output to return
+    let output: string | TclVariable = arg.value;
+
     // Check if the lexer has determined this argument has subexpressions
     if (arg.hasSubExpr) {
       // Process all subexpressions and set the value accordingly
-      arg.value = await this.processSquareBrackets(arg.value);
+      output = await this.processSquareBrackets(output);
     }
 
     // Check if lexer has already determined there might be a variable
     if (arg.hasVariable) {
-      // If so run the regex over it
-      let match = arg.value.match(variableRegex);
-
-      // If there is a match, and the match matches the entire string
-      if (match && match.length === 1 && match[0] === arg.value) {
-        // Execute the regex again on the arg to find the groups
-        let regex = variableRegex.exec(arg.value);
-
-        // Check if groups are present
-        if (!regex || !regex.groups || !regex.groups.fullname)
-          throw new TclError('Error parsing variable');
-
-        // Check for escape string
-        if (regex.groups.escaped === '\\')
-          return new TclSimple(arg.value.replace(/\\\$/g, '$'));
-
-        // Return the correct variable
-        return this.scope.resolve(regex.groups.fullname);
-      }
-      // Code goes here if only part of the string matches the regex
-
-      // Replace the regex with a function
-      arg.value = arg.value.replace(
-        variableRegex,
-        (...regex: Array<any>): string => {
-          // Parse the regex groups
-          let groups: RegexVariable = regex[regex.length - 1];
-
-          // Check for escape string
-          if (groups.escaped === '\\') return `$${groups.fullname}`;
-
-          // Return the resolved value to replace
-          return `${this.scope.resolve(groups.fullname).getValue()}`;
-        },
-      );
+      // If so, resolve those
+      output = this.processVariables(output);
     }
 
     // If the lexer has not determined to stop backslash processing, process all the backslashes
-    if (!arg.stopBackslash) arg.value = this.processBackSlash(arg.value);
+    if (!arg.stopBackslash && typeof output === 'string')
+      output = this.processBackSlash(output);
 
     // Return a new TclSimple with the previously set output
-    return new TclSimple(arg.value);
+    return typeof output === 'string' ? new TclSimple(output) : output;
+  }
+
+  /**
+   * Function to resolve all variables in an argument
+   * 
+   * @param  {string} input - The input argument
+   * @returns TclVariable - The variable containing the resolved results
+   */
+  private processVariables(input: string): TclVariable {
+    // If so run the regex over it
+    let match = input.match(findVariableRegex);
+
+    // If there is a match, and the match matches the entire string
+    if (match && match.length === 1 && match[0] === input) {
+      // Execute the regex again on the arg to find the groups
+      let regex = findVariableRegex.exec(input);
+
+      // Check if groups are present
+      if (!regex || !regex.groups || !regex.groups.fullname)
+        throw new TclError('Error parsing variable');
+
+      // Check for escape string
+      if (regex.groups.escaped === '\\')
+        return new TclSimple(input.replace(/\\\$/g, '$'));
+
+      // Return the correct variable
+      return this.getVariable(regex.groups.fullname);
+    }
+    // Code goes here if only part of the string matches the regex
+
+    // Replace the regex with a function
+    input = input.replace(
+      findVariableRegex,
+      (...regex: Array<any>): string => {
+        // Parse the regex groups
+        let groups: RegexVariable = regex[regex.length - 1];
+
+        // Check for escape string
+        if (groups.escaped === '\\') return `$${groups.fullname}`;
+
+        // Return the resolved value to replace
+        return `${this.getVariable(groups.fullname).getValue()}`;
+      },
+    );
+
+    // Return a variable with the processed string
+    return new TclSimple(input);
+  }
+
+  /**
+   * Grabs a variable with full name parsing: so "name" "name(obj)" and "name(3)" will all work
+   * 
+   * @param  {string} variableName - The advanced variable name
+   * @returns TclVariable - The resolved variable
+   */
+  public getVariable(variableName: string): TclVariable {
+    // Run inputName through regex to check if name is valid
+    let regex = variableRegex.exec(variableName);
+    if (!regex || !regex.groups)
+      throw new TclError(`can't read "${variableName}": invalid variable name`);
+
+    // Extract the variable name from the regex
+    let name = regex.groups.name;
+
+    // Get the corresponding value
+    let value: TclVariable | null = this.scope.resolve(name);
+
+    if (!value) throw new TclError(`can't read "${name}": no such variable`);
+
+    // Check if an object key is present
+    if (regex.groups.object) {
+      // Check if the value is indeed an object
+      if (!(value instanceof TclObject))
+        throw new TclError(`can't read "${name}": variable isn't object`);
+
+      // Return the value at the given key
+      return value.getSubValue(regex.groups.object);
+    }
+    // Check if an array index is present
+    else if (regex.groups.array) {
+      // Check if the value is indeed an array
+      if (!(value instanceof TclArray))
+        throw new TclError(`can't read "${name}": variable isn't array`);
+
+      // Return the value at the given index
+      let arrayNum = parseInt(regex.groups.array, 10);
+      return value.getSubValue(arrayNum);
+    }
+    // If none are present, just return the value
+    else {
+      return value;
+    }
+  }
+
+  /**
+   * Sets a variable with full name parsing
+   * 
+   * @param  {string} variableName - The advanced variable name
+   * @param  {TclVariable} variable - The variable to put at that index
+   */
+  public setVariable(variableName: string, variable: TclVariable) {
+    // Run the variableRegex over the inputname
+    let regex = variableRegex.exec(variableName);
+
+    // Check if the regex was succesful, if not throw an error
+    if (!regex || !regex.groups)
+      throw new TclError(`can't read "${variableName}": invalid variable name`);
+
+    // Retrieve the variable name from ther regex
+    let name = regex.groups.name;
+
+    // Define an output
+    let output: TclVariable = variable;
+
+    // Read if the value is already present in the scope
+    let existingValue: TclVariable | null = this.scope.resolve(name);
+
+    // Check if an object key was parsed
+    if (regex.groups.object) {
+      if (existingValue) {
+        // If a value is already present, check if it is indeed an object
+        if (!(existingValue instanceof TclObject))
+          throw new TclError(
+            `cant' set "${variableName}": variable isn't object`,
+          );
+
+        // Update the object with the value and return
+        existingValue.set(regex.groups.object, variable);
+        return;
+      }
+
+      // Create a new object, add the value
+      let obj = new TclObject(undefined, name);
+      obj.set(regex.groups.object, variable);
+
+      // Put the new object in the output
+      output = obj;
+    }
+    // Check an array index was parsed
+    else if (regex.groups.array) {
+      // Convert the parsed arrayVar to an integer
+      let arrayNum = parseInt(regex.groups.array, 10);
+
+      if (existingValue) {
+        // If a value is already present, check if it is indeed an array
+        if (!(existingValue instanceof TclArray))
+          throw new TclError(
+            `cant' set "${variableName}": variable isn't array`,
+          );
+
+        // Update the array with the value and return
+        existingValue.set(arrayNum, variable);
+        return;
+      }
+
+      // Create a new array, add the value
+      let arr = new TclArray(undefined, name);
+      arr.set(arrayNum, variable);
+
+      // Put the new array in the output
+      output = arr;
+    }
+    // It is just a normal object
+    else {
+      // Check if the existingValue is not already a different object
+      if (existingValue instanceof TclObject)
+        throw new TclError(`cant' set "${variableName}": variable is object`);
+      if (existingValue instanceof TclArray)
+        throw new TclError(`cant' set "${variableName}": variable is array`);
+      if (existingValue instanceof TclList)
+        throw new TclError(`cant' set "${variableName}": variable is list`);
+    }
+
+    // Set the name
+    output.setName(name);
+
+    // Set the scope correctly
+    this.scope.define(name, output);
+    return;
   }
 
   /**
@@ -203,7 +357,7 @@ export class Interpreter {
 
   /**
    * Function to replace all backslash sequences correctly
-   * 
+   *
    * @param  {string} input - The string to process
    * @returns string - The processed string
    */

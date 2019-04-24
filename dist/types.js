@@ -39,20 +39,14 @@ var __extends = (this && this.__extends) || (function () {
             this.value = value;
             return value;
         };
-        TclVariable.prototype.getSubValue = function (key) {
-            return undefined;
-        };
         TclVariable.prototype.getRawValue = function () {
             return this.value;
         };
         TclVariable.prototype.getName = function () {
             return this.name;
         };
-        TclVariable.prototype.getNumber = function (isInt) {
-            return undefined;
-        };
-        TclVariable.prototype.isNumber = function () {
-            return false;
+        TclVariable.prototype.setName = function (name) {
+            this.name = name;
         };
         return TclVariable;
     }());
@@ -177,7 +171,7 @@ var __extends = (this && this.__extends) || (function () {
             if (this.isNumber())
                 return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
             else
-                return undefined;
+                return 0;
         };
         TclSimple.prototype.isNumber = function () {
             return Is.Number(this.value);

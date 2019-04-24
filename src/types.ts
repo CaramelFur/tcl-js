@@ -39,17 +39,6 @@ export class TclVariable {
   }
 
   /**
-   * This function is only used in the case of lists, arrays and objects
-   * If the class is not one of these it will return undefined
-   *
-   * @param  {any} key?
-   * @returns any
-   */
-  public getSubValue(key?: any): any {
-    return undefined;
-  }
-
-  /**
    * This function should not be used but is here in case you need it for testing
    * It return the raw interal data storage of the variable
    *
@@ -69,22 +58,12 @@ export class TclVariable {
   }
 
   /**
-   * This function is used to retrieve the number from the variable, as long as it is a numbervariable
+   * This function sets the name of the variable
    *
-   * @param  {boolean} isInt?
-   * @returns number
+   * @returns string
    */
-  public getNumber(isInt?: boolean): number | undefined {
-    return undefined;
-  }
-
-  /**
-   * Check if the variable is a number
-   *
-   * @returns boolean
-   */
-  public isNumber(): boolean {
-    return false;
+  public setName(name: string) {
+    this.name = name;
   }
 }
 
@@ -329,12 +308,12 @@ export class TclSimple extends TclVariable {
    * Function to convert the TclSimple to a js number if the value allows this
    *
    * @param  {boolean=false} isInt - Tell the function to return an int or a float
-   * @returns number - The returned number
+   * @returns number - The returned number, 0 if the variable is not a number
    */
-  public getNumber(isInt: boolean = false): number | undefined {
+  public getNumber(isInt: boolean = false): number {
     if (this.isNumber())
       return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
-    else return undefined;
+    else return 0;
   }
 
   /**

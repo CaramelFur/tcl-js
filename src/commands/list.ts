@@ -56,11 +56,11 @@ commands.lindex = (
   // Go over every next argument
   for (let i = 1; i < varArgs.length; i++) {
     // Check if the argument is TclSimple an a number
-    if (!(varArgs[i] instanceof TclSimple && varArgs[i].isNumber()))
+    if (!(varArgs[i] instanceof TclSimple) || !(<TclSimple>varArgs[i]).isNumber() )
       throw new TclError('expected number, did not recieve number');
 
     // Add the number to the array
-    numArr[i - 1] = <number>varArgs[i].getNumber();
+    numArr[i - 1] = (<TclSimple>varArgs[i]).getNumber();
   }
 
   // Cast the first argument to TclSimple

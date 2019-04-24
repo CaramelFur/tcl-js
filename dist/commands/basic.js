@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../interpreter", "mathjs", "../scope", "../tclerror"], factory);
+        define(["require", "exports", "../interpreter", "mathjs", "../types", "../scope", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -47,17 +47,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     Object.defineProperty(exports, "__esModule", { value: true });
     var interpreter_1 = require("../interpreter");
     var math = require("mathjs");
+    var types_1 = require("../types");
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
     var commands = {};
     commands.set = function (interpreter, args, varArgs, command) {
         var varName = args[0], value = args[1];
         if (args.length === 2) {
-            interpreter.scope.define(varName, value);
+            var tclValue = new types_1.TclSimple(value);
+            interpreter.setVariable(varName, tclValue);
             return value;
         }
         else if (args.length === 1) {
-            return interpreter.scope.resolve(varName).getValue();
+            return interpreter.getVariable(varName).getValue();
         }
         throw new tclerror_1.TclError("wrong # args: should be \"set varName ?newValue?\"\nwhile reading: \"" + command.codeLine + "\"");
     };

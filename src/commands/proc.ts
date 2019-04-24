@@ -50,7 +50,8 @@ commands.proc = (
     // Put all the given arguments in the created scope
     for (let i = 0; i < parsedVarArgs.length; i++) {
       let argName = commandArgs.getSubValue(i).getValue();
-      let argValue = parsedVarArgs[i].getValue();
+      let argValue = parsedVarArgs[i];
+
       newScope.define(argName, argValue);
     }
 

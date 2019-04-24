@@ -24,7 +24,7 @@
             throw new tclerror_1.TclError('expected list, did not receive list');
         var numArr = [];
         for (var i = 1; i < varArgs.length; i++) {
-            if (!(varArgs[i] instanceof types_1.TclSimple && varArgs[i].isNumber()))
+            if (!(varArgs[i] instanceof types_1.TclSimple) || !varArgs[i].isNumber())
                 throw new tclerror_1.TclError('expected number, did not recieve number');
             numArr[i - 1] = varArgs[i].getNumber();
         }
