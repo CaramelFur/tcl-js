@@ -12,7 +12,7 @@
     "gendoc": "typedoc --options ./typedoc.json ./src/",
     "build": "npm run tsbuild & npm run gendoc",
     "start": "echo Error: There is nothing to start & exit 1",
-    "report-coverage": "nyc report --reporter=json > coverage/coverage.json && codecov -f coverage/*.json"
+    "report-coverage": "nyc report --reporter=json && codecov -f coverage/*.json"
   },
   "repository": {
     "type": "git",
