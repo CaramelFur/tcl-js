@@ -14,9 +14,9 @@ export class Tcl {
    *
    * @param  {Array<string>} disableCommands
    */
-  public constructor(disableCommands: Array<string>) {
-    this.disabledCommands = disableCommands;
-    this.globalScope = new Scope(undefined, disableCommands);
+  public constructor(disableCommands?: Array<string>) {
+    if(disableCommands) this.disabledCommands = disableCommands;
+    this.globalScope = new Scope(undefined, this.disabledCommands);
   }
 
   /**

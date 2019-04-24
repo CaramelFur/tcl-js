@@ -52,8 +52,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         function Tcl(disableCommands) {
             this.io = new io_1.IO();
             this.disabledCommands = [];
-            this.disabledCommands = disableCommands;
-            this.globalScope = new scope_1.Scope(undefined, disableCommands);
+            if (disableCommands)
+                this.disabledCommands = disableCommands;
+            this.globalScope = new scope_1.Scope(undefined, this.disabledCommands);
         }
         Tcl.prototype.run = function (input) {
             return __awaiter(this, void 0, void 0, function () {

@@ -1,11 +1,10 @@
-const chai = require('chai');  
-const assert = chai.assert;
+const Tcl = require('../dist/tcl');
+const chai = require('chai');
+const expect = chai.expect;
 
-// This is only just a test
-describe('Array', function() {
-  describe('#indexOf()', function() {
-    it('should return -1 when the value is not present', function() {
-      assert.equal([1, 2, 3].indexOf(4), -1);
-    });
+describe('Calculator', () => {
+  it('should add two numbers together', async () => {
+    const tcl = new Tcl.Tcl();
+    expect((await tcl.run('expr 3')).getValue()).to.equal('3');
   });
 });
