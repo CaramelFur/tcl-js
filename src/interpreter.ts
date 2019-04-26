@@ -1,7 +1,6 @@
-import { Program, Parser, CommandToken } from './parser';
+import { Program, Parser, CommandToken, ArgToken } from './parser';
 import { Scope } from './scope';
 import { Tcl } from './tcl';
-import { WordToken } from './lexer';
 import {
   TclSimple,
   TclVariable,
@@ -12,12 +11,6 @@ import {
   TclProc,
 } from './types';
 import { TclError } from './tclerror';
-
-// A regex for finding variables in the code
-const findVariableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
-
-// A regex to convert a variable name to its base name with appended object keys or array indexes
-const variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
 
 export class Interpreter {
   program: Program;
@@ -78,7 +71,12 @@ export class Interpreter {
 
         if (options.pattern) message += `: should be "${options.pattern}"`;
 
-        throw new TclError(`${message}\nwhile reading: "${command.codeLine}"`);
+        // Throw an advanced error
+        throw new TclError(
+          `${message}\n    while reading: "${command.source}"\n    at line #${
+            command.sourceLocation
+          }\n`,
+        );
       },
     };
 
@@ -89,10 +87,10 @@ export class Interpreter {
   /**
    * Processes arguments
    *
-   * @param  {WordToken} arg
+   * @param  {ArgToken} arg
    * @returns Promise
    */
-  private async processArg(arg: WordToken): Promise<TclVariable> {
+  private async processArg(arg: ArgToken): Promise<TclVariable> {
     // Define an output to return
     let output: string | TclVariable = arg.value;
 
@@ -105,7 +103,7 @@ export class Interpreter {
     // Check if lexer has already determined there might be a variable
     if (arg.hasVariable && typeof output === 'string') {
       // If so, resolve those
-      output = this.processVariables(output);
+      output = await this.deepProcessVariables(output);
     }
 
     // If the lexer has not determined to stop backslash processing, process all the backslashes
@@ -120,66 +118,208 @@ export class Interpreter {
   }
 
   /**
-   * Function to resolve all variables in an argument
-   *
-   * @param  {string} input - The input argument
-   * @returns TclVariable - The variable containing the resolved results
+   * Function to loop over every variable and solve all of them in order
+   * 
+   * @param  {string} input - The string to loop over
+   * @param  {number=0} position - At what position in the string to start
+   * @returns Promise - The solved result
    */
-  public processVariables(input: string): TclVariable | string {
-    // If so run the regex over it
-    let match = input.match(findVariableRegex);
+  public async deepProcessVariables(
+    input: string,
+    position: number = 0,
+  ): Promise<TclVariable | string> {
+    // Initialize output string
+    let output = "";
 
-    // If there is a match, and the match matches the entire string
-    if (match && match.length === 1 && match[0] === input) {
-      // Execute the regex again on the arg to find the groups
-      let regex = findVariableRegex.exec(input);
+    // Intitialize variable for every found variable
+    let toProcess: FoundVariable | null;
 
-      // Check if groups are present
-      if (!regex || !regex.groups || !regex.groups.fullname)
-        throw new TclError('Error parsing variable');
+    // Keep going as long as there are variables
+    while ((toProcess = await this.resolveFirstVariable(input, position))) {
+      // Add the string until the first found variable
+      while (position < toProcess.startPosition){
+        output += input.charAt(position);
+        position++;
+      }
 
-      // Check for escape string
-      if (regex.groups.escaped === '\\')
-        return new TclSimple(input.replace(/\\\$/g, '$'));
+      // Jump to the end of the variable
+      position = toProcess.endPosition;
 
-      // Return the correct variable
-      return this.getVariable(regex.groups.fullname);
+      // Return the full value if it corrresponds to the entire string
+      if (toProcess.raw === input) return toProcess.value;
+      // Otherwise add the result to the output
+      output += toProcess.value.getValue();
     }
-    // Code goes here if only part of the string matches the regex
 
-    // Replace the regex with a function
-    input = input.replace(
-      findVariableRegex,
-      (...regex: Array<any>): string => {
-        // Parse the regex groups
-        let groups: RegexVariable = regex[regex.length - 1];
+    // Add the last bit of the string
+    while (position < input.length){
+      output += input.charAt(position);
+      position++;
+    }
 
-        // Check for escape string
-        if (groups.escaped === '\\') return `$${groups.fullname}`;
+    return output;
+  }
 
-        // Return the resolved value to replace
-        return `${this.getVariable(groups.fullname).getValue()}`;
-      },
-    );
+  /**
+   * Function to read a string until the first found variable
+   * It will then solve the variable and return that
+   * 
+   * @param  {string} input - The string that will be searched for variables
+   * @param  {number=0} position - The position to start searching at
+   * @returns Promise - The found results
+   */
+  private async resolveFirstVariable(
+    input: string,
+    position: number = 0,
+  ): Promise<FoundVariable | null> {
+    // Setup necessary variables
+    let char = input.charAt(position);
 
-    // Return the processed string
-    return input;
+    // Setup an output buffer
+    let currentVar = {
+      // Exmample: name(bracket)
+      name: '',
+      bracket: '',
+      // Originalstring: $name(bracket)
+      originalString: '',
+      // If the variable is curly: ${curly(variable)}
+      curly: false,
+    };
+
+    // Keep track if we are in a bracket () or not
+    let inBracket = false;
+
+    // Function to progress one char
+    function read(appendOnOriginal: boolean) {
+      if (appendOnOriginal) currentVar.originalString += char;
+      position += 1;
+      char = input.charAt(position);
+    }
+
+    // Keep reading string until a $ is found
+    while (char !== '$' && position < input.length) {
+      if (char === '\\') read(false);
+      read(false);
+    }
+    // Check if it was not the end of the string that stopped us
+    if (char !== '$') return null;
+    char = <string>char;
+
+    // Record the startposition of the variable
+    let startPosition = position;
+
+    // Eat the $ character
+    read(true);
+
+    // Check if the variable is curly
+    if (char === '{') {
+      currentVar.curly = true;
+      read(true);
+    }
+
+    // While input is abvailable
+    while (position < input.length) {
+      // Check if we are within ()
+      if (inBracket) {
+        if (char === ')') {
+          inBracket = false;
+          read(true);
+          break;
+        }
+
+        if (char === '$') {
+          let replaceVar = await this.resolveFirstVariable(input, position);
+          if (replaceVar) {
+            while (position < replaceVar.endPosition) {
+              read(true);
+            }
+            currentVar.bracket += replaceVar.value.getValue();
+            continue;
+          }
+        }
+      // If not
+      } else {
+        // Check if we should enter brackets
+        if (char === '(') {
+          inBracket = true;
+          // Eat the ( character
+          read(true);
+          continue;
+        }
+
+        // If not check if the character is normal wordcharacter
+        // Although this is only needed when we are not within {}
+        if (!currentVar.curly && !char.match(/\w/g)) break;
+      }
+
+      // If the variable is curly and we hit an end }, break;
+      if (currentVar.curly && char === '}') break;
+
+      // Check for escape chars
+      if (char === '\\') {
+        if (inBracket) currentVar.bracket += char;
+        else currentVar.name += char;
+        read(true);
+      }
+
+      // Add the character to the corresponding string
+      if (inBracket) currentVar.bracket += char;
+      else currentVar.name += char;
+
+      // Next char
+      read(true);
+    }
+
+    // If the variable is curly check if we ended on an }
+    if (currentVar.curly) {
+      if (char !== '}') throw new TclError('unexpected end of string');
+      // Eat the }
+      read(true);
+    }
+
+    // Check if we did not just hit a lonesome $, if we did return the next variable
+    if (currentVar.name === '')
+      return this.resolveFirstVariable(input, position);
+
+    // Initialize an index
+    let index: string | number | null;
+
+    /**
+     * Commented out for future use, this should fix "set hello hello; puts $hello[expr 3]" from not running
+     */
+    let solved = currentVar.bracket;
+    /*let solved = await this.processSquareBrackets(currentVar.bracket);
+    if (typeof solved !== 'string') solved = solved.getValue();*/
+
+    // Set the correct key
+    if (solved === '') index = null;
+    else if (isNumber(solved)) index = parseInt(solved, 10);
+    else index = solved;
+
+    // And return the solved variable with extra info
+    return {
+      raw: currentVar.originalString,
+      startPosition,
+      endPosition: position,
+      value: this.getVariable(currentVar.name, index),
+    };
   }
 
   /**
    * Grabs a variable with full name parsing: so "name" "name(obj)" and "name(3)" will all work
    *
    * @param  {string} variableName - The advanced variable name
+   * @param  {string|number|null} variableKey - If necessary, the array or object key in the variable
    * @returns TclVariable - The resolved variable
    */
-  public getVariable(variableName: string): TclVariable {
-    // Run inputName through regex to check if name is valid
-    let regex = variableRegex.exec(variableName);
-    if (!regex || !regex.groups)
-      throw new TclError(`can't read "${variableName}": invalid variable name`);
-
-    // Extract the variable name from the regex
-    let name = regex.groups.name;
+  public getVariable(
+    variableName: string,
+    variableKey: string | number | null,
+  ): TclVariable {
+    // Set the correct keys
+    let name = variableName;
+    let objectKey = typeof variableKey === 'string' ? variableKey : undefined;
+    let arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
 
     // Get the corresponding value
     let value: TclVariable | null = this.scope.resolve(name);
@@ -187,23 +327,22 @@ export class Interpreter {
     if (!value) throw new TclError(`can't read "${name}": no such variable`);
 
     // Check if an object key is present
-    if (regex.groups.object) {
+    if (objectKey) {
       // Check if the value is indeed an object
       if (!(value instanceof TclObject))
         throw new TclError(`can't read "${name}": variable isn't object`);
 
       // Return the value at the given key
-      return value.getSubValue(regex.groups.object);
+      return value.getSubValue(objectKey);
     }
     // Check if an array index is present
-    else if (regex.groups.array) {
+    else if (arrayIndex) {
       // Check if the value is indeed an array
       if (!(value instanceof TclArray))
         throw new TclError(`can't read "${name}": variable isn't array`);
 
       // Return the value at the given index
-      let arrayNum = parseInt(regex.groups.array, 10);
-      return value.getSubValue(arrayNum);
+      return value.getSubValue(arrayIndex);
     }
     // If none are present, just return the value
     else {
@@ -215,18 +354,18 @@ export class Interpreter {
    * Sets a variable with full name parsing
    *
    * @param  {string} variableName - The advanced variable name
+   * @param  {string|number|null} variableKey - If necessary, the array or object key in the variable
    * @param  {TclVariable} variable - The variable to put at that index
    */
-  public setVariable(variableName: string, variable: TclVariable) {
-    // Run the variableRegex over the inputname
-    let regex = variableRegex.exec(variableName);
-
-    // Check if the regex was succesful, if not throw an error
-    if (!regex || !regex.groups)
-      throw new TclError(`can't read "${variableName}": invalid variable name`);
-
-    // Retrieve the variable name from ther regex
-    let name = regex.groups.name;
+  public setVariable(
+    variableName: string,
+    variableKey: string | number | null,
+    variable: TclVariable,
+  ) {
+    // Set the correct keys
+    let name = variableName;
+    let objectKey = typeof variableKey === 'string' ? variableKey : undefined;
+    let arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
 
     // Define an output
     let output: TclVariable = variable;
@@ -235,7 +374,7 @@ export class Interpreter {
     let existingValue: TclVariable | null = this.scope.resolve(name);
 
     // Check if an object key was parsed
-    if (regex.groups.object) {
+    if (objectKey) {
       if (existingValue) {
         // If a value is already present, check if it is indeed an object
         if (!(existingValue instanceof TclObject))
@@ -244,22 +383,19 @@ export class Interpreter {
           );
 
         // Update the object with the value and return
-        existingValue.set(regex.groups.object, variable);
+        existingValue.set(objectKey, variable);
         return;
       }
 
       // Create a new object, add the value
       let obj = new TclObject(undefined, name);
-      obj.set(regex.groups.object, variable);
+      obj.set(objectKey, variable);
 
       // Put the new object in the output
       output = obj;
     }
     // Check an array index was parsed
-    else if (regex.groups.array) {
-      // Convert the parsed arrayVar to an integer
-      let arrayNum = parseInt(regex.groups.array, 10);
-
+    else if (arrayIndex) {
       if (existingValue) {
         // If a value is already present, check if it is indeed an array
         if (!(existingValue instanceof TclArray))
@@ -268,13 +404,13 @@ export class Interpreter {
           );
 
         // Update the array with the value and return
-        existingValue.set(arrayNum, variable);
+        existingValue.set(arrayIndex, variable);
         return;
       }
 
       // Create a new array, add the value
       let arr = new TclArray(undefined, name);
-      arr.set(arrayNum, variable);
+      arr.set(arrayIndex, variable);
 
       // Put the new array in the output
       output = arr;
@@ -344,6 +480,7 @@ export class Interpreter {
             let result = await subInterpreter.run();
 
             let replaceVal = `[${lastExpression}]`;
+
             // If we just solved the entire string return the raw TclVariable
             if (output === replaceVal) return result;
             // Replace the output with the correct value
@@ -352,7 +489,7 @@ export class Interpreter {
             // Reset the expression for the next one
             lastExpression = '';
           }
-        }
+        } else if (depth < 0) throw new TclError('unexpected ]');
       }
 
       // If we are within square brackets, add the characters to the expression
@@ -464,11 +601,19 @@ export class Interpreter {
   }
 }
 
-// An interface for holding the result of the regex
-interface RegexVariable {
-  name: string;
-  fullname: string;
-  array: string | null;
-  object: string | null;
-  escaped: string;
+/**
+ * Checks if a variable is a number
+ * 
+ * @param  {any} input - The variable to check
+ */
+export function isNumber(input: any) {
+  return !isNaN(<number>(<unknown>input)) && !isNaN(parseInt(input, 10));
+}
+
+// An interface for holding a found variable
+interface FoundVariable {
+  raw: string;
+  startPosition: number;
+  endPosition: number;
+  value: TclVariable;
 }

@@ -17,7 +17,7 @@ export class Parser {
     this.lexer = new Lexer(input);
 
     // Loop over every available token
-    let toProcess = this.lexer.nextToken();
+    let toProcess: WordToken | null = this.lexer.nextToken();
     while (toProcess) {
       // Check if the index of the current token is zero, this means that the token is a command and not an argument
       if (toProcess.index === 0) {
@@ -25,7 +25,8 @@ export class Parser {
         this.program.commands.push({
           command: toProcess.value,
           args: [],
-          codeLine: toProcess.lastSentence,
+          source: toProcess.source,
+          sourceLocation: toProcess.sourceLocation,
         });
       }
       // If not the token is an argument
@@ -35,13 +36,16 @@ export class Parser {
           throw new TclError('encountered argument but no command exists');
 
         // Add the argument to the last command in the command list
-        this.program.commands[this.program.commands.length - 1].args.push(
-          toProcess,
-        );
+        this.program.commands[this.program.commands.length - 1].args.push({
+          value: toProcess.value,
+          hasVariable: toProcess.hasVariable,
+          hasSubExpr: toProcess.hasSubExpr,
+          stopBackslash: toProcess.stopBackslash,
+        });
 
         // Add the original tcl code
-        this.program.commands[this.program.commands.length - 1].codeLine =
-          toProcess.lastSentence;
+        this.program.commands[this.program.commands.length - 1].source =
+          toProcess.source;
       }
 
       // Process next token
@@ -55,6 +59,8 @@ export class Parser {
    * @returns Program - Processed program
    */
   public get(): Program {
+    //writeFileSync('./test/dev/out.json', JSON.stringify(this.program, null, 2));
+    //process.exit();
     return this.program;
   }
 }
@@ -65,8 +71,16 @@ export interface Program {
 
 export interface CommandToken {
   command: string;
-  args: Array<WordToken>;
-  codeLine: string;
+  args: Array<ArgToken>;
+  source: string;
+  sourceLocation: number;
+}
+
+export interface ArgToken {
+  value: string;
+  hasVariable: boolean;
+  hasSubExpr: boolean;
+  stopBackslash: boolean;
 }
 
 /*
@@ -79,11 +93,11 @@ Program
       |
       command
       args[
-        Word
+        Arg
           |
           index
           value
-        Word
+        Arg
           |
           index
           value
@@ -92,11 +106,11 @@ Program
       |
       command
       args[
-        Word
+        Arg
           |
           index
           value
-        Word
+        Arg
           |
           index
           value

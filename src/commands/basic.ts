@@ -1,15 +1,12 @@
 import { Interpreter } from '../interpreter';
 import * as math from 'mathjs';
-import {
-  TclVariable,
-  TclProcFunction,
-  TclSimple,
-  TclProcHelpers,
-} from '../types';
+import { TclVariable, TclSimple, TclProcHelpers } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
-import { resolve } from 'dns';
 import { CommandToken } from '../parser';
+
+// A regex to convert a variable name to its base name with appended object keys or array indexes
+const variableRegex = /(?<fullname>(?<name>\w+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
 
 /**
  * Function to load the procs into the scope
@@ -34,18 +31,54 @@ export function Load(scope: Scope) {
     ): TclVariable => {
       const [varName, tclValue] = args;
 
+      // Interface for return object
+      interface solveVarReturn {
+        name: string;
+        key: string | number | null;
+      }
+
+      /**
+       * Function to destruct a variable into name/key combinations
+       *
+       * @param  {string} input - The raw variable
+       * @returns solveVarReturn - The solved result
+       */
+      function solveVar(input: string): solveVarReturn {
+        // Execute the regex
+        let result = variableRegex.exec(input);
+        // Check if succeed
+        if (!result || !result.groups) return helpers.sendHelp('wvarname');
+
+        // Remap the name and key accordingly
+        let name = result.groups.name;
+        let key = result.groups.object
+          ? result.groups.object
+          : result.groups.array
+          ? parseInt(result.groups.array, 10)
+          : null;
+
+        // Return
+        return {
+          name,
+          key,
+        };
+      }
+
       // If there are 2 arguments, set the variable
       if (args.length === 2) {
         if (!(tclValue instanceof TclSimple) || !(varName instanceof TclSimple))
           return helpers.sendHelp('wtype');
 
-        interpreter.setVariable(varName.getValue(), tclValue);
+        let solved = solveVar(varName.getValue());
+        interpreter.setVariable(solved.name, solved.key, tclValue);
         return tclValue;
       }
       // If there is 1 argument return the variable
       else if (args.length === 1) {
         if (!(varName instanceof TclSimple)) return helpers.sendHelp('wtype');
-        return interpreter.getVariable(varName.getValue());
+
+        let solved = solveVar(varName.getValue());
+        return interpreter.getVariable(solved.name, solved.key);
       }
 
       // If there are any other amount of variables throw an error
@@ -56,6 +89,7 @@ export function Load(scope: Scope) {
       helpMessages: {
         wargs: `wrong # args`,
         wtype: `wrong type`,
+        wvarname: `incorrect variable name`,
       },
     },
   );
@@ -115,12 +149,12 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'expr',
-    (
+    async (
       interpreter: Interpreter,
       args: Array<TclVariable>,
       command: CommandToken,
       helpers: TclProcHelpers,
-    ): TclVariable => {
+    ): Promise<TclVariable> => {
       // Check if there are enough arguments
       if (args.length === 0) return helpers.sendHelp('warg');
 
@@ -133,7 +167,7 @@ export function Load(scope: Scope) {
       let stringArgs = args.map((arg) => arg.getValue());
       let expression = stringArgs.join(' ');
 
-      let solvedExpression = interpreter.processVariables(expression);
+      let solvedExpression = await interpreter.deepProcessVariables(expression);
       if (typeof solvedExpression !== 'string')
         throw new TclError('expression resolved to variable instead of string');
 

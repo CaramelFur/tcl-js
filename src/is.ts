@@ -5,8 +5,10 @@ const CommandDelimiter = (c: string) => c === ';' || c === '\n';
 const WordSeparator = (c: string) => Whitespace(c) || CommandDelimiter(c);
 const Subs = (c: string) => c === '$' || c === '\\' || c === '[';
 
-const OpenBrace = (c: string) => c === '{' || c === '[' || c === '"';
-const CloseBrace = (c: string) => c === ']' || c === '}' || c === '"';
+const OpenBrace = (c: string) =>
+  c === '{' || c === '[' || c === '"' || c === '(';
+const CloseBrace = (c: string) =>
+  c === ']' || c === '}' || c === '"' || c === ')';
 const Brace = (c: string) => OpenBrace(c) || CloseBrace(c);
 const Number = (c: string) => !isNaN(parseFloat(c));
 

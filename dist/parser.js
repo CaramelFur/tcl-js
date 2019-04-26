@@ -23,15 +23,21 @@
                     this.program.commands.push({
                         command: toProcess.value,
                         args: [],
-                        codeLine: toProcess.lastSentence,
+                        source: toProcess.source,
+                        sourceLocation: toProcess.sourceLocation,
                     });
                 }
                 else {
                     if (this.program.commands.length === 0)
                         throw new tclerror_1.TclError('encountered argument but no command exists');
-                    this.program.commands[this.program.commands.length - 1].args.push(toProcess);
-                    this.program.commands[this.program.commands.length - 1].codeLine =
-                        toProcess.lastSentence;
+                    this.program.commands[this.program.commands.length - 1].args.push({
+                        value: toProcess.value,
+                        hasVariable: toProcess.hasVariable,
+                        hasSubExpr: toProcess.hasSubExpr,
+                        stopBackslash: toProcess.stopBackslash,
+                    });
+                    this.program.commands[this.program.commands.length - 1].source =
+                        toProcess.source;
                 }
                 toProcess = this.lexer.nextToken();
             }

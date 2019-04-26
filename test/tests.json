@@ -245,6 +245,17 @@
         "type": "file",
         "value": "results/math_2.txt"
       }
+    },
+    {
+      "name": "Math three",
+      "input": {
+        "type": "file",
+        "value": "scripts/math_3.tcl"
+      },
+      "stdout": {
+        "type": "file",
+        "value": "results/math_3.txt"
+      }
     }
   ]
 }

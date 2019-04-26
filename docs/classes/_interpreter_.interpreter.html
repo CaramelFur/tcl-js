@@ -928,6 +928,9 @@ img { max-width: 100%; }
 					<a href="_interpreter_.interpreter.html#tcl" class="tsd-kind-icon">tcl</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_interpreter_.interpreter.html#deepprocessvariables" class="tsd-kind-icon">deep<wbr>Process<wbr>Variables</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_interpreter_.interpreter.html#getvariable" class="tsd-kind-icon">get<wbr>Variable</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -942,8 +945,8 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_interpreter_.interpreter.html#processsquarebrackets" class="tsd-kind-icon">process<wbr>Square<wbr>Brackets</a>
 				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class">
-					<a href="_interpreter_.interpreter.html#processvariables" class="tsd-kind-icon">process<wbr>Variables</a>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_interpreter_.interpreter.html#resolvefirstvariable" class="tsd-kind-icon">resolve<wbr>First<wbr>Variable</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_interpreter_.interpreter.html#run" class="tsd-kind-icon">run</a>
@@ -954,13 +957,10 @@ img { max-width: 100%; }
 			</ul>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../interfaces/_interpreter_.regexvariable.html" class="tsd-kind-icon">Regex<wbr>Variable</a>
+			<a href="../interfaces/_interpreter_.foundvariable.html" class="tsd-kind-icon">Found<wbr>Variable</a>
 		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../modules/_interpreter_.html#findvariableregex" class="tsd-kind-icon">find<wbr>Variable<wbr>Regex</a>
-		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../modules/_interpreter_.html#variableregex" class="tsd-kind-icon">variable<wbr>Regex</a>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module">
+			<a href="../modules/_interpreter_.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a>
 		</li>
 	</ul>
 </nav>
@@ -996,12 +996,13 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#deepprocessvariables" class="tsd-kind-icon">deep<wbr>Process<wbr>Variables</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#getvariable" class="tsd-kind-icon">get<wbr>Variable</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processarg" class="tsd-kind-icon">process<wbr>Arg</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processbackslash" class="tsd-kind-icon">process<wbr>Back<wbr>Slash</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processcommand" class="tsd-kind-icon">process<wbr>Command</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#processsquarebrackets" class="tsd-kind-icon">process<wbr>Square<wbr>Brackets</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#processvariables" class="tsd-kind-icon">process<wbr>Variables</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_.interpreter.html#resolvefirstvariable" class="tsd-kind-icon">resolve<wbr>First<wbr>Variable</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#run" class="tsd-kind-icon">run</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_.interpreter.html#setvariable" class="tsd-kind-icon">set<wbr>Variable</a></li>
 						</ul>
@@ -1021,7 +1022,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L26">interpreter.ts:26</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L19">interpreter.ts:19</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1069,7 +1070,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">last<wbr>Value<span class="tsd-signature-symbol">:</span> <a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol"> =&nbsp;new TclSimple(&#x27;&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L25">interpreter.ts:25</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L18">interpreter.ts:18</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1079,7 +1080,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">program<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_parser_.program.html" class="tsd-signature-type">Program</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L23">interpreter.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L16">interpreter.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1089,7 +1090,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">scope<span class="tsd-signature-symbol">:</span> <a href="_scope_.scope.html" class="tsd-signature-type">Scope</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L24">interpreter.ts:24</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L17">interpreter.ts:17</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1099,7 +1100,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">tcl<span class="tsd-signature-symbol">:</span> <a href="_tcl_.tcl.html" class="tsd-signature-type">Tcl</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L26">interpreter.ts:26</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L19">interpreter.ts:19</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1107,16 +1108,54 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-				<a name="getvariable" class="tsd-anchor"></a>
-				<h3>get<wbr>Variable</h3>
+				<a name="deepprocessvariables" class="tsd-anchor"></a>
+				<h3>deep<wbr>Process<wbr>Variables</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Variable<span class="tsd-signature-symbol">(</span>variableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+					<li class="tsd-signature tsd-kind-icon">deep<wbr>Process<wbr>Variables<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, position<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L175">interpreter.ts:175</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L127">interpreter.ts:127</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Function to loop over every variable and solve all of them in order</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>input: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The string to loop over</p>
+								</div>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> position: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>At what position in the string to start</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Promise - The solved result</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="getvariable" class="tsd-anchor"></a>
+				<h3>get<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Variable<span class="tsd-signature-symbol">(</span>variableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, variableKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L315">interpreter.ts:315</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1132,6 +1171,12 @@ img { max-width: 100%; }
 									<p>The advanced variable name</p>
 								</div>
 							</li>
+							<li>
+								<h5>variableKey: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>If necessary, the array or object key in the variable</p>
+								</div>
+							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
 						<p>TclVariable - The resolved variable</p>
@@ -1142,13 +1187,13 @@ img { max-width: 100%; }
 				<a name="processarg" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> process<wbr>Arg</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">process<wbr>Arg<span class="tsd-signature-symbol">(</span>arg<span class="tsd-signature-symbol">: </span><a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">process<wbr>Arg<span class="tsd-signature-symbol">(</span>arg<span class="tsd-signature-symbol">: </span><a href="../interfaces/_parser_.argtoken.html" class="tsd-signature-type">ArgToken</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L95">interpreter.ts:95</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L93">interpreter.ts:93</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1159,7 +1204,7 @@ img { max-width: 100%; }
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>arg: <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></h5>
+								<h5>arg: <a href="../interfaces/_parser_.argtoken.html" class="tsd-signature-type">ArgToken</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1177,7 +1222,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L382">interpreter.ts:382</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L519">interpreter.ts:519</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1209,7 +1254,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L61">interpreter.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L54">interpreter.ts:54</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1241,7 +1286,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L307">interpreter.ts:307</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L443">interpreter.ts:443</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1263,22 +1308,23 @@ img { max-width: 100%; }
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-				<a name="processvariables" class="tsd-anchor"></a>
-				<h3>process<wbr>Variables</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">process<wbr>Variables<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></li>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="resolvefirstvariable" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> resolve<wbr>First<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">resolve<wbr>First<wbr>Variable<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, position<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interpreter_.foundvariable.html" class="tsd-signature-type">FoundVariable</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L128">interpreter.ts:128</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L171">interpreter.ts:171</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Function to resolve all variables in an argument</p>
+								<p>Function to read a string until the first found variable
+								It will then solve the variable and return that</p>
 							</div>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1286,15 +1332,18 @@ img { max-width: 100%; }
 							<li>
 								<h5>input: <span class="tsd-signature-type">string</span></h5>
 								<div class="tsd-comment tsd-typography">
-									<p>The input argument</p>
+									<p>The string that will be searched for variables</p>
+								</div>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> position: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The position to start searching at</p>
 								</div>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a>
-							<span class="tsd-signature-symbol"> | </span>
-							<span class="tsd-signature-type">string</span>
-						</h4>
-						<p>TclVariable - The variable containing the resolved results</p>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_interpreter_.foundvariable.html" class="tsd-signature-type">FoundVariable</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>Promise - The found results</p>
 					</li>
 				</ul>
 			</section>
@@ -1308,7 +1357,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L48">interpreter.ts:48</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L41">interpreter.ts:41</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1325,13 +1374,13 @@ img { max-width: 100%; }
 				<a name="setvariable" class="tsd-anchor"></a>
 				<h3>set<wbr>Variable</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">set<wbr>Variable<span class="tsd-signature-symbol">(</span>variableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, variable<span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Variable<span class="tsd-signature-symbol">(</span>variableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, variableKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, variable<span class="tsd-signature-symbol">: </span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L220">interpreter.ts:220</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L360">interpreter.ts:360</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1345,6 +1394,12 @@ img { max-width: 100%; }
 								<h5>variableName: <span class="tsd-signature-type">string</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>The advanced variable name</p>
+								</div>
+							</li>
+							<li>
+								<h5>variableKey: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>If necessary, the array or object key in the variable</p>
 								</div>
 							</li>
 							<li>

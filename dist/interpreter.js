@@ -47,8 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var parser_1 = require("./parser");
     var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
-    var findVariableRegex = /(?<escaped>\\?)\$(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/g;
-    var variableRegex = /(?<fullname>(?<name>[a-zA-Z0-9_]+)(\(((?<array>[0-9]+)|(?<object>[a-zA-Z0-9_]+))\))?)/;
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
             this.lastValue = new types_1.TclSimple('');
@@ -111,7 +109,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                     var message = options.helpMessages[helpType] || 'Error';
                                     if (options.pattern)
                                         message += ": should be \"" + options.pattern + "\"";
-                                    throw new tclerror_1.TclError(message + "\nwhile reading: \"" + command.codeLine + "\"");
+                                    throw new tclerror_1.TclError(message + "\n    while reading: \"" + command.source + "\"\n    at line #" + command.sourceLocation + "\n");
                                 },
                             };
                             return [2, proc.callback(this, args, command, helpers)];
@@ -132,9 +130,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             output = _a.sent();
                             _a.label = 2;
                         case 2:
-                            if (arg.hasVariable && typeof output === 'string') {
-                                output = this.processVariables(output);
-                            }
+                            if (!(arg.hasVariable && typeof output === 'string')) return [3, 4];
+                            return [4, this.deepProcessVariables(output)];
+                        case 3:
+                            output = _a.sent();
+                            _a.label = 4;
+                        case 4:
                             if (!arg.stopBackslash && typeof output === 'string')
                                 output = this.processBackSlash(output);
                             if (typeof output === 'string')
@@ -144,80 +145,191 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 });
             });
         };
-        Interpreter.prototype.processVariables = function (input) {
-            var _this = this;
-            var match = input.match(findVariableRegex);
-            if (match && match.length === 1 && match[0] === input) {
-                var regex = findVariableRegex.exec(input);
-                if (!regex || !regex.groups || !regex.groups.fullname)
-                    throw new tclerror_1.TclError('Error parsing variable');
-                if (regex.groups.escaped === '\\')
-                    return new types_1.TclSimple(input.replace(/\\\$/g, '$'));
-                return this.getVariable(regex.groups.fullname);
-            }
-            input = input.replace(findVariableRegex, function () {
-                var regex = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    regex[_i] = arguments[_i];
-                }
-                var groups = regex[regex.length - 1];
-                if (groups.escaped === '\\')
-                    return "$" + groups.fullname;
-                return "" + _this.getVariable(groups.fullname).getValue();
+        Interpreter.prototype.deepProcessVariables = function (input, position) {
+            if (position === void 0) { position = 0; }
+            return __awaiter(this, void 0, void 0, function () {
+                var output, toProcess;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            output = "";
+                            _a.label = 1;
+                        case 1: return [4, this.resolveFirstVariable(input, position)];
+                        case 2:
+                            if (!(toProcess = _a.sent())) return [3, 3];
+                            while (position < toProcess.startPosition) {
+                                output += input.charAt(position);
+                                position++;
+                            }
+                            position = toProcess.endPosition;
+                            if (toProcess.raw === input)
+                                return [2, toProcess.value];
+                            output += toProcess.value.getValue();
+                            return [3, 1];
+                        case 3:
+                            while (position < input.length) {
+                                output += input.charAt(position);
+                                position++;
+                            }
+                            return [2, output];
+                    }
+                });
             });
-            return input;
         };
-        Interpreter.prototype.getVariable = function (variableName) {
-            var regex = variableRegex.exec(variableName);
-            if (!regex || !regex.groups)
-                throw new tclerror_1.TclError("can't read \"" + variableName + "\": invalid variable name");
-            var name = regex.groups.name;
+        Interpreter.prototype.resolveFirstVariable = function (input, position) {
+            if (position === void 0) { position = 0; }
+            return __awaiter(this, void 0, void 0, function () {
+                function read(appendOnOriginal) {
+                    if (appendOnOriginal)
+                        currentVar.originalString += char;
+                    position += 1;
+                    char = input.charAt(position);
+                }
+                var char, currentVar, inBracket, startPosition, replaceVar, index, solved;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            char = input.charAt(position);
+                            currentVar = {
+                                name: '',
+                                bracket: '',
+                                originalString: '',
+                                curly: false,
+                            };
+                            inBracket = false;
+                            while (char !== '$' && position < input.length) {
+                                if (char === '\\')
+                                    read(false);
+                                read(false);
+                            }
+                            if (char !== '$')
+                                return [2, null];
+                            char = char;
+                            startPosition = position;
+                            read(true);
+                            if (char === '{') {
+                                currentVar.curly = true;
+                                read(true);
+                            }
+                            _a.label = 1;
+                        case 1:
+                            if (!(position < input.length)) return [3, 6];
+                            if (!inBracket) return [3, 4];
+                            if (char === ')') {
+                                inBracket = false;
+                                read(true);
+                                return [3, 6];
+                            }
+                            if (!(char === '$')) return [3, 3];
+                            return [4, this.resolveFirstVariable(input, position)];
+                        case 2:
+                            replaceVar = _a.sent();
+                            if (replaceVar) {
+                                while (position < replaceVar.endPosition) {
+                                    read(true);
+                                }
+                                currentVar.bracket += replaceVar.value.getValue();
+                                return [3, 1];
+                            }
+                            _a.label = 3;
+                        case 3: return [3, 5];
+                        case 4:
+                            if (char === '(') {
+                                inBracket = true;
+                                read(true);
+                                return [3, 1];
+                            }
+                            if (!currentVar.curly && !char.match(/\w/g))
+                                return [3, 6];
+                            _a.label = 5;
+                        case 5:
+                            if (currentVar.curly && char === '}')
+                                return [3, 6];
+                            if (char === '\\') {
+                                if (inBracket)
+                                    currentVar.bracket += char;
+                                else
+                                    currentVar.name += char;
+                                read(true);
+                            }
+                            if (inBracket)
+                                currentVar.bracket += char;
+                            else
+                                currentVar.name += char;
+                            read(true);
+                            return [3, 1];
+                        case 6:
+                            if (currentVar.curly) {
+                                if (char !== '}')
+                                    throw new tclerror_1.TclError('unexpected end of string');
+                                read(true);
+                            }
+                            if (currentVar.name === '')
+                                return [2, this.resolveFirstVariable(input, position)];
+                            solved = currentVar.bracket;
+                            if (solved === '')
+                                index = null;
+                            else if (isNumber(solved))
+                                index = parseInt(solved, 10);
+                            else
+                                index = solved;
+                            return [2, {
+                                    raw: currentVar.originalString,
+                                    startPosition: startPosition,
+                                    endPosition: position,
+                                    value: this.getVariable(currentVar.name, index),
+                                }];
+                    }
+                });
+            });
+        };
+        Interpreter.prototype.getVariable = function (variableName, variableKey) {
+            var name = variableName;
+            var objectKey = typeof variableKey === 'string' ? variableKey : undefined;
+            var arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
             var value = this.scope.resolve(name);
             if (!value)
                 throw new tclerror_1.TclError("can't read \"" + name + "\": no such variable");
-            if (regex.groups.object) {
+            if (objectKey) {
                 if (!(value instanceof types_1.TclObject))
                     throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't object");
-                return value.getSubValue(regex.groups.object);
+                return value.getSubValue(objectKey);
             }
-            else if (regex.groups.array) {
+            else if (arrayIndex) {
                 if (!(value instanceof types_1.TclArray))
                     throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't array");
-                var arrayNum = parseInt(regex.groups.array, 10);
-                return value.getSubValue(arrayNum);
+                return value.getSubValue(arrayIndex);
             }
             else {
                 return value;
             }
         };
-        Interpreter.prototype.setVariable = function (variableName, variable) {
-            var regex = variableRegex.exec(variableName);
-            if (!regex || !regex.groups)
-                throw new tclerror_1.TclError("can't read \"" + variableName + "\": invalid variable name");
-            var name = regex.groups.name;
+        Interpreter.prototype.setVariable = function (variableName, variableKey, variable) {
+            var name = variableName;
+            var objectKey = typeof variableKey === 'string' ? variableKey : undefined;
+            var arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
             var output = variable;
             var existingValue = this.scope.resolve(name);
-            if (regex.groups.object) {
+            if (objectKey) {
                 if (existingValue) {
                     if (!(existingValue instanceof types_1.TclObject))
                         throw new tclerror_1.TclError("cant' set \"" + variableName + "\": variable isn't object");
-                    existingValue.set(regex.groups.object, variable);
+                    existingValue.set(objectKey, variable);
                     return;
                 }
                 var obj = new types_1.TclObject(undefined, name);
-                obj.set(regex.groups.object, variable);
+                obj.set(objectKey, variable);
                 output = obj;
             }
-            else if (regex.groups.array) {
-                var arrayNum = parseInt(regex.groups.array, 10);
+            else if (arrayIndex) {
                 if (existingValue) {
                     if (!(existingValue instanceof types_1.TclArray))
                         throw new tclerror_1.TclError("cant' set \"" + variableName + "\": variable isn't array");
-                    existingValue.set(arrayNum, variable);
+                    existingValue.set(arrayIndex, variable);
                     return;
                 }
                 var arr = new types_1.TclArray(undefined, name);
-                arr.set(arrayNum, variable);
+                arr.set(arrayIndex, variable);
                 output = arr;
             }
             else {
@@ -249,10 +361,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             lastExpression = '';
                             _a.label = 1;
                         case 1:
-                            if (!(position < input.length)) return [3, 4];
-                            if (!(char === ']')) return [3, 3];
+                            if (!(position < input.length)) return [3, 6];
+                            if (!(char === ']')) return [3, 5];
                             depth--;
-                            if (!(depth === 0)) return [3, 3];
+                            if (!(depth === 0)) return [3, 4];
                             if (!(lastExpression !== '')) return [3, 3];
                             subInterpreter = new Interpreter(this.tcl, lastExpression, this.scope);
                             return [4, subInterpreter.run()];
@@ -264,7 +376,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             output = output.replace(replaceVal, result.getValue());
                             lastExpression = '';
                             _a.label = 3;
-                        case 3:
+                        case 3: return [3, 5];
+                        case 4:
+                            if (depth < 0)
+                                throw new tclerror_1.TclError('unexpected ]');
+                            _a.label = 5;
+                        case 5:
                             if (depth > 0) {
                                 lastExpression += char;
                             }
@@ -272,7 +389,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 depth++;
                             read();
                             return [3, 1];
-                        case 4:
+                        case 6:
                             if (depth !== 0)
                                 throw new tclerror_1.TclError('incorrect amount of square brackets');
                             return [2, output];
@@ -354,5 +471,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         return Interpreter;
     }());
     exports.Interpreter = Interpreter;
+    function isNumber(input) {
+        return !isNaN(input) && !isNaN(parseInt(input, 10));
+    }
+    exports.isNumber = isNumber;
 });
 //# sourceMappingURL=interpreter.js.map

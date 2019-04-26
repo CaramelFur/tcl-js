@@ -919,6 +919,9 @@ img { max-width: 100%; }
 					<a href="_lexer_.lexer.html#currentchar" class="tsd-kind-icon">current<wbr>Char</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="_lexer_.lexer.html#currentline" class="tsd-kind-icon">current<wbr>Line</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="_lexer_.lexer.html#currentsentence" class="tsd-kind-icon">current<wbr>Sentence</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -934,7 +937,10 @@ img { max-width: 100%; }
 					<a href="_lexer_.lexer.html#getnexttoken" class="tsd-kind-icon">get<wbr>Next<wbr>Token</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a href="_lexer_.lexer.html#nextbracketword" class="tsd-kind-icon">next<wbr>Bracket<wbr>Word</a>
+					<a href="_lexer_.lexer.html#newwordtoken" class="tsd-kind-icon">new<wbr>Word<wbr>Token</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_lexer_.lexer.html#nextbraceword" class="tsd-kind-icon">next<wbr>Brace<wbr>Word</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_lexer_.lexer.html#nextquoteword" class="tsd-kind-icon">next<wbr>Quote<wbr>Word</a>
@@ -949,10 +955,16 @@ img { max-width: 100%; }
 					<a href="_lexer_.lexer.html#read" class="tsd-kind-icon">read</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_lexer_.lexer.html#readbrackets" class="tsd-kind-icon">read<wbr>Brackets</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_lexer_.lexer.html#readcomment" class="tsd-kind-icon">read<wbr>Comment</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_lexer_.lexer.html#readendofcommand" class="tsd-kind-icon">read<wbr>End<wbr>OfCommand</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_lexer_.lexer.html#readvariable" class="tsd-kind-icon">read<wbr>Variable</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_lexer_.lexer.html#readwhitespace" class="tsd-kind-icon">read<wbr>Whitespace</a>
@@ -988,6 +1000,7 @@ img { max-width: 100%; }
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lexer_.lexer.html#currentchar" class="tsd-kind-icon">current<wbr>Char</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lexer_.lexer.html#currentline" class="tsd-kind-icon">current<wbr>Line</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lexer_.lexer.html#currentsentence" class="tsd-kind-icon">current<wbr>Sentence</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lexer_.lexer.html#input" class="tsd-kind-icon">input</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_lexer_.lexer.html#pos" class="tsd-kind-icon">pos</a></li>
@@ -998,13 +1011,16 @@ img { max-width: 100%; }
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#getnexttoken" class="tsd-kind-icon">get<wbr>Next<wbr>Token</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#nextbracketword" class="tsd-kind-icon">next<wbr>Bracket<wbr>Word</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#newwordtoken" class="tsd-kind-icon">new<wbr>Word<wbr>Token</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#nextbraceword" class="tsd-kind-icon">next<wbr>Brace<wbr>Word</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#nextquoteword" class="tsd-kind-icon">next<wbr>Quote<wbr>Word</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#nextsimpleword" class="tsd-kind-icon">next<wbr>Simple<wbr>Word</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lexer_.lexer.html#nexttoken" class="tsd-kind-icon">next<wbr>Token</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#read" class="tsd-kind-icon">read</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#readbrackets" class="tsd-kind-icon">read<wbr>Brackets</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#readcomment" class="tsd-kind-icon">read<wbr>Comment</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#readendofcommand" class="tsd-kind-icon">read<wbr>End<wbr>OfCommand</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#readvariable" class="tsd-kind-icon">read<wbr>Variable</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_lexer_.lexer.html#readwhitespace" class="tsd-kind-icon">read<wbr>Whitespace</a></li>
 						</ul>
 					</section>
@@ -1023,7 +1039,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L14">lexer.ts:14</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L14">lexer.ts:14</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1055,7 +1071,17 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">current<wbr>Char<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L11">lexer.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L10">lexer.ts:10</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="currentline" class="tsd-anchor"></a>
+				<h3>current<wbr>Line</h3>
+				<div class="tsd-signature tsd-kind-icon">current<wbr>Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L14">lexer.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1065,7 +1091,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">current<wbr>Sentence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L14">lexer.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L13">lexer.ts:13</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1075,7 +1101,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L12">lexer.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L11">lexer.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1085,7 +1111,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">pos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L7">lexer.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L6">lexer.ts:6</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1095,7 +1121,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">word<wbr>Idx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L9">lexer.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L8">lexer.ts:8</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1112,57 +1138,65 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L272">lexer.ts:272</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L93">lexer.ts:93</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Internal function for fetching a new token</p>
+							</div>
+						</div>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a>
 							<span class="tsd-signature-symbol"> | </span>
 							<span class="tsd-signature-type">null</span>
 						</h4>
+						<p>WordToken</p>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-				<a name="nextbracketword" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagPrivate">Private</span> next<wbr>Bracket<wbr>Word</h3>
+				<a name="newwordtoken" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> new<wbr>Word<wbr>Token</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">next<wbr>Bracket<wbr>Word<span class="tsd-signature-symbol">(</span>keepOuterBracket<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, openingBracket<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, closingBracket<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></li>
+					<li class="tsd-signature tsd-kind-icon">new<wbr>Word<wbr>Token<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L81">lexer.ts:81</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L399">lexer.ts:399</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Read a word that has brackets, it managages the bracket depth and checks if this is correct and eventually return the complete result</p>
+								<p>Generates a new empty wordtoken</p>
 							</div>
 						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>keepOuterBracket: <span class="tsd-signature-type">boolean</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>To include the most outer brackets in the returned string, or to leave them out</p>
-								</div>
-							</li>
-							<li>
-								<h5>openingBracket: <span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>The opening bracket to use for checking</p>
-								</div>
-							</li>
-							<li>
-								<h5>closingBracket: <span class="tsd-signature-type">string</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<p>The closing bracket to use for checking</p>
-								</div>
-							</li>
-						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></h4>
-						<p>WordToken - The processed result</p>
+						<p>WordToken</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="nextbraceword" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> next<wbr>Brace<wbr>Word</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">next<wbr>Brace<wbr>Word<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L145">lexer.ts:145</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Reads a word that starts with { and parses everything in between correctly</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <a href="../interfaces/_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a></h4>
+						<p>WordToken</p>
 					</li>
 				</ul>
 			</section>
@@ -1176,7 +1210,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L194">lexer.ts:194</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L197">lexer.ts:197</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1199,7 +1233,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L243">lexer.ts:243</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L248">lexer.ts:248</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1222,7 +1256,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L333">lexer.ts:333</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L79">lexer.ts:79</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1248,7 +1282,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L32">lexer.ts:32</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L32">lexer.ts:32</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1262,6 +1296,29 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="readbrackets" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> read<wbr>Brackets</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">read<wbr>Brackets<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L285">lexer.ts:285</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Reads the input until the last closing bracket</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						<p>string</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 				<a name="readcomment" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> read<wbr>Comment</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -1271,7 +1328,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L56">lexer.ts:56</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L57">lexer.ts:57</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1294,7 +1351,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L67">lexer.ts:67</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L68">lexer.ts:68</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1308,6 +1365,29 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="readvariable" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> read<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">read<wbr>Variable<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L318">lexer.ts:318</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Function to read a variable completely and return the variable</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						<p>string</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 				<a name="readwhitespace" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> read<wbr>Whitespace</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -1317,7 +1397,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/lexer.ts#L45">lexer.ts:45</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/lexer.ts#L46">lexer.ts:46</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

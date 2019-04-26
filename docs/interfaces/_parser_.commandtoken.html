@@ -912,6 +912,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class tsd-parent-kind-external-module">
 			<a href="../classes/_parser_.parser.html" class="tsd-kind-icon">Parser</a>
 		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="_parser_.argtoken.html" class="tsd-kind-icon">Arg<wbr>Token</a>
+		</li>
 		<li class="current tsd-kind-interface tsd-parent-kind-external-module">
 			<a href="_parser_.commandtoken.html" class="tsd-kind-icon">Command<wbr>Token</a>
 			<ul>
@@ -919,10 +922,13 @@ img { max-width: 100%; }
 					<a href="_parser_.commandtoken.html#args" class="tsd-kind-icon">args</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_parser_.commandtoken.html#codeline" class="tsd-kind-icon">code<wbr>Line</a>
+					<a href="_parser_.commandtoken.html#command" class="tsd-kind-icon">command</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="_parser_.commandtoken.html#command" class="tsd-kind-icon">command</a>
+					<a href="_parser_.commandtoken.html#source" class="tsd-kind-icon">source</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="_parser_.commandtoken.html#sourcelocation" class="tsd-kind-icon">source<wbr>Location</a>
 				</li>
 			</ul>
 		</li>
@@ -949,8 +955,9 @@ img { max-width: 100%; }
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_parser_.commandtoken.html#args" class="tsd-kind-icon">args</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_parser_.commandtoken.html#codeline" class="tsd-kind-icon">code<wbr>Line</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_parser_.commandtoken.html#command" class="tsd-kind-icon">command</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_parser_.commandtoken.html#source" class="tsd-kind-icon">source</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_parser_.commandtoken.html#sourcelocation" class="tsd-kind-icon">source<wbr>Location</a></li>
 						</ul>
 					</section>
 				</div>
@@ -961,20 +968,10 @@ img { max-width: 100%; }
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 				<a name="args" class="tsd-anchor"></a>
 				<h3>args</h3>
-				<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="_lexer_.wordtoken.html" class="tsd-signature-type">WordToken</a><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-signature tsd-kind-icon">args<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="_parser_.argtoken.html" class="tsd-signature-type">ArgToken</a><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/parser.ts#L68">parser.ts:68</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="codeline" class="tsd-anchor"></a>
-				<h3>code<wbr>Line</h3>
-				<div class="tsd-signature tsd-kind-icon">code<wbr>Line<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/parser.ts#L69">parser.ts:69</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/parser.ts#L74">parser.ts:74</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -984,7 +981,27 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">command<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/parser.ts#L67">parser.ts:67</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/parser.ts#L73">parser.ts:73</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="source" class="tsd-anchor"></a>
+				<h3>source</h3>
+				<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/parser.ts#L75">parser.ts:75</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+				<a name="sourcelocation" class="tsd-anchor"></a>
+				<h3>source<wbr>Location</h3>
+				<div class="tsd-signature tsd-kind-icon">source<wbr>Location<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/parser.ts#L76">parser.ts:76</a></li>
 					</ul>
 				</aside>
 			</section>

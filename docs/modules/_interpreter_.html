@@ -913,13 +913,10 @@ img { max-width: 100%; }
 			<a href="../classes/_interpreter_.interpreter.html" class="tsd-kind-icon">Interpreter</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../interfaces/_interpreter_.regexvariable.html" class="tsd-kind-icon">Regex<wbr>Variable</a>
+			<a href="../interfaces/_interpreter_.foundvariable.html" class="tsd-kind-icon">Found<wbr>Variable</a>
 		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="_interpreter_.html#findvariableregex" class="tsd-kind-icon">find<wbr>Variable<wbr>Regex</a>
-		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="_interpreter_.html#variableregex" class="tsd-kind-icon">variable<wbr>Regex</a>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module">
+			<a href="_interpreter_.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a>
 		</li>
 	</ul>
 </nav>
@@ -938,40 +935,50 @@ img { max-width: 100%; }
 					<section class="tsd-index-section tsd-is-not-exported">
 						<h3>Interfaces</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported"><a href="../interfaces/_interpreter_.regexvariable.html" class="tsd-kind-icon">Regex<wbr>Variable</a></li>
+							<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported"><a href="../interfaces/_interpreter_.foundvariable.html" class="tsd-kind-icon">Found<wbr>Variable</a></li>
 						</ul>
 					</section>
-					<section class="tsd-index-section tsd-is-not-exported">
-						<h3>Variables</h3>
+					<section class="tsd-index-section ">
+						<h3>Functions</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_interpreter_.html#findvariableregex" class="tsd-kind-icon">find<wbr>Variable<wbr>Regex</a></li>
-							<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_interpreter_.html#variableregex" class="tsd-kind-icon">variable<wbr>Regex</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_interpreter_.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-			<h2>Variables</h2>
-			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-				<a name="findvariableregex" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagConst">Const</span> find<wbr>Variable<wbr>Regex</h3>
-				<div class="tsd-signature tsd-kind-icon">find<wbr>Variable<wbr>Regex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/(?&lt;escaped&gt;\\?)\$(?&lt;fullname&gt;(?&lt;name&gt;[a-zA-Z0-9_]+)(\(((?&lt;array&gt;[0-9]+)|(?&lt;object&gt;[a-zA-Z0-9_]+))\))?)/g</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L17">interpreter.ts:17</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-				<a name="variableregex" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagConst">Const</span> variable<wbr>Regex</h3>
-				<div class="tsd-signature tsd-kind-icon">variable<wbr>Regex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> =&nbsp;/(?&lt;fullname&gt;(?&lt;name&gt;[a-zA-Z0-9_]+)(\(((?&lt;array&gt;[0-9]+)|(?&lt;object&gt;[a-zA-Z0-9_]+))\))?)/</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L20">interpreter.ts:20</a></li>
-					</ul>
-				</aside>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+				<a name="isnumber" class="tsd-anchor"></a>
+				<h3>is<wbr>Number</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+					<li class="tsd-signature tsd-kind-icon">is<wbr>Number<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L609">interpreter.ts:609</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Checks if a variable is a number</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>input: <span class="tsd-signature-type">any</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The variable to check</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer>

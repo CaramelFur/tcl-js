@@ -49,20 +49,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var types_1 = require("../types");
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
+    var variableRegex = /(?<fullname>(?<name>\w+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
     function Load(scope) {
         var _this = this;
         scope.defineProc('set', function (interpreter, args, command, helpers) {
             var varName = args[0], tclValue = args[1];
+            function solveVar(input) {
+                var result = variableRegex.exec(input);
+                if (!result || !result.groups)
+                    return helpers.sendHelp('wvarname');
+                var name = result.groups.name;
+                var key = result.groups.object
+                    ? result.groups.object
+                    : result.groups.array
+                        ? parseInt(result.groups.array, 10)
+                        : null;
+                return {
+                    name: name,
+                    key: key,
+                };
+            }
             if (args.length === 2) {
                 if (!(tclValue instanceof types_1.TclSimple) || !(varName instanceof types_1.TclSimple))
                     return helpers.sendHelp('wtype');
-                interpreter.setVariable(varName.getValue(), tclValue);
+                var solved = solveVar(varName.getValue());
+                interpreter.setVariable(solved.name, solved.key, tclValue);
                 return tclValue;
             }
             else if (args.length === 1) {
                 if (!(varName instanceof types_1.TclSimple))
                     return helpers.sendHelp('wtype');
-                return interpreter.getVariable(varName.getValue());
+                var solved = solveVar(varName.getValue());
+                return interpreter.getVariable(solved.name, solved.key);
             }
             return helpers.sendHelp('wargs');
         }, {
@@ -70,6 +88,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             helpMessages: {
                 wargs: "wrong # args",
                 wtype: "wrong type",
+                wvarname: "incorrect variable name",
             },
         });
         scope.defineProc('unset', function (interpreter, args, command, helpers) {
@@ -97,26 +116,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 wtype: "wrong type",
             },
         });
-        scope.defineProc('expr', function (interpreter, args, command, helpers) {
-            if (args.length === 0)
-                return helpers.sendHelp('warg');
-            for (var _i = 0, args_3 = args; _i < args_3.length; _i++) {
-                var arg = args_3[_i];
-                if (!(arg instanceof types_1.TclSimple))
-                    return helpers.sendHelp('wtype');
-            }
-            var stringArgs = args.map(function (arg) { return arg.getValue(); });
-            var expression = stringArgs.join(' ');
-            var solvedExpression = interpreter.processVariables(expression);
-            if (typeof solvedExpression !== 'string')
-                throw new tclerror_1.TclError('expression resolved to variable instead of string');
-            var result = math.eval(solvedExpression);
-            if (typeof result !== 'number')
-                throw new tclerror_1.TclError('expression result is not a number');
-            if (result === Infinity)
-                throw new tclerror_1.TclError('expression result is infinity');
-            return new types_1.TclSimple("" + result);
-        }, {
+        scope.defineProc('expr', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
+            var _i, args_3, arg, stringArgs, expression, solvedExpression, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (args.length === 0)
+                            return [2, helpers.sendHelp('warg')];
+                        for (_i = 0, args_3 = args; _i < args_3.length; _i++) {
+                            arg = args_3[_i];
+                            if (!(arg instanceof types_1.TclSimple))
+                                return [2, helpers.sendHelp('wtype')];
+                        }
+                        stringArgs = args.map(function (arg) { return arg.getValue(); });
+                        expression = stringArgs.join(' ');
+                        return [4, interpreter.deepProcessVariables(expression)];
+                    case 1:
+                        solvedExpression = _a.sent();
+                        if (typeof solvedExpression !== 'string')
+                            throw new tclerror_1.TclError('expression resolved to variable instead of string');
+                        result = math.eval(solvedExpression);
+                        if (typeof result !== 'number')
+                            throw new tclerror_1.TclError('expression result is not a number');
+                        if (result === Infinity)
+                            throw new tclerror_1.TclError('expression result is infinity');
+                        return [2, new types_1.TclSimple("" + result)];
+                }
+            });
+        }); }, {
             pattern: 'expr arg ?arg arg ...?',
             helpMessages: {
                 wargs: "wrong # args",

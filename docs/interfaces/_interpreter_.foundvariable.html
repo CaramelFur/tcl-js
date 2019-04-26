@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RegexVariable | tcl-js</title>
+	<title>FoundVariable | tcl-js</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -913,30 +913,24 @@ img { max-width: 100%; }
 			<a href="../classes/_interpreter_.interpreter.html" class="tsd-kind-icon">Interpreter</a>
 		</li>
 		<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="_interpreter_.regexvariable.html" class="tsd-kind-icon">Regex<wbr>Variable</a>
+			<a href="_interpreter_.foundvariable.html" class="tsd-kind-icon">Found<wbr>Variable</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a href="_interpreter_.regexvariable.html#array" class="tsd-kind-icon">array</a>
+					<a href="_interpreter_.foundvariable.html#endposition" class="tsd-kind-icon">end<wbr>Position</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a href="_interpreter_.regexvariable.html#escaped" class="tsd-kind-icon">escaped</a>
+					<a href="_interpreter_.foundvariable.html#raw" class="tsd-kind-icon">raw</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a href="_interpreter_.regexvariable.html#fullname" class="tsd-kind-icon">fullname</a>
+					<a href="_interpreter_.foundvariable.html#startposition" class="tsd-kind-icon">start<wbr>Position</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a href="_interpreter_.regexvariable.html#name" class="tsd-kind-icon">name</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a href="_interpreter_.regexvariable.html#object" class="tsd-kind-icon">object</a>
+					<a href="_interpreter_.foundvariable.html#value" class="tsd-kind-icon">value</a>
 				</li>
 			</ul>
 		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../modules/_interpreter_.html#findvariableregex" class="tsd-kind-icon">find<wbr>Variable<wbr>Regex</a>
-		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-			<a href="../modules/_interpreter_.html#variableregex" class="tsd-kind-icon">variable<wbr>Regex</a>
+		<li class=" tsd-kind-function tsd-parent-kind-external-module">
+			<a href="../modules/_interpreter_.html#isnumber" class="tsd-kind-icon">is<wbr>Number</a>
 		</li>
 	</ul>
 </nav>
@@ -946,7 +940,7 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">RegexVariable</span>
+					<span class="target">FoundVariable</span>
 				</li>
 			</ul>
 		</section>
@@ -957,11 +951,10 @@ img { max-width: 100%; }
 					<section class="tsd-index-section tsd-is-not-exported">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.regexvariable.html#array" class="tsd-kind-icon">array</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.regexvariable.html#escaped" class="tsd-kind-icon">escaped</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.regexvariable.html#fullname" class="tsd-kind-icon">fullname</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.regexvariable.html#name" class="tsd-kind-icon">name</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.regexvariable.html#object" class="tsd-kind-icon">object</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.foundvariable.html#endposition" class="tsd-kind-icon">end<wbr>Position</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.foundvariable.html#raw" class="tsd-kind-icon">raw</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.foundvariable.html#startposition" class="tsd-kind-icon">start<wbr>Position</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_interpreter_.foundvariable.html#value" class="tsd-kind-icon">value</a></li>
 						</ul>
 					</section>
 				</div>
@@ -970,52 +963,42 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-				<a name="array" class="tsd-anchor"></a>
-				<h3>array</h3>
-				<div class="tsd-signature tsd-kind-icon">array<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+				<a name="endposition" class="tsd-anchor"></a>
+				<h3>end<wbr>Position</h3>
+				<div class="tsd-signature tsd-kind-icon">end<wbr>Position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L471">interpreter.ts:471</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L617">interpreter.ts:617</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-				<a name="escaped" class="tsd-anchor"></a>
-				<h3>escaped</h3>
-				<div class="tsd-signature tsd-kind-icon">escaped<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<a name="raw" class="tsd-anchor"></a>
+				<h3>raw</h3>
+				<div class="tsd-signature tsd-kind-icon">raw<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L473">interpreter.ts:473</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L615">interpreter.ts:615</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-				<a name="fullname" class="tsd-anchor"></a>
-				<h3>fullname</h3>
-				<div class="tsd-signature tsd-kind-icon">fullname<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<a name="startposition" class="tsd-anchor"></a>
+				<h3>start<wbr>Position</h3>
+				<div class="tsd-signature tsd-kind-icon">start<wbr>Position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L470">interpreter.ts:470</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L616">interpreter.ts:616</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-				<a name="name" class="tsd-anchor"></a>
-				<h3>name</h3>
-				<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<a name="value" class="tsd-anchor"></a>
+				<h3>value</h3>
+				<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <a href="../classes/_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L469">interpreter.ts:469</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-				<a name="object" class="tsd-anchor"></a>
-				<h3>object</h3>
-				<div class="tsd-signature tsd-kind-icon">object<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/bd9c6be/src/interpreter.ts#L472">interpreter.ts:472</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/9ecffec/src/interpreter.ts#L618">interpreter.ts:618</a></li>
 					</ul>
 				</aside>
 			</section>

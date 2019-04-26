@@ -17,9 +17,13 @@
     exports.WordSeparator = WordSeparator;
     var Subs = function (c) { return c === '$' || c === '\\' || c === '['; };
     exports.Subs = Subs;
-    var OpenBrace = function (c) { return c === '{' || c === '[' || c === '"'; };
+    var OpenBrace = function (c) {
+        return c === '{' || c === '[' || c === '"' || c === '(';
+    };
     exports.OpenBrace = OpenBrace;
-    var CloseBrace = function (c) { return c === ']' || c === '}' || c === '"'; };
+    var CloseBrace = function (c) {
+        return c === ']' || c === '}' || c === '"' || c === ')';
+    };
     exports.CloseBrace = CloseBrace;
     var Brace = function (c) { return OpenBrace(c) || CloseBrace(c); };
     exports.Brace = Brace;

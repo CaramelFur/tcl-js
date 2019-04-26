@@ -16,6 +16,7 @@
             this.pos = 0;
             this.wordIdx = 0;
             this.currentSentence = '';
+            this.currentLine = 0;
             this.input = input;
             this.currentChar = this.input.charAt(0);
         }
@@ -24,6 +25,8 @@
             this.pos += 1;
             this.currentChar = this.input.charAt(this.pos);
             this.currentSentence += old;
+            if (old === '\n')
+                this.currentLine += 1;
             return old;
         };
         Lexer.prototype.readWhitespace = function () {
@@ -41,110 +44,13 @@
                 this.read();
             }
         };
-        Lexer.prototype.nextBracketWord = function (keepOuterBracket, openingBracket, closingBracket) {
-            var delimiters = [];
-            var out = {
-                value: '',
-                hasVariable: false,
-                hasSubExpr: false,
-                stopBackslash: false,
-                index: this.wordIdx,
-                lastSentence: '',
-            };
-            function testOpenDelimiters(test) {
-                if (test === openingBracket) {
-                    delimiters.push(closingBracket);
-                    return delimiters.length;
-                }
-                return -1;
+        Lexer.prototype.nextToken = function () {
+            var token = this.getNextToken();
+            if (token) {
+                token.source = this.currentSentence;
+                token.sourceLocation = this.currentLine;
             }
-            function testCloseDelimiters(test) {
-                if (test === delimiters[delimiters.length - 1]) {
-                    delimiters.pop();
-                    return delimiters.length;
-                }
-                return -1;
-            }
-            function testEndOfWord(test) {
-                if (delimiters.length > 0) {
-                    return false;
-                }
-                return Is.WordSeparator(test);
-            }
-            while (this.pos < this.input.length) {
-                var opening = testOpenDelimiters(this.currentChar);
-                if (opening === 1 && !keepOuterBracket) {
-                    this.read();
-                    continue;
-                }
-                var closing = testCloseDelimiters(this.currentChar);
-                if (closing === 0 && !keepOuterBracket) {
-                    this.read();
-                    continue;
-                }
-                if (testEndOfWord(this.currentChar))
-                    break;
-                if (delimiters.length === 0 && closing === -1)
-                    throw new tclerror_1.TclError('extra characters after close-brace:');
-                if (this.currentChar === '\\')
-                    out.value += this.read();
-                out.value += this.read();
-            }
-            if (delimiters.length > 0)
-                throw new tclerror_1.TclError('missing close-brace');
-            this.wordIdx += 1;
-            return out;
-        };
-        Lexer.prototype.nextQuoteWord = function () {
-            if (this.currentChar !== '"')
-                throw new tclerror_1.TclError('nextQuoteWord was called without a quote exisiting');
-            this.read();
-            var out = {
-                value: '',
-                hasVariable: false,
-                hasSubExpr: false,
-                stopBackslash: false,
-                index: this.wordIdx,
-                lastSentence: '',
-            };
-            while (this.pos < this.input.length && this.currentChar !== '"') {
-                if (this.currentChar === '[')
-                    out.hasSubExpr = true;
-                if (this.currentChar === '$')
-                    out.hasVariable = true;
-                if (this.currentChar === '\\')
-                    out.value += this.read();
-                out.value += this.read();
-            }
-            var close = this.read();
-            if (close !== '"')
-                throw new tclerror_1.TclError('missing "');
-            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
-                throw new tclerror_1.TclError('extra characters after close-quote');
-            this.wordIdx += 1;
-            return out;
-        };
-        Lexer.prototype.nextSimpleWord = function () {
-            var out = {
-                value: '',
-                hasVariable: false,
-                hasSubExpr: false,
-                stopBackslash: false,
-                index: this.wordIdx,
-                lastSentence: '',
-            };
-            while (this.pos < this.input.length &&
-                !Is.WordSeparator(this.currentChar)) {
-                if (this.currentChar === '[')
-                    out.hasSubExpr = true;
-                if (this.currentChar === '$')
-                    out.hasVariable = true;
-                if (this.currentChar === '\\')
-                    out.value += this.read();
-                out.value += this.read();
-            }
-            this.wordIdx += 1;
-            return out;
+            return token;
         };
         Lexer.prototype.getNextToken = function () {
             this.readWhitespace();
@@ -161,13 +67,8 @@
                     this.currentSentence = '';
                     return this.nextToken();
                 case this.currentChar === '{': {
-                    var word = this.nextBracketWord(false, '{', '}');
+                    var word = this.nextBraceWord();
                     word.stopBackslash = true;
-                    return word;
-                }
-                case this.currentChar === '[': {
-                    var word = this.nextBracketWord(true, '[', ']');
-                    word.hasSubExpr = true;
                     return word;
                 }
                 case this.currentChar === '"':
@@ -176,11 +77,168 @@
                     return this.nextSimpleWord();
             }
         };
-        Lexer.prototype.nextToken = function () {
-            var token = this.getNextToken();
-            if (token)
-                token.lastSentence = this.currentSentence;
-            return token;
+        Lexer.prototype.nextBraceWord = function () {
+            if (this.currentChar !== '{')
+                throw new tclerror_1.TclError('asked to read bracket when none exist');
+            this.currentChar = this.currentChar;
+            var out = this.newWordToken();
+            var depth = 0;
+            while (this.pos < this.input.length) {
+                if (this.currentChar === '}') {
+                    depth--;
+                    if (depth === 0) {
+                        this.read();
+                        continue;
+                    }
+                }
+                if (this.currentChar === '{') {
+                    depth++;
+                    if (depth === 1) {
+                        this.read();
+                        continue;
+                    }
+                }
+                if (depth === 0)
+                    break;
+                if (this.currentChar === '\\')
+                    out.value += this.read();
+                out.value += this.read();
+            }
+            if (depth !== 0)
+                throw new tclerror_1.TclError('uneven amount of curly braces');
+            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+                throw new tclerror_1.TclError('extra characters after close-brace');
+            return out;
+        };
+        Lexer.prototype.nextQuoteWord = function () {
+            if (this.currentChar !== '"')
+                throw new tclerror_1.TclError('nextQuoteWord was called without a quote exisiting');
+            this.read();
+            var out = this.newWordToken();
+            while (this.pos < this.input.length && this.currentChar !== '"') {
+                if (this.currentChar === '[') {
+                    out.value += this.readBrackets();
+                    out.hasSubExpr = true;
+                    out.hasVariable = true;
+                    continue;
+                }
+                if (this.currentChar === '$') {
+                    out.value += this.readVariable();
+                    out.hasSubExpr = true;
+                    out.hasVariable = true;
+                    continue;
+                }
+                if (this.currentChar === '\\')
+                    out.value += this.read();
+                out.value += this.read();
+            }
+            var close = this.read();
+            if (close !== '"')
+                throw new tclerror_1.TclError('missing "');
+            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+                throw new tclerror_1.TclError('extra characters after close-quote');
+            this.wordIdx += 1;
+            return out;
+        };
+        Lexer.prototype.nextSimpleWord = function () {
+            var out = this.newWordToken();
+            while (this.pos < this.input.length &&
+                !Is.WordSeparator(this.currentChar)) {
+                if (this.currentChar === '[') {
+                    out.value += this.readBrackets();
+                    out.hasSubExpr = true;
+                    out.hasVariable = true;
+                    continue;
+                }
+                if (this.currentChar === '$') {
+                    out.value += this.readVariable();
+                    out.hasSubExpr = true;
+                    out.hasVariable = true;
+                    continue;
+                }
+                if (this.currentChar === '\\')
+                    out.value += this.read();
+                out.value += this.read();
+            }
+            this.wordIdx += 1;
+            return out;
+        };
+        Lexer.prototype.readBrackets = function () {
+            if (this.currentChar !== '[')
+                throw new tclerror_1.TclError('asked to read bracket when none exist');
+            this.currentChar = this.currentChar;
+            var output = '';
+            var depth = 0;
+            while (this.pos < this.input.length) {
+                if (this.currentChar === ']')
+                    depth--;
+                if (this.currentChar === '[')
+                    depth++;
+                if (this.currentChar === '\\')
+                    output += this.read();
+                output += this.read();
+                if (depth === 0)
+                    break;
+            }
+            return output;
+        };
+        Lexer.prototype.readVariable = function () {
+            if (this.currentChar !== '$')
+                throw new tclerror_1.TclError('asked to read variable when none exist');
+            this.currentChar = this.currentChar;
+            var output = '';
+            output += this.read();
+            if (this.currentChar === '{') {
+                this.currentChar = this.currentChar;
+                while (this.pos < this.input.length && this.currentChar !== '}') {
+                    if (this.currentChar === '\\')
+                        output += this.read();
+                    output += this.read();
+                }
+                return output;
+            }
+            while (this.pos < this.input.length) {
+                if (this.currentChar === '(') {
+                    this.currentChar = this.currentChar;
+                    while (this.pos < this.input.length) {
+                        if (this.currentChar === ')') {
+                            output += this.read();
+                            break;
+                        }
+                        if (this.currentChar === '$') {
+                            output += this.readVariable();
+                        }
+                        else {
+                            if (this.currentChar === '\\')
+                                output += this.read();
+                            output += this.read();
+                        }
+                    }
+                    if (this.pos >= this.input.length)
+                        throw new tclerror_1.TclError('missing )');
+                    return output;
+                }
+                if (Is.WordSeparator(this.currentChar) ||
+                    Is.Brace(this.currentChar) ||
+                    this.currentChar === '$') {
+                    break;
+                }
+                if (this.currentChar === '\\')
+                    output += this.read();
+                output += this.read();
+            }
+            return output;
+        };
+        Lexer.prototype.newWordToken = function () {
+            return {
+                value: '',
+                hasVariable: false,
+                hasSubExpr: false,
+                stopBackslash: false,
+                index: this.wordIdx,
+                source: '',
+                sourceLocation: 0,
+            };
         };
         return Lexer;
     }());

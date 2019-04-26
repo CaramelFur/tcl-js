@@ -1,6 +1,5 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
-import { Tcl } from './tcl';
 
 export class Lexer {
   // Initialize current read position
@@ -12,6 +11,7 @@ export class Lexer {
   input: string;
   // Initialize current sentence, this is used for linking the source code with the runnable result
   currentSentence: string = '';
+  currentLine: number = 0;
 
   /**
    * Create a new lexer with the given code
@@ -34,6 +34,7 @@ export class Lexer {
     this.pos += 1;
     this.currentChar = this.input.charAt(this.pos);
     this.currentSentence += old;
+    if (old === '\n') this.currentLine += 1;
     return old;
   }
 
@@ -71,204 +72,24 @@ export class Lexer {
   }
 
   /**
-   * Read a word that has brackets, it managages the bracket depth and checks if this is correct and eventually return the complete result
+   * Makes the lexer process the input until a new complete word is found
    *
-   * @param  {boolean} keepOuterBracket - To include the most outer brackets in the returned string, or to leave them out
-   * @param  {string} openingBracket - The opening bracket to use for checking
-   * @param  {string} closingBracket - The closing bracket to use for checking
-   * @returns WordToken - The processed result
+   * @returns WordToken - Returns null when the end of the input is hit
    */
-  private nextBracketWord(
-    keepOuterBracket: boolean,
-    openingBracket: string,
-    closingBracket: string,
-  ): WordToken {
-    // Initiliaze the delimiter array
-    let delimiters: Array<string> = [];
-    // This delimiter array is used for keeping track of opening an closing brackets, and thus making sure read until the last corresponding bracket
-    // E.g. `this is {some "code {to}" parse} with [the lexer]` => ['this', 'is', 'some "code {to}" parse', 'with', 'the lexer']
-    // and not `this is {some "code {to}" parse} with [the lexer]` => ['this', 'is', 'some "code {to', '}" parse}', 'with', 'the lexer']
-
-    // Initialize an empty wordtoken to eventually return
-    let out: WordToken = {
-      value: '',
-      hasVariable: false,
-      hasSubExpr: false,
-      stopBackslash: false,
-      index: this.wordIdx,
-      lastSentence: '',
-    };
-
-    /**
-     * Tests a char for being an opening delimiter adds the necessary end delimiter to the array
-     *
-     * @param  {string} test - The char to test for opening delimiters
-     * @returns number - If a delimiter was added: the amount of delimiters, If not: -1
-     */
-    function testOpenDelimiters(test: string): number {
-      if (test === openingBracket) {
-        delimiters.push(closingBracket);
-        return delimiters.length;
-      }
-      return -1;
+  public nextToken(): WordToken | null {
+    let token = this.getNextToken();
+    if (token) {
+      token.source = this.currentSentence;
+      token.sourceLocation = this.currentLine;
     }
-
-    /**
-     * Tests a char for being a closing delimiter removes the necessary end delimiters from the array
-     *
-     * @param  {string} test - The char to test for closing delimiters
-     * @returns number - If a delimiter was removed: the amount of delimiters, If not: -1
-     */
-    function testCloseDelimiters(test: string): number {
-      if (test === delimiters[delimiters.length - 1]) {
-        delimiters.pop();
-        return delimiters.length;
-      }
-      return -1;
-    }
-
-    /**
-     * Check if the wordscanner has hit the end of the word
-     * Returns a boolean:
-     * - false: Nothing happend, continue reading chars
-     * - true: There are no more chars to read, return the word you currently have
-     *
-     * @param  {string} test
-     * @returns boolean - Is end of word
-     */
-    function testEndOfWord(test: string): boolean {
-      // Check if we are currently in any delimiters
-      if (delimiters.length > 0) {
-        // If so return false
-        return false;
-      }
-
-      // If not check if the current character is a wordseperator or not
-      return Is.WordSeparator(test);
-    }
-
-    // Keep reading chars as long as there is input
-    while (this.pos < this.input.length) {
-      // Test for opening delimiters
-      let opening = testOpenDelimiters(this.currentChar);
-      // If it was the first one, dont add it to the output
-      if (opening === 1 && !keepOuterBracket) {
-        this.read();
-        continue;
-      }
-
-      // Test for closing delimiters
-      let closing = testCloseDelimiters(this.currentChar);
-      // If it was the last delimiter, dont add it to the output
-      if (closing === 0 && !keepOuterBracket) {
-        this.read();
-        continue;
-      }
-
-      // Check if this is the end and leave if so
-      if (testEndOfWord(this.currentChar)) break;
-
-      // If the program finds new characters after the last delimiter, throw an error
-      // This will only happen if someone appends text after a brace: E.g. `puts {hello}world`
-      if (delimiters.length === 0 && closing === -1)
-        throw new TclError('extra characters after close-brace:');
-
-      // If a \ is found just add the character following the \ to the word without processing it
-      if (this.currentChar === '\\') out.value += this.read();
-      out.value += this.read();
-    }
-
-    // If there are still delimiters left, that means that there are non matching brackets
-    if (delimiters.length > 0) throw new TclError('missing close-brace');
-
-    // Change the word index
-    this.wordIdx += 1;
-    return out;
+    return token;
   }
 
   /**
-   * Reads the input until the next found quote
+   * Internal function for fetching a new token
    *
-   * @returns WordToken - The processed word
+   * @returns WordToken
    */
-  private nextQuoteWord(): WordToken {
-    // Check if the function was called when necessary
-    if (this.currentChar !== '"')
-      throw new TclError('nextQuoteWord was called without a quote exisiting');
-
-    // Discard the opening quote
-    this.read();
-
-    // Intialize a token
-    let out: WordToken = {
-      value: '',
-      hasVariable: false,
-      hasSubExpr: false,
-      stopBackslash: false,
-      index: this.wordIdx,
-
-      lastSentence: '',
-    };
-
-    // Keep reading chars as long as there is input and the char is not a quote
-    while (this.pos < this.input.length && this.currentChar !== '"') {
-      // Check if the word has subexpressions or variables
-      if (this.currentChar === '[') out.hasSubExpr = true;
-      if (this.currentChar === '$') out.hasVariable = true;
-
-      // If a \ is found just add the character following the \ to the word without processing it
-      if (this.currentChar === '\\') out.value += this.read();
-      out.value += this.read();
-    }
-
-    // Discard the closing quote
-    let close = this.read();
-    // Check if this closing quote was and actual quote
-    if (close !== '"') throw new TclError('missing "');
-
-    // Check if the next char is word-seperator, if not there is incorrect user input
-    if (!Is.WordSeparator(this.currentChar) && <string>this.currentChar !== '')
-      throw new TclError('extra characters after close-quote');
-
-    // Change the word index
-    this.wordIdx += 1;
-    return out;
-  }
-
-  /**
-   * Reads the input until a word seperator is found
-   *
-   * @returns WordToken - The processed word
-   */
-  private nextSimpleWord(): WordToken {
-    // Initialize a token
-    let out: WordToken = {
-      value: '',
-      hasVariable: false,
-      hasSubExpr: false,
-      stopBackslash: false,
-      index: this.wordIdx,
-      lastSentence: '',
-    };
-
-    // Keep reading chars as long as there is input and the char is not a word-seperator
-    while (
-      this.pos < this.input.length &&
-      !Is.WordSeparator(this.currentChar)
-    ) {
-      // Check if the word has subexpressions or variables
-      if (this.currentChar === '[') out.hasSubExpr = true;
-      if (this.currentChar === '$') out.hasVariable = true;
-
-      // If a \ is found just add the character following the \ to the word without processing it
-      if (this.currentChar === '\\') out.value += this.read();
-      out.value += this.read();
-    }
-    // Change the word index
-    this.wordIdx += 1;
-    return out;
-  }
-
   private getNextToken(): WordToken | null {
     // Get rid of all whitespace
     this.readWhitespace();
@@ -299,20 +120,11 @@ export class Lexer {
 
       // Check if the current char is a {
       case this.currentChar === '{': {
-        // Read the word with the outer most brackets removed
-        let word = this.nextBracketWord(false, '{', '}');
+        // Read the next brace word
+        let word = this.nextBraceWord();
 
         // Disable backslashes on this word
         word.stopBackslash = true;
-        return word;
-      }
-      // Check if the current char is a [
-      case this.currentChar === '[': {
-        // Read the word with the outer most brackets included
-        let word = this.nextBracketWord(true, '[', ']');
-
-        // Enable subexpression parsing
-        word.hasSubExpr = true;
         return word;
       }
       // Check if the current char is "
@@ -326,14 +138,274 @@ export class Lexer {
   }
 
   /**
-   * Makes the lexer process the input until a new complete word is found
+   * Reads a word that starts with { and parses everything in between correctly
    *
-   * @returns WordToken - Returns null when the end of the input is hit
+   * @returns WordToken
    */
-  public nextToken(): WordToken | null {
-    let token = this.getNextToken();
-    if (token) token.lastSentence = this.currentSentence;
-    return token;
+  private nextBraceWord(): WordToken {
+    // Check if called correctly
+    if (this.currentChar !== '{')
+      throw new TclError('asked to read bracket when none exist');
+    this.currentChar = <string>this.currentChar;
+
+    // Initialize some variables
+    let out = this.newWordToken();
+    let depth = 0;
+
+    // While there is data to read
+    while (this.pos < this.input.length) {
+      if (this.currentChar === '}') {
+        // Decrease the depth and skip the character if it is the outer most
+        depth--;
+        if (depth === 0) {
+          this.read();
+          continue;
+        }
+      }
+      if (this.currentChar === '{') {
+        // Increase the depth and skip the character if it is the outer most
+        depth++;
+        if (depth === 1) {
+          this.read();
+          continue;
+        }
+      }
+
+      // Break out of the function when we are back to a depth of 0
+      if (depth === 0) break;
+
+      // Handle escape characters and go to the next one
+      if (this.currentChar === '\\') out.value += this.read();
+      out.value += this.read();
+    }
+
+    // Check if the depth is correct
+    if (depth !== 0) throw new TclError('uneven amount of curly braces');
+
+    // Check for characters after closing brace
+    if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+      throw new TclError('extra characters after close-brace');
+
+    return out;
+  }
+
+  /**
+   * Reads the input until the next found quote
+   *
+   * @returns WordToken - The processed word
+   */
+  private nextQuoteWord(): WordToken {
+    // Check if the function was called when necessary
+    if (this.currentChar !== '"')
+      throw new TclError('nextQuoteWord was called without a quote exisiting');
+
+    // Discard the opening quote
+    this.read();
+
+    // Intialize a token
+    let out: WordToken = this.newWordToken();
+
+    // Keep reading chars as long as there is input and the char is not a quote
+    while (this.pos < this.input.length && this.currentChar !== '"') {
+      // Check if the word has subexpressions or variables
+      if (this.currentChar === '[') {
+        out.value += this.readBrackets();
+        out.hasSubExpr = true;
+        out.hasVariable = true;
+        continue;
+      }
+      if (this.currentChar === '$') {
+        out.value += this.readVariable();
+        out.hasSubExpr = true;
+        out.hasVariable = true;
+        continue;
+      }
+
+      // If a \ is found just add the character following the \ to the word without processing it
+      if (this.currentChar === '\\') out.value += this.read();
+      out.value += this.read();
+    }
+
+    // Discard the closing quote
+    let close = this.read();
+    // Check if this closing quote was and actual quote
+    if (close !== '"') throw new TclError('missing "');
+
+    // Check if the next char is word-seperator, if not there is incorrect user input
+    if (!Is.WordSeparator(this.currentChar) && <string>this.currentChar !== '')
+      throw new TclError('extra characters after close-quote');
+
+    // Change the word index
+    this.wordIdx += 1;
+    return out;
+  }
+
+  /**
+   * Reads the input until a word seperator is found
+   *
+   * @returns WordToken - The processed word
+   */
+  private nextSimpleWord(): WordToken {
+    // Initialize a token
+    let out: WordToken = this.newWordToken();
+
+    // Keep reading chars as long as there is input and the char is not a word-seperator
+    while (
+      this.pos < this.input.length &&
+      !Is.WordSeparator(this.currentChar)
+    ) {
+      // Check if the word has subexpressions or variables
+      if (this.currentChar === '[') {
+        out.value += this.readBrackets();
+        out.hasSubExpr = true;
+        out.hasVariable = true;
+        continue;
+      }
+      if (this.currentChar === '$') {
+        out.value += this.readVariable();
+        out.hasSubExpr = true;
+        out.hasVariable = true;
+        continue;
+      }
+
+      // If a \ is found just add the character following the \ to the word without processing it
+      if (this.currentChar === '\\') out.value += this.read();
+      out.value += this.read();
+    }
+    // Change the word index
+    this.wordIdx += 1;
+    return out;
+  }
+
+  /**
+   * Reads the input until the last closing bracket
+   *
+   * @returns string
+   */
+  private readBrackets(): string {
+    // Check if called correctly
+    if (this.currentChar !== '[')
+      throw new TclError('asked to read bracket when none exist');
+    this.currentChar = <string>this.currentChar;
+
+    // Initialize some variables
+    let output = '';
+    let depth = 0;
+
+    // While there is data to process
+    while (this.pos < this.input.length) {
+      // Ajust the depth
+      if (this.currentChar === ']') depth--;
+      if (this.currentChar === '[') depth++;
+
+      // Handle escapes
+      if (this.currentChar === '\\') output += this.read();
+      output += this.read();
+
+      // Break on last close
+      if (depth === 0) break;
+    }
+
+    // Return the collected result
+    return output;
+  }
+
+  /**
+   * Function to read a variable completely and return the variable
+   *
+   * @returns string
+   */
+  private readVariable(): string {
+    // Check if called correctly
+    if (this.currentChar !== '$')
+      throw new TclError('asked to read variable when none exist');
+    this.currentChar = <string>this.currentChar;
+
+    // Initialize an output buffer
+    let output = '';
+    output += this.read();
+
+    // Check if we have a curly variable
+    if (this.currentChar === '{') {
+      this.currentChar = <string>this.currentChar;
+
+      // Keep reading until a closing curly is found
+      while (this.pos < this.input.length && this.currentChar !== '}') {
+        // Handle escapes
+        if (this.currentChar === '\\') output += this.read();
+        output += this.read();
+      }
+
+      // Return the string containing the variable
+      return output;
+    }
+
+    // If it is not a curly variable keep reading while there is data
+    while (this.pos < this.input.length) {
+      // Check if the string has attached braces
+      if (this.currentChar === '(') {
+        this.currentChar = <string>this.currentChar;
+
+        // If so, keep reading while there is data
+        while (this.pos < this.input.length) {
+          // If an endbrace is found, get out of the nested loop
+          if (this.currentChar === ')') {
+            output += this.read();
+            break;
+          }
+
+          // If another variable is found within the braces
+          if (this.currentChar === '$') {
+            // Parse it using the same function we are currently in
+            output += this.readVariable();
+          }
+          //  If not just move to the next character
+          else {
+            if (this.currentChar === '\\') output += this.read();
+            output += this.read();
+          }
+        }
+
+        // Check if we did escape because of the )
+        if (this.pos >= this.input.length) throw new TclError('missing )');
+
+        // A closing brace
+        return output;
+      }
+
+      // Break out of the loop if we hit the end of the variable
+      if (
+        Is.WordSeparator(this.currentChar) ||
+        Is.Brace(this.currentChar) ||
+        this.currentChar === '$'
+      ) {
+        break;
+      }
+
+      // Handle escape strings
+      if (this.currentChar === '\\') output += this.read();
+      output += this.read();
+    }
+
+    // And return the output
+    return output;
+  }
+
+  /**
+   * Generates a new empty wordtoken
+   *
+   * @returns WordToken
+   */
+  private newWordToken(): WordToken {
+    return {
+      value: '',
+      hasVariable: false,
+      hasSubExpr: false,
+      stopBackslash: false,
+      index: this.wordIdx,
+      source: '',
+      sourceLocation: 0,
+    };
   }
 }
 
@@ -344,5 +416,6 @@ export interface WordToken {
   hasVariable: boolean;
   hasSubExpr: boolean;
   stopBackslash: boolean;
-  lastSentence: string;
+  source: string;
+  sourceLocation: number;
 }

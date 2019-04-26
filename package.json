@@ -1,11 +1,13 @@
 {
   "name": "tcl-js",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {
     "run": "npm run tsbuild && npm run runonly",
-    "runonly": "ts-node test/dev/test.js",
+    "runonly": "ts-node ./test/dev/test.ts",
+    "debug": "npm run tsbuild && npm run debugonly",
+    "debugonly": "node --inspect-brk --require ts-node/register ./test/dev/test.ts",
     "test": "npm run build && npm run nyc",
     "posttest": "npm run report-coverage",
     "tsbuild": "tsc",
