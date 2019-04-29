@@ -8,6 +8,7 @@ let tcl = new Tcl();
   .catch(console.error); /**/
 
 tcl
-  .run('set var(1) HelloWorld; puts $var;')
+  //.run('puts hi\\nhi')
+  .run('set test [puts [puts hi\\nhi]]   ')
   .then(console.log)
   .catch(console.error); /**/

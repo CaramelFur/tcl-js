@@ -102,7 +102,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         case 4:
                             proc = this.scope.resolveProc(command.command);
                             if (!proc)
-                                throw new tclerror_1.TclError("invalid command name \"" + name + "\"");
+                                throw new tclerror_1.TclError("invalid command name \"" + command.command + "\"");
                             helpers = {
                                 sendHelp: function (helpType) {
                                     var options = proc.options;
@@ -124,24 +124,77 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     switch (_a.label) {
                         case 0:
                             output = arg.value;
-                            if (!(arg.hasSubExpr && typeof output === 'string')) return [3, 2];
-                            return [4, this.processSquareBrackets(output)];
+                            if (!(arg.hasVariable && arg.hasVariable && typeof output === 'string')) return [3, 2];
+                            return [4, this.deepProcess(output)];
                         case 1:
                             output = _a.sent();
                             _a.label = 2;
                         case 2:
-                            if (!(arg.hasVariable && typeof output === 'string')) return [3, 4];
-                            return [4, this.deepProcessVariables(output)];
-                        case 3:
-                            output = _a.sent();
-                            _a.label = 4;
-                        case 4:
                             if (!arg.stopBackslash && typeof output === 'string')
                                 output = this.processBackSlash(output);
                             if (typeof output === 'string')
                                 output = output.replace(/\\\n/g, ' ');
                             return [2, typeof output === 'string' ? new types_1.TclSimple(output) : output];
                     }
+                });
+            });
+        };
+        Interpreter.prototype.deepProcess = function (input, position) {
+            if (position === void 0) { position = 0; }
+            return __awaiter(this, void 0, void 0, function () {
+                var output, toProcess;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            output = '';
+                            _a.label = 1;
+                        case 1: return [4, this.resolveFirst(input, position)];
+                        case 2:
+                            if (!(toProcess = _a.sent())) return [3, 3];
+                            while (position < toProcess.startPosition) {
+                                output += input.charAt(position);
+                                position++;
+                            }
+                            position = toProcess.endPosition;
+                            if (toProcess.raw === input)
+                                return [2, toProcess.value];
+                            output += toProcess.value.getValue();
+                            return [3, 1];
+                        case 3:
+                            while (position < input.length) {
+                                output += input.charAt(position);
+                                position++;
+                            }
+                            return [2, output];
+                    }
+                });
+            });
+        };
+        Interpreter.prototype.resolveFirst = function (input, position) {
+            if (position === void 0) { position = 0; }
+            return __awaiter(this, void 0, void 0, function () {
+                function read() {
+                    position += 1;
+                    char = input.charAt(position);
+                }
+                var char;
+                return __generator(this, function (_a) {
+                    char = input.charAt(position);
+                    while (char !== '[' && char !== '$' && position < input.length) {
+                        if (char === '\\')
+                            read();
+                        read();
+                    }
+                    if (char === '[') {
+                        return [2, this.resolveFirstSquareBracket(input, position)];
+                    }
+                    else if (char === '$') {
+                        return [2, this.resolveFirstVariable(input, position)];
+                    }
+                    else {
+                        return [2, null];
+                    }
+                    return [2];
                 });
             });
         };
@@ -185,7 +238,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     position += 1;
                     char = input.charAt(position);
                 }
-                var char, currentVar, inBracket, startPosition, replaceVar, index, solved;
+                var char, currentVar, inBracket, startPosition, replaceVar, replaceVar, index, solved;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -213,12 +266,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             }
                             _a.label = 1;
                         case 1:
-                            if (!(position < input.length)) return [3, 6];
-                            if (!inBracket) return [3, 4];
+                            if (!(position < input.length)) return [3, 8];
+                            if (!inBracket) return [3, 6];
                             if (char === ')') {
                                 inBracket = false;
                                 read(true);
-                                return [3, 6];
+                                return [3, 8];
                             }
                             if (!(char === '$')) return [3, 3];
                             return [4, this.resolveFirstVariable(input, position)];
@@ -232,19 +285,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 return [3, 1];
                             }
                             _a.label = 3;
-                        case 3: return [3, 5];
+                        case 3:
+                            if (!(char === '[')) return [3, 5];
+                            return [4, this.resolveFirstSquareBracket(input, position)];
                         case 4:
+                            replaceVar = _a.sent();
+                            if (replaceVar) {
+                                while (position < replaceVar.endPosition) {
+                                    read(true);
+                                }
+                                currentVar.bracket += replaceVar.value.getValue();
+                                return [3, 1];
+                            }
+                            _a.label = 5;
+                        case 5: return [3, 7];
+                        case 6:
                             if (char === '(') {
                                 inBracket = true;
                                 read(true);
                                 return [3, 1];
                             }
                             if (!currentVar.curly && !char.match(/\w/g))
-                                return [3, 6];
-                            _a.label = 5;
-                        case 5:
+                                return [3, 8];
+                            _a.label = 7;
+                        case 7:
                             if (currentVar.curly && char === '}')
-                                return [3, 6];
+                                return [3, 8];
                             if (char === '\\') {
                                 if (inBracket)
                                     currentVar.bracket += char;
@@ -258,7 +324,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                 currentVar.name += char;
                             read(true);
                             return [3, 1];
-                        case 6:
+                        case 8:
                             if (currentVar.curly) {
                                 if (char !== '}')
                                     throw new tclerror_1.TclError('unexpected end of string');
@@ -344,61 +410,99 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             this.scope.define(name, output);
             return;
         };
-        Interpreter.prototype.processSquareBrackets = function (input) {
+        Interpreter.prototype.deepProcessSquareBrackets = function (input, position) {
+            if (position === void 0) { position = 0; }
             return __awaiter(this, void 0, void 0, function () {
-                function read() {
-                    position += 1;
-                    char = input.charAt(position);
-                }
-                var output, depth, position, char, lastExpression, subInterpreter, result, replaceVal;
+                var output, toProcess;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            output = input;
-                            depth = 0;
-                            position = 0;
-                            char = input.charAt(position);
-                            lastExpression = '';
+                            output = '';
                             _a.label = 1;
-                        case 1:
-                            if (!(position < input.length)) return [3, 6];
-                            if (!(char === ']')) return [3, 5];
-                            depth--;
-                            if (!(depth === 0)) return [3, 4];
-                            if (!(lastExpression !== '')) return [3, 3];
-                            subInterpreter = new Interpreter(this.tcl, lastExpression, this.scope);
-                            return [4, subInterpreter.run()];
+                        case 1: return [4, this.resolveFirstSquareBracket(input, position)];
                         case 2:
-                            result = _a.sent();
-                            replaceVal = "[" + lastExpression + "]";
-                            if (output === replaceVal)
-                                return [2, result];
-                            output = output.replace(replaceVal, result.getValue());
-                            lastExpression = '';
-                            _a.label = 3;
-                        case 3: return [3, 5];
-                        case 4:
-                            if (depth < 0)
-                                throw new tclerror_1.TclError('unexpected ]');
-                            _a.label = 5;
-                        case 5:
-                            if (depth > 0) {
-                                lastExpression += char;
+                            if (!(toProcess = _a.sent())) return [3, 3];
+                            while (position < toProcess.startPosition) {
+                                output += input.charAt(position);
+                                position++;
                             }
-                            if (char === '[')
-                                depth++;
-                            if (char === '\\') {
-                                read();
-                                if (depth > 0) {
-                                    lastExpression += char;
-                                }
-                            }
-                            read();
+                            position = toProcess.endPosition;
+                            if (toProcess.raw === input)
+                                return [2, toProcess.value];
+                            output += toProcess.value.getValue();
                             return [3, 1];
-                        case 6:
+                        case 3:
+                            while (position < input.length) {
+                                output += input.charAt(position);
+                                position++;
+                            }
+                            return [2, output];
+                    }
+                });
+            });
+        };
+        Interpreter.prototype.resolveFirstSquareBracket = function (input, position) {
+            return __awaiter(this, void 0, void 0, function () {
+                function read(appendOnOriginal) {
+                    if (appendOnOriginal)
+                        outbuf.originalString += char;
+                    position += 1;
+                    char = input.charAt(position);
+                }
+                var outbuf, char, depth, interpreter, _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            outbuf = {
+                                originalString: '',
+                                startPosition: 0,
+                                endPosition: 0,
+                                expression: '',
+                                value: new types_1.TclVariable(''),
+                            };
+                            char = input.charAt(position);
+                            depth = 0;
+                            while (char !== '[' && position < input.length) {
+                                if (char === '\\')
+                                    read(false);
+                                read(false);
+                            }
+                            if (char !== '[')
+                                return [2, null];
+                            char = char;
+                            outbuf.startPosition = position;
+                            read(true);
+                            depth = 1;
+                            while (position < input.length) {
+                                if (char === '[') {
+                                    depth++;
+                                }
+                                if (char === ']') {
+                                    depth--;
+                                    if (depth === 0)
+                                        break;
+                                }
+                                if (char === '\\') {
+                                    outbuf.expression += char;
+                                    read(true);
+                                }
+                                outbuf.expression += char;
+                                read(true);
+                            }
                             if (depth !== 0)
                                 throw new tclerror_1.TclError('incorrect amount of square brackets');
-                            return [2, output];
+                            read(true);
+                            interpreter = new Interpreter(this.tcl, outbuf.expression, this.scope);
+                            _a = outbuf;
+                            return [4, interpreter.run()];
+                        case 1:
+                            _a.value = _b.sent();
+                            return [2, {
+                                    raw: outbuf.originalString,
+                                    startPosition: outbuf.startPosition,
+                                    endPosition: position,
+                                    value: outbuf.value,
+                                }];
                     }
                 });
             });

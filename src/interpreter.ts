@@ -61,7 +61,7 @@ export class Interpreter {
     // Return the result of the associated function being called
     let proc = this.scope.resolveProc(command.command);
     // First check if function exists
-    if (!proc) throw new TclError(`invalid command name "${name}"`);
+    if (!proc) throw new TclError(`invalid command name "${command.command}"`);
 
     // Setup helper functions
     let helpers: TclProcHelpers = {
@@ -94,16 +94,10 @@ export class Interpreter {
     // Define an output to return
     let output: string | TclVariable = arg.value;
 
-    // Check if the lexer has determined this argument has subexpressions
-    if (arg.hasSubExpr && typeof output === 'string') {
-      // Process all subexpressions and set the value accordingly
-      output = await this.processSquareBrackets(output);
-    }
-
-    // Check if lexer has already determined there might be a variable
-    if (arg.hasVariable && typeof output === 'string') {
+    // Check if the lexer allows solving
+    if (arg.hasVariable && arg.hasVariable &&typeof output === 'string') {
       // If so, resolve those
-      output = await this.deepProcessVariables(output);
+      output = await this.deepProcess(output);
     }
 
     // If the lexer has not determined to stop backslash processing, process all the backslashes
@@ -115,6 +109,78 @@ export class Interpreter {
 
     // Return a new TclSimple with the previously set output
     return typeof output === 'string' ? new TclSimple(output) : output;
+  }
+
+  /**
+   * Function to go over a string and solve expressions and variables accordingly
+   * 
+   * @param  {string} input - The string to go over
+   * @param  {number=0} position - At what point to start in the string
+   * @returns Promise - The found results
+   */
+  public async deepProcess(
+    input: string,
+    position: number = 0,
+  ): Promise<TclVariable | string> {
+    // Initialize output string
+    let output = '';
+
+    // Intitialize variable for every found variable
+    let toProcess: FoundVariable | null;
+
+    // Keep going as long as there are variables
+    while ((toProcess = await this.resolveFirst(input, position))) {
+      // Add the string until the first found variable
+      while (position < toProcess.startPosition) {
+        output += input.charAt(position);
+        position++;
+      }
+
+      // Jump to the end of the variable
+      position = toProcess.endPosition;
+
+      // Return the full value if it corrresponds to the entire string
+      if (toProcess.raw === input) return toProcess.value;
+      // Otherwise add the result to the output
+      output += toProcess.value.getValue();
+    }
+
+    // Add the last bit of the string
+    while (position < input.length) {
+      output += input.charAt(position);
+      position++;
+    }
+
+    return output;
+  }
+
+  private async resolveFirst(
+    input: string,
+    position: number = 0,
+  ): Promise<FoundVariable | null> {
+    // Setup necessary variables
+    let char = input.charAt(position);
+
+    // Function to progress one char
+    function read() {
+      position += 1;
+      char = input.charAt(position);
+    }
+
+    // Keep reading string until a something is found
+    while (char !== '[' && char !== '$' && position < input.length) {
+      if (char === '\\') read();
+      read();
+    }
+
+    // Return the correct fix according to the found char
+    if (char === '[') {
+      return this.resolveFirstSquareBracket(input, position);
+    } else if (char === '$') {
+      return this.resolveFirstVariable(input, position);
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -227,8 +293,24 @@ export class Interpreter {
           break;
         }
 
+        // Solve any found variables
         if (char === '$') {
           let replaceVar = await this.resolveFirstVariable(input, position);
+          if (replaceVar) {
+            while (position < replaceVar.endPosition) {
+              read(true);
+            }
+            currentVar.bracket += replaceVar.value.getValue();
+            continue;
+          }
+        }
+
+        // Solve any found subexpressions
+        if (char === '[') {
+          let replaceVar = await this.resolveFirstSquareBracket(
+            input,
+            position,
+          );
           if (replaceVar) {
             while (position < replaceVar.endPosition) {
               read(true);
@@ -284,12 +366,7 @@ export class Interpreter {
     // Initialize an index
     let index: string | number | null;
 
-    /**
-     * Commented out for future use, this should fix "set hello hello; puts $hello[expr 3]" from not running
-     */
     let solved = currentVar.bracket;
-    /*let solved = await this.processSquareBrackets(currentVar.bracket);
-    if (typeof solved !== 'string') solved = solved.getValue();*/
 
     // Set the correct key
     if (solved === '') index = null;
@@ -435,87 +512,133 @@ export class Interpreter {
   }
 
   /**
+   * Function to go over a string and solve all square bracket subexpressions accordingly
+   * 
+   * @param  {string} input - The string to loop over
+   * @param  {number=0} position - The starting position in the string
+   * @returns Promise - The found and processed results
+   */
+  private async deepProcessSquareBrackets(
+    input: string,
+    position: number = 0,
+  ): Promise<string | TclVariable> {
+    // Initialize output string
+    let output = '';
+
+    // Intitialize variable for every found variable
+    let toProcess: FoundVariable | null;
+
+    // Keep going as long as there are variables
+    while (
+      (toProcess = await this.resolveFirstSquareBracket(input, position))
+    ) {
+      // Add the string until the first found variable
+      while (position < toProcess.startPosition) {
+        output += input.charAt(position);
+        position++;
+      }
+
+      // Jump to the end of the variable
+      position = toProcess.endPosition;
+
+      // Return the full value if it corrresponds to the entire string
+      if (toProcess.raw === input) return toProcess.value;
+      // Otherwise add the result to the output
+      output += toProcess.value.getValue();
+    }
+
+    // Add the last bit of the string
+    while (position < input.length) {
+      output += input.charAt(position);
+      position++;
+    }
+
+    return output;
+  }
+
+  /**
    * Function to loop over all the subexpressions in a string an resolve all of them in order
    *
    * @param  {string} input - The input string
    * @returns Promise - The processed output
    */
-  private async processSquareBrackets(
+  private async resolveFirstSquareBracket(
     input: string,
-  ): Promise<string | TclVariable> {
-    // Initialize output string
-    let output = input;
+    position: number,
+  ): Promise<FoundVariable | null> {
+    // Setup output buffer
+    let outbuf = {
+      originalString: '',
+      startPosition: 0,
+      endPosition: 0,
+      expression: '',
+      value: new TclVariable(''),
+    };
 
     // Setup necessary variables
-    let depth = 0;
-    let position = 0;
     let char = input.charAt(position);
 
-    let lastExpression = '';
+    let depth = 0;
 
     // Function to progress one char
-    function read() {
+    function read(appendOnOriginal: boolean) {
+      if (appendOnOriginal) outbuf.originalString += char;
       position += 1;
       char = input.charAt(position);
     }
 
+    // Keep reading string until a [ is found
+    while (char !== '[' && position < input.length) {
+      if (char === '\\') read(false);
+      read(false);
+    }
+    // Check if it was not the end of the string that stopped us
+    if (char !== '[') return null;
+    char = <string>char;
+
+    outbuf.startPosition = position;
+
+    // Eat the [ character
+    read(true);
+    depth = 1;
+
     // While input is abvailable
     while (position < input.length) {
-      // If the current char is ] reduce the depth
+      // Change depth based on character
+      if (char === '[') {
+        depth++;
+      }
+
       if (char === ']') {
         depth--;
-
-        // If the depth has been reduced to zero
-        if (depth === 0) {
-          // Check if an expression was created
-          if (lastExpression !== '') {
-            // If so, create a new interpreter to process the expression
-            let subInterpreter = new Interpreter(
-              this.tcl,
-              lastExpression,
-              this.scope,
-            );
-
-            // Grab the result
-            let result = await subInterpreter.run();
-
-            let replaceVal = `[${lastExpression}]`;
-
-            // If we just solved the entire string return the raw TclVariable
-            if (output === replaceVal) return result;
-            // Replace the output with the correct value
-            output = output.replace(replaceVal, result.getValue());
-
-            // Reset the expression for the next one
-            lastExpression = '';
-          }
-        } else if (depth < 0) throw new TclError('unexpected ]');
+        if (depth === 0) break;
       }
-
-      // If we are within square brackets, add the characters to the expression
-      if (depth > 0) {
-        lastExpression += char;
-      }
-
-      // If the character is [ increase the depth
-      if (char === '[') depth++;
 
       // Handle escapes
       if (char === '\\') {
-        read();
-        if (depth > 0) {
-          lastExpression += char;
-        }
+        outbuf.expression += char;
+        read(true);
       }
-
       // Move to the next char
-      read();
+      outbuf.expression += char;
+      read(true);
     }
 
     // Check if depth is zero after loop, otherwise throw error
     if (depth !== 0) throw new TclError('incorrect amount of square brackets');
 
-    return output;
+    read(true);
+
+    let interpreter = new Interpreter(this.tcl, outbuf.expression, this.scope);
+    outbuf.value = await interpreter.run();
+
+    // And return the solved variable with extra info
+    return {
+      raw: outbuf.originalString,
+      startPosition: outbuf.startPosition,
+      endPosition: position,
+      value: outbuf.value,
+    };
   }
 
   /**
