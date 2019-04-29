@@ -1,8 +1,8 @@
 import { Interpreter } from '../interpreter';
-import * as math from 'mathjs';
 import { TclVariable, TclSimple, TclProcHelpers } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
+import { Parser } from '../mathParser';
 import { CommandToken } from '../parser';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
@@ -171,10 +171,12 @@ export function Load(scope: Scope) {
       if (typeof solvedExpression !== 'string')
         throw new TclError('expression resolved to variable instead of string');
 
+      let parser = new Parser();
       // Try to solve the expression and return the result
-      let result = math.eval(solvedExpression);
+      let result = parser.parse(solvedExpression).evaluate();
 
       //Check if the result is usable
+      if (typeof result === 'boolean') result = result ? 1 : 0;
       if (typeof result !== 'number')
         throw new TclError('expression result is not a number');
       if (result === Infinity)

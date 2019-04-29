@@ -922,12 +922,16 @@ img { max-width: 100%; }
 				<a href="https://travis-ci.org/rubikscraft/tcl-js"><img src="https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat" alt="Build Status"></a>
 				<a href="https://codecov.io/gh/rubikscraft/tcl-js"><img src="https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg" alt="codecov"></a>
 			<a href="https://packagephobia.now.sh/result?p=tcl-js"><img src="https://packagephobia.now.sh/badge?p=tcl-js&style=flat" alt="install size"></a></p>
-			<h2 id="important">Important</h2>
-			<p>I can not guarantee that everything works as it should, and the api will probably still change.
-			Therefore it is not recommended use this package in production yet.</p>
-			<p>But it would be highly appreciated if this package was heavily tested, cause it is impossible for me to test every scenario.</p>
+			<h2 id="about">About</h2>
+			<p>tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
+			tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.</p>
+			<h2 id="disclaimer">Disclaimer</h2>
+			<p>This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.</p>
+			<p>Because this project is still not finished any new PRs or found issues being added would be highly aprreciated.</p>
 			<h2 id="getting-started">Getting started</h2>
-			<p>You can easily start using the interpreter with this example</p>
+			<p>Install tcl-js to your project with</p>
+			<pre><code class="language-bash">npm install --save tcl-js</code></pre>
+			<p>Then use it in your project by importing the Tcl component.</p>
 			<pre><code class="language-js"><span class="hljs-comment">// Import the interpreter</span>
 <span class="hljs-keyword">const</span> { Tcl } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'tcl-js'</span>);
 
@@ -947,6 +951,20 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 			<h2 id="documentation">Documentation</h2>
 			<p>You can find the documentation <a href="https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html">here</a></p>
 			<h2 id="status">Status</h2>
+			<p>Down below is the current project status of tcl-js, here you can see what parts are already implemented and working, and what deviations have been made from the original tcl-sh interpreter.</p>
+			<h3 id="deviations">Deviations</h3>
+			<ul>
+				<li>In the <code>expr</code> command:<ul>
+						<li>The <code>x ** y</code> (exponentiation) operator has been changed to <code>x ^ y</code></li>
+						<li>The <code>~x</code> (bitwise not) operator is now <code>bnot(x)</code></li>
+						<li>The <code>!x</code> (logical not) operator is now <code>not(x)</code> or <code>not x</code></li>
+						<li>The <code>x &lt;&lt; y</code> and <code>x &gt;&gt; y</code> (bitwise shift) operators are now <code>lshift(x, y)</code> and <code>rshift(x, y)</code></li>
+						<li>The <code>x &amp; y</code> and <code>x | y</code> (bitwise and/or) operators are now <code>band(x, y)</code> and <code>bor(x, y)</code></li>
+						<li>The <code>a1 &amp;&amp; a2 &amp;&amp; a3 &amp;&amp;...</code> and <code>a1 || a2 || a3 ||...</code> (logical and/or) operators are now <code>land(a1, a2, a3, ...)</code> and <code>lor(a1, a2, a3, ...)</code></li>
+						<li>The <code>eq</code>, <code>ne</code> and <code>ni</code> (string compare) operators are not implemented, please use <code>==</code>, <code>!=</code> and <code>not(x in y)</code> instead</li>
+					</ul>
+				</li>
+			</ul>
 			<h3 id="currently-working-tcl-commands">Currently working tcl commands</h3>
 			<p>These commands should be fully working according to the tcl wiki</p>
 			<ul>
@@ -998,6 +1016,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 							<li class="tsd-kind-external-module"><a href="modules/_io_.html" class="tsd-kind-icon">"io"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_is_.html" class="tsd-kind-icon">"is"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_lexer_.html" class="tsd-kind-icon">"lexer"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_mathparser_.html" class="tsd-kind-icon">"math<wbr>Parser"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_parser_.html" class="tsd-kind-icon">"parser"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_scope_.html" class="tsd-kind-icon">"scope"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_tcl_.html" class="tsd-kind-icon">"tcl"</a></li>

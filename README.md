@@ -7,16 +7,26 @@
 [![codecov](https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg)](https://codecov.io/gh/rubikscraft/tcl-js)
 [![install size](https://packagephobia.now.sh/badge?p=tcl-js&style=flat)](https://packagephobia.now.sh/result?p=tcl-js)
 
-## Important
+## About
 
-I can not guarantee that everything works as it should, and the api will probably still change.
-Therefore it is not recommended use this package in production yet.
+tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
+tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.
 
-But it would be highly appreciated if this package was heavily tested, cause it is impossible for me to test every scenario.
+## Disclaimer
+
+This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.
+
+Because this project is still not finished any new PRs or found issues being added would be highly aprreciated.
 
 ## Getting started
 
-You can easily start using the interpreter with this example
+Install tcl-js to your project with
+
+```bash
+npm install --save tcl-js
+```
+
+Then use it in your project by importing the Tcl component.
 
 ```js
 // Import the interpreter
@@ -42,6 +52,19 @@ main().catch(console.error);
 You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html)
 
 ## Status
+
+Down below is the current project status of tcl-js, here you can see what parts are already implemented and working, and what deviations have been made from the original tcl-sh interpreter.
+
+### Deviations
+
+- In the `expr` command:
+  - The `x ** y` (exponentiation) operator has been changed to `x ^ y`
+  - The `~x` (bitwise not) operator is now `bnot(x)`
+  - The `!x` (logical not) operator is now `not(x)` or `not x`
+  - The `x << y` and `x >> y` (bitwise shift) operators are now `lshift(x, y)` and `rshift(x, y)`
+  - The `x & y` and `x | y` (bitwise and/or) operators are now `band(x, y)` and `bor(x, y)`
+  - The `a1 && a2 && a3 &&...` and `a1 || a2 || a3 ||...` (logical and/or) operators are now `land(a1, a2, a3, ...)` and `lor(a1, a2, a3, ...)`
+  - The `eq`, `ne` and `ni` (string compare) operators are not implemented, please use `==`, `!=` and `not(x in y)` instead
 
 ### Currently working tcl commands
 

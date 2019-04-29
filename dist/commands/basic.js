@@ -39,16 +39,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../interpreter", "mathjs", "../types", "../scope", "../tclerror"], factory);
+        define(["require", "exports", "../interpreter", "../types", "../scope", "../tclerror", "../mathParser"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var interpreter_1 = require("../interpreter");
-    var math = require("mathjs");
     var types_1 = require("../types");
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
+    var mathParser_1 = require("../mathParser");
     var variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
     function Load(scope) {
         var _this = this;
@@ -117,7 +117,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             },
         });
         scope.defineProc('expr', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var _i, args_3, arg, stringArgs, expression, solvedExpression, result;
+            var _i, args_3, arg, stringArgs, expression, solvedExpression, parser, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -135,7 +135,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         solvedExpression = _a.sent();
                         if (typeof solvedExpression !== 'string')
                             throw new tclerror_1.TclError('expression resolved to variable instead of string');
-                        result = math.eval(solvedExpression);
+                        parser = new mathParser_1.Parser();
+                        result = parser.parse(solvedExpression).evaluate();
+                        if (typeof result === 'boolean')
+                            result = result ? 1 : 0;
                         if (typeof result !== 'number')
                             throw new tclerror_1.TclError('expression result is not a number');
                         if (result === Infinity)

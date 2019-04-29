@@ -9,6 +9,6 @@ let tcl = new Tcl();
 
 tcl
   //.run('puts hi\\nhi')
-  .run('set test [puts [puts hi\\nhi]]   ')
+  .run('expr {bnot 4}')
   .then(console.log)
   .catch(console.error); /**/
