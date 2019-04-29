@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var types_1 = require("../types");
     var scope_1 = require("../scope");
     var tclerror_1 = require("../tclerror");
-    var variableRegex = /(?<fullname>(?<name>\w+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
+    var variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
     function Load(scope) {
         var _this = this;
         scope.defineProc('set', function (interpreter, args, command, helpers) {

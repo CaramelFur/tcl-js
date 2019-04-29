@@ -318,8 +318,8 @@ export class Interpreter {
   ): TclVariable {
     // Set the correct keys
     let name = variableName;
-    let objectKey = typeof variableKey === 'string' ? variableKey : undefined;
-    let arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
+    let objectKey = typeof variableKey === 'string' ? variableKey : null;
+    let arrayIndex = typeof variableKey === 'number' ? variableKey : null;
 
     // Get the corresponding value
     let value: TclVariable | null = this.scope.resolve(name);
@@ -327,7 +327,7 @@ export class Interpreter {
     if (!value) throw new TclError(`can't read "${name}": no such variable`);
 
     // Check if an object key is present
-    if (objectKey) {
+    if (objectKey !== null) {
       // Check if the value is indeed an object
       if (!(value instanceof TclObject))
         throw new TclError(`can't read "${name}": variable isn't object`);
@@ -336,7 +336,7 @@ export class Interpreter {
       return value.getSubValue(objectKey);
     }
     // Check if an array index is present
-    else if (arrayIndex) {
+    else if (arrayIndex !== null) {
       // Check if the value is indeed an array
       if (!(value instanceof TclArray))
         throw new TclError(`can't read "${name}": variable isn't array`);
@@ -364,8 +364,8 @@ export class Interpreter {
   ) {
     // Set the correct keys
     let name = variableName;
-    let objectKey = typeof variableKey === 'string' ? variableKey : undefined;
-    let arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
+    let objectKey = typeof variableKey === 'string' ? variableKey : null;
+    let arrayIndex = typeof variableKey === 'number' ? variableKey : null;
 
     // Define an output
     let output: TclVariable = variable;
@@ -374,7 +374,7 @@ export class Interpreter {
     let existingValue: TclVariable | null = this.scope.resolve(name);
 
     // Check if an object key was parsed
-    if (objectKey) {
+    if (objectKey !== null) {
       if (existingValue) {
         // If a value is already present, check if it is indeed an object
         if (!(existingValue instanceof TclObject))
@@ -395,7 +395,7 @@ export class Interpreter {
       output = obj;
     }
     // Check an array index was parsed
-    else if (arrayIndex) {
+    else if (arrayIndex !== null) {
       if (existingValue) {
         // If a value is already present, check if it is indeed an array
         if (!(existingValue instanceof TclArray))

@@ -66,6 +66,7 @@ function runTest(partTest) {
       });
       stdout = stdout.join('');
     } catch (e) {
+      //console.log({partTest, e})
       if (partTest.output.type === 'error') {
         expect(e.name).to.equal('TclError');
       } else {

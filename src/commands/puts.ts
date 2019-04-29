@@ -1,7 +1,6 @@
 import { Interpreter } from '../interpreter';
 import {
   TclVariable,
-  TclProcFunction,
   TclProcHelpers,
   TclSimple,
 } from '../types';

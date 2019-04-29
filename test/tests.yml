@@ -50,57 +50,65 @@ Commands:
 
   # Test the functionality of variables
   'Set and Unset':
-    'Simple Variables':
-      - name: Simple
-        input:
-          type: raw
-          value: 'set var HelloWorld'
-        output:
-          type: raw
-          value: HelloWorld
+    - name: Simple
+      input:
+        type: raw
+        value: 'set var HelloWorld'
+      output:
+        type: raw
+        value: HelloWorld
 
-      - name: 'Print variable'
-        input:
-          type: raw
-          value: 'set var HelloWorld; puts $var;'
-        stdout:
-          type: raw
-          value: "HelloWorld\n"
+    - name: 'Print variable'
+      input:
+        type: raw
+        value: 'set var HelloWorld; puts $var;'
+      stdout:
+        type: raw
+        value: "HelloWorld\n"
 
-      - name: 'Retrieve variable'
-        input:
-          type: raw
-          value: 'set var HelloWorld; puts $var; set var;'
-        stdout:
-          type: raw
-          value: "HelloWorld\n"
-        output:
-          type: raw
-          value: HelloWorld
+    - name: 'Retrieve variable'
+      input:
+        type: raw
+        value: 'set var HelloWorld; puts $var; set var;'
+      stdout:
+        type: raw
+        value: "HelloWorld\n"
+      output:
+        type: raw
+        value: HelloWorld
 
-      - name: 'Unset variable'
-        input:
-          type: raw
-          value: 'set var HelloWorld; puts $var; unset var;'
-        stdout:
-          type: raw
-          value: "HelloWorld\n"
+    - name: 'Unset variable'
+      input:
+        type: raw
+        value: 'set var HelloWorld; puts $var; unset var;'
+      stdout:
+        type: raw
+        value: "HelloWorld\n"
 
-      - name: 'Set variable and change'
-        input:
-          type: raw
-          value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
-        stdout:
-          type: raw
-          value: "HelloWorld\nHelloEarth\n"
+    - name: 'Set variable and change'
+      input:
+        type: raw
+        value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
+      stdout:
+        type: raw
+        value: "HelloWorld\nHelloEarth\n"
 
-      - name: 'Set variable, unset variable and set again'
-        input:
-          type: raw
-          value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
-        stdout:
-          type: raw
-          value: "HelloWorld\nHelloEarth\n"
+    - name: 'Set variable, unset variable and set again'
+      input:
+        type: raw
+        value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
+      stdout:
+        type: raw
+        value: "HelloWorld\nHelloEarth\n"
+
+  List:
+    - name: 'Simple'
+      input:
+        type: raw
+        value: 'puts [list hello this is a list]'
+      stdout:
+        type: raw
+        value: "hello this is a list\n"
 
 Functionality:
   # Test if TCL is able to load files
@@ -562,6 +570,229 @@ Functionality:
       stdout:
         type: raw
         value: '30'
+
+  Variables:
+    Simple:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Bigger value'
+        input:
+          type: raw
+          value: 'set var "Hello World!"; puts $var;'
+        stdout:
+          type: raw
+          value: "Hello World!\n"
+      - name: 'In middle of sentence'
+        input:
+          type: raw
+          value: 'set var "Hello World"; puts "I like to say $var!";'
+        stdout:
+          type: raw
+          value: "I like to say Hello World!\n"
+      - name: 'In middle of brace sentence'
+        input:
+          type: raw
+          value: 'set var "Hello World"; puts {I like to say $var!};'
+        stdout:
+          type: raw
+          value: "I like to say $var!\n"
+      - name: 'Double in middle of sentence'
+        input:
+          type: raw
+          value: 'set var "Hello World"; puts "I like to say $var$var!";'
+        stdout:
+          type: raw
+          value: "I like to say Hello WorldHello World!\n"
+      - name: 'In front of square bracket'
+        input:
+          type: raw
+          value: 'set var "Hello World"; puts $var[expr 3];'
+        stdout:
+          type: raw
+          value: "Hello World3\n"
+      - name: 'Behind of square bracket'
+        input:
+          type: raw
+          value: 'set var "Hello World"; puts [expr 3]$var;'
+        stdout:
+          type: raw
+          value: "3Hello World\n"  
+    Array:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var(0);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Nested'
+        input:
+          type: raw
+          value: 'set index 2; set var($index) HelloWorld; puts $var($index);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Double Nested'
+        input:
+          type: raw
+          value: 'set index 2; set double($index) 5; set var($double($index)) HelloWorld; puts $var($double($index));'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Using Square Brackets'
+        input:
+          type: raw
+          value: 'set var([expr 3 * 3]) HelloWorld; puts $var([expr 3 * 3]);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Using Nested Square Brackets'
+        input:
+          type: raw
+          value: 'set multiplier 3; set var([expr 3 * 3]) HelloWorld; puts $var([expr $multiplier * 3]);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Unset and reassign'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var(0); unset var; set var hello; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\nhello\n"
+      - name: 'Error on whole use'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var;'
+        output:
+          type: error
+      - name: 'Error on invalid index'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var(1);'
+        output:
+          type: error
+      - name: 'Error on reassign'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var(0); set var hello'
+        output:
+          type: error
+      - name: 'Error on unfinished bracket'
+        input:
+          type: raw
+          value: 'set var(0) HelloWorld; puts $var(0;'
+        output:
+          type: error
+    Object:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'set var(test) HelloWorld; puts $var(test);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'With space'
+        input:
+          type: raw
+          value: 'set "var(test this)" HelloWorld; puts $var(test this);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Nested'
+        input:
+          type: raw
+          value: 'set wow akey; set var($wow) HelloWorld; puts $var($wow);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Double Nested'
+        input:
+          type: raw
+          value: 'set keyholder tired; set addition jup; set "wow($keyholder $addition)" akey; set var($wow($keyholder $addition)) HelloWorld; puts $var($wow($keyholder $addition));'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Using Square Brackets'
+        input:
+          type: raw
+          value: 'set var([list wow hi]) HelloWorld; puts $var(wow hi);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Using Nested Square Brackets'
+        input:
+          type: raw
+          value: 'set multiplier thing; set var([list thing three]) HelloWorld; puts $var([list $multiplier three]);'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Unset and reassign'
+        input:
+          type: raw
+          value: 'set var(hello) HelloWorld; puts $var(hello); unset var; set var hello; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\nhello\n"
+      - name: 'Error on whole use'
+        input:
+          type: raw
+          value: 'set var(hello) HelloWorld; puts $var;'
+        output:
+          type: error
+      - name: 'Error on invalid index'
+        input:
+          type: raw
+          value: 'set var(hello) HelloWorld; puts $var(wow);'
+        output:
+          type: error
+      - name: 'Error on reassign'
+        input:
+          type: raw
+          value: 'set var(hello) HelloWorld; puts $var(hello); set var hello'
+        output:
+          type: error
+      - name: 'Error on unfinished bracket'
+        input:
+          type: raw
+          value: 'set var(hello) HelloWorld; puts $var(hello;'
+        output:
+          type: error
+    Brace Variables:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts ${var};'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Weird chars'
+        input:
+          type: raw
+          value: 'set {*!@&#^#^@!!*^#} HelloWorld; puts ${*!@&#^#^@!!*^#};'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Weird chars array'
+        input:
+          type: raw
+          value: 'set {*!@&#^#^@!!*^#(3)} HelloWorld; puts ${*!@&#^#^@!!*^#(3)};'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+      - name: 'Weird chars object'
+        input:
+          type: raw
+          value: 'set {*!@&#^#^@!!*^#(!@&#^#^@!)} HelloWorld; puts ${*!@&#^#^@!!*^#(!@&#^#^@!)};'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+
 
 #Execute examples from ./scripts
 Examples:

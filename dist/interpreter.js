@@ -285,17 +285,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         Interpreter.prototype.getVariable = function (variableName, variableKey) {
             var name = variableName;
-            var objectKey = typeof variableKey === 'string' ? variableKey : undefined;
-            var arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
+            var objectKey = typeof variableKey === 'string' ? variableKey : null;
+            var arrayIndex = typeof variableKey === 'number' ? variableKey : null;
             var value = this.scope.resolve(name);
             if (!value)
                 throw new tclerror_1.TclError("can't read \"" + name + "\": no such variable");
-            if (objectKey) {
+            if (objectKey !== null) {
                 if (!(value instanceof types_1.TclObject))
                     throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't object");
                 return value.getSubValue(objectKey);
             }
-            else if (arrayIndex) {
+            else if (arrayIndex !== null) {
                 if (!(value instanceof types_1.TclArray))
                     throw new tclerror_1.TclError("can't read \"" + name + "\": variable isn't array");
                 return value.getSubValue(arrayIndex);
@@ -306,11 +306,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         Interpreter.prototype.setVariable = function (variableName, variableKey, variable) {
             var name = variableName;
-            var objectKey = typeof variableKey === 'string' ? variableKey : undefined;
-            var arrayIndex = typeof variableKey === 'number' ? variableKey : undefined;
+            var objectKey = typeof variableKey === 'string' ? variableKey : null;
+            var arrayIndex = typeof variableKey === 'number' ? variableKey : null;
             var output = variable;
             var existingValue = this.scope.resolve(name);
-            if (objectKey) {
+            if (objectKey !== null) {
                 if (existingValue) {
                     if (!(existingValue instanceof types_1.TclObject))
                         throw new tclerror_1.TclError("cant' set \"" + variableName + "\": variable isn't object");
@@ -321,7 +321,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 obj.set(objectKey, variable);
                 output = obj;
             }
-            else if (arrayIndex) {
+            else if (arrayIndex !== null) {
                 if (existingValue) {
                     if (!(existingValue instanceof types_1.TclArray))
                         throw new tclerror_1.TclError("cant' set \"" + variableName + "\": variable isn't array");

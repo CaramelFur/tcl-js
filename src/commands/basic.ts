@@ -6,7 +6,7 @@ import { TclError } from '../tclerror';
 import { CommandToken } from '../parser';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
-const variableRegex = /(?<fullname>(?<name>\w+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
+const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
 
 /**
  * Function to load the procs into the scope
