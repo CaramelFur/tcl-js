@@ -119,7 +119,7 @@ export class Interpreter {
 
   /**
    * Function to loop over every variable and solve all of them in order
-   * 
+   *
    * @param  {string} input - The string to loop over
    * @param  {number=0} position - At what position in the string to start
    * @returns Promise - The solved result
@@ -129,7 +129,7 @@ export class Interpreter {
     position: number = 0,
   ): Promise<TclVariable | string> {
     // Initialize output string
-    let output = "";
+    let output = '';
 
     // Intitialize variable for every found variable
     let toProcess: FoundVariable | null;
@@ -137,7 +137,7 @@ export class Interpreter {
     // Keep going as long as there are variables
     while ((toProcess = await this.resolveFirstVariable(input, position))) {
       // Add the string until the first found variable
-      while (position < toProcess.startPosition){
+      while (position < toProcess.startPosition) {
         output += input.charAt(position);
         position++;
       }
@@ -152,7 +152,7 @@ export class Interpreter {
     }
 
     // Add the last bit of the string
-    while (position < input.length){
+    while (position < input.length) {
       output += input.charAt(position);
       position++;
     }
@@ -163,7 +163,7 @@ export class Interpreter {
   /**
    * Function to read a string until the first found variable
    * It will then solve the variable and return that
-   * 
+   *
    * @param  {string} input - The string that will be searched for variables
    * @param  {number=0} position - The position to start searching at
    * @returns Promise - The found results
@@ -237,7 +237,7 @@ export class Interpreter {
             continue;
           }
         }
-      // If not
+        // If not
       } else {
         // Check if we should enter brackets
         if (char === '(') {
@@ -500,6 +500,14 @@ export class Interpreter {
       // If the character is [ increase the depth
       if (char === '[') depth++;
 
+      // Handle escapes
+      if (char === '\\') {
+        read();
+        if (depth > 0) {
+          lastExpression += char;
+        }
+      }
+
       // Move to the next char
       read();
     }
@@ -521,7 +529,7 @@ export class Interpreter {
     let simpleBackRegex = /\\(?<letter>[abfnrtv])/g;
     let octalBackRegex = /\\0(?<octal>[0-7]{0,2})/g;
     let unicodeBackRegex = /\\u(?<hexcode>[0-9a-fA-F]{1,4})/g;
-    let hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{0,2})/g;
+    let hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{1,2})/g;
     let cleanUpBackRegex = /\\(?<character>.)/g;
 
     // Function to convert a number to the corresponding character
@@ -572,7 +580,7 @@ export class Interpreter {
       unicodeBackRegex,
       (...args: any[]): string => {
         let groups = args[args.length - 1];
-        let hex = parseInt(groups.hexcode, 16);
+        let hex = parseInt(groups.hexcode.toLowerCase(), 16);
         return codeToChar(hex);
       },
     );
@@ -582,7 +590,7 @@ export class Interpreter {
       hexBackRegex,
       (...args: any[]): string => {
         let groups = args[args.length - 1];
-        let hex = parseInt(groups.hexcode, 16);
+        let hex = parseInt(groups.hexcode.toLowerCase(), 16);
         return codeToChar(hex);
       },
     );
@@ -603,7 +611,7 @@ export class Interpreter {
 
 /**
  * Checks if a variable is a number
- * 
+ *
  * @param  {any} input - The variable to check
  */
 export function isNumber(input: any) {

@@ -159,7 +159,7 @@ export class Lexer {
         depth--;
         if (depth === 0) {
           this.read();
-          continue;
+          break;
         }
       }
       if (this.currentChar === '{') {

@@ -88,7 +88,7 @@
                     depth--;
                     if (depth === 0) {
                         this.read();
-                        continue;
+                        break;
                     }
                 }
                 if (this.currentChar === '{') {

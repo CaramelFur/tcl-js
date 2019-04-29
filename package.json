@@ -1,6 +1,6 @@
 {
   "name": "tcl-js",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "An implementation of the Tcl language in Javascript",
   "main": "dist/tcl.js",
   "scripts": {

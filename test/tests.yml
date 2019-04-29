@@ -1,130 +1,567 @@
-# Test if the puts command works
-Puts:
-  - name: Simple
-    input:
-      type: raw
-      value: 'puts HelloWorld'
-    stdout:
-      type: raw
-      value: "HelloWorld\n"
+Commands:
+  # Test if the puts command works
+  Puts:
+    - name: Simple
+      input:
+        type: raw
+        value: 'puts HelloWorld'
+      stdout:
+        type: raw
+        value: "HelloWorld\n"
 
-  - name: 'With -nonewline'
-    input:
-      type: raw
-      value: 'puts -nonewline HelloWorld'
-    stdout:
-      type: raw
-      value: HelloWorld
+    - name: 'With -nonewline'
+      input:
+        type: raw
+        value: 'puts -nonewline HelloWorld'
+      stdout:
+        type: raw
+        value: HelloWorld
 
-  - name: 'With quotes'
-    input:
-      type: raw
-      value: 'puts "Hello World!"'
-    stdout:
-      type: raw
-      value: "Hello World!\n"
+    - name: 'With longer text'
+      input:
+        type: raw
+        value: 'puts "Hello World!"'
+      stdout:
+        type: raw
+        value: "Hello World!\n"
 
-  - name: 'With brackets'
-    input:
-      type: raw
-      value: 'puts {Hello World!}'
-    stdout:
-      type: raw
-      value: "Hello World!\n"
+  Expr:
+    - name: Simple
+      input:
+        type: raw
+        value: 'expr 3'
+      output:
+        type: raw
+        value: '3'
+    - name: Simple math
+      input:
+        type: raw
+        value: 'expr (3 +6) * (5 % 3) / 7 - 3^2'
+      output:
+        type: raw
+        value: '-6.428571428571429'
+    - name: Math with variables
+      input:
+        type: raw
+        value: 'set five 5; expr 3 + $five'
+      output:
+        type: raw
+        value: '8'
 
-  - name: 'With nested brackets'
-    input:
-      type: raw
-      value: 'puts {Hello World!, {{Hello} Earth!}}'
-    stdout:
-      type: raw
-      value: "Hello World!, {{Hello} Earth!}\n"
+  # Test the functionality of variables
+  'Set and Unset':
+    'Simple Variables':
+      - name: Simple
+        input:
+          type: raw
+          value: 'set var HelloWorld'
+        output:
+          type: raw
+          value: HelloWorld
 
-  - name: 'With quotes and nested brackets'
-    input:
-      type: raw
-      value: 'puts "Hello World!, {{Hello} Earth!}"'
-    stdout:
-      type: raw
-      value: "Hello World!, {{Hello} Earth!}\n"
+      - name: 'Print variable'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
 
-# Test if TCL is able to load files
-Files:
-  - name: 'Hello World example'
-    input:
-      type: file
-      value: 'scripts/HelloWorld.tcl'
-    stdout:
-      type: file
-      value: 'results/HelloWorld.txt'
+      - name: 'Retrieve variable'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var; set var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
+        output:
+          type: raw
+          value: HelloWorld
 
-# Test if comments are working
-Comments:
-  - name: Simple
-    input:
-      type: raw
-      value: '# This is a comment'
+      - name: 'Unset variable'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var; unset var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
 
-  - name: 'Error on missing semicolon'
-    input:
-      type: raw
-      value: 'puts {Bad comment syntax example}   # *Error* - no semicolon!'
-    output:
-      type: error
-      value: ''
+      - name: 'Set variable and change'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\nHelloEarth\n"
 
-# Test the functionality of variables
-Variables:
-  - name: Simple
-    input:
-      type: raw
-      value: 'set var HelloWorld'
-    output:
-      type: raw
-      value: HelloWorld
+      - name: 'Set variable, unset variable and set again'
+        input:
+          type: raw
+          value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
+        stdout:
+          type: raw
+          value: "HelloWorld\nHelloEarth\n"
 
-  - name: 'Print variable'
-    input:
-      type: raw
-      value: 'set var HelloWorld; puts $var;'
-    stdout:
-      type: raw
-      value: "HelloWorld\n"
+Functionality:
+  # Test if TCL is able to load files
+  Files:
+    - name: 'Hello World example'
+      input:
+        type: file
+        value: 'scripts/HelloWorld.tcl'
+      stdout:
+        type: file
+        value: 'results/HelloWorld.txt'
 
-  - name: 'Retrieve variable'
-    input:
-      type: raw
-      value: 'set var HelloWorld; puts $var; set var;'
-    stdout:
-      type: raw
-      value: "HelloWorld\n"
-    output:
-      type: raw
-      value: HelloWorld
+  # Test if comments are working
+  Comments:
+    - name: Simple
+      input:
+        type: raw
+        value: '# This is a comment'
 
-  - name: 'Unset variable'
-    input:
-      type: raw
-      value: 'set var HelloWorld; puts $var; unset var;'
-    stdout:
-      type: raw
-      value: "HelloWorld\n"
+    - name: 'Error on missing semicolon'
+      input:
+        type: raw
+        value: 'puts {Bad comment syntax example}   # *Error* - no semicolon!'
+      output:
+        type: error
+        value: ''
 
-  - name: 'Set variable and change'
-    input:
-      type: raw
-      value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
-    stdout:
-      type: raw
-      value: "HelloWorld\nHelloEarth\n"
+  Arguments:
+    Simple:
+      - name: Simple
+        input:
+          type: raw
+          value: 'puts HelloWorld'
+        stdout:
+          type: raw
+          value: "HelloWorld\n"
 
-  - name: 'Set variable, unset variable and set again'
-    input:
-      type: raw
-      value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
-    stdout:
-      type: raw
-      value: "HelloWorld\nHelloEarth\n"
+    Quotes:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'puts "-nonewline" "Hello World!"'
+        stdout:
+          type: raw
+          value: 'Hello World!'
+      - name: 'Uneven quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" "Hello"World!"'
+        output:
+          type: error
+      - name: 'Touching quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" "Hello""World!"'
+        output:
+          type: error
+      - name: 'Text after quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" "Hello World!"Hello'
+        output:
+          type: error
+      - name: 'Text before spaced quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" Hello"Hello World!"'
+        output:
+          type: error
+      - name: 'Text before unspaced quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" Hello"HelloWorld!"'
+        stdout:
+          type: raw
+          value: 'Hello"HelloWorld!"'
+
+    Braces:
+      - name: 'Simple'
+        input:
+          type: raw
+          value: 'puts {Hello World!}'
+        stdout:
+          type: raw
+          value: "Hello World!\n"
+      - name: 'Nested braces'
+        input:
+          type: raw
+          value: 'puts {Hello World!, {{Hello} Earth!}}'
+        stdout:
+          type: raw
+          value: "Hello World!, {{Hello} Earth!}\n"
+      - name: 'Nested braces in quotes'
+        input:
+          type: raw
+          value: 'puts "Hello World!, {{Hello} Earth!}"'
+        stdout:
+          type: raw
+          value: "Hello World!, {{Hello} Earth!}\n"
+      - name: 'Wrongly Nested braces'
+        input:
+          type: raw
+          value: 'puts {Hello World!, {{Hello Earth!}}'
+        output:
+          type: error
+      - name: 'Touching braces'
+        input:
+          type: raw
+          value: 'puts "-nonewline" {Hello}{World!}'
+        output:
+          type: error
+      - name: 'Text after braces'
+        input:
+          type: raw
+          value: 'puts "-nonewline" {Hello World!}Hello'
+        output:
+          type: error
+      - name: 'Text before spaced quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" Hello{Hello World!}'
+        output:
+          type: error
+      - name: 'Text before unspaced quotes'
+        input:
+          type: raw
+          value: 'puts "-nonewline" Hello{HelloWorld!}'
+        stdout:
+          type: raw
+          value: 'Hello{HelloWorld!}'
+    Brackets:
+      - name: Simple
+        input:
+          type: raw
+          value: 'puts -nonewline [expr 3]'
+        stdout:
+          type: raw
+          value: '3'
+      - name: Nested
+        input:
+          type: raw
+          value: 'puts -nonewline [expr [expr 3]]'
+        stdout:
+          type: raw
+          value: '3'
+      - name: Touching
+        input:
+          type: raw
+          value: 'puts -nonewline [expr 3][expr 3]'
+        stdout:
+          type: raw
+          value: '33'
+      - name: Text before
+        input:
+          type: raw
+          value: 'puts -nonewline Hello[expr 3]'
+        stdout:
+          type: raw
+          value: 'Hello3'
+      - name: Text after
+        input:
+          type: raw
+          value: 'puts -nonewline [expr 3]Hello'
+        stdout:
+          type: raw
+          value: '3Hello'
+
+  # Test backslash substitution
+  'Backslash Substitution':
+    # Simple substitution like \n
+    Simple:
+      - name: Audible Bell
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\a World"'
+        stdout:
+          type: raw
+          value: "Hello\a World"
+      - name: Backspace
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\b World"'
+        stdout:
+          type: raw
+          value: "Hello\b World"
+      - name: From Feed
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\f World"'
+        stdout:
+          type: raw
+          value: "Hello\f World"
+      - name: New Line
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\n World"'
+        stdout:
+          type: raw
+          value: "Hello\n World"
+      - name: Carriage Return
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\r World"'
+        stdout:
+          type: raw
+          value: "Hello\r World"
+      - name: Tab
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\t World"'
+        stdout:
+          type: raw
+          value: "Hello\t World"
+      - name: Vertical Tab
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\v World"'
+        stdout:
+          type: raw
+          value: "Hello\v World"
+
+    # Special substitution
+    Special:
+      Octal:
+        - name: Empty
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\0 World"'
+          stdout:
+            type: raw
+            value: "Hello\0 World"
+        - name: Single
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\07 World"'
+          stdout:
+            type: raw
+            value: "Hello\a World"
+        - name: Double
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\077 World"'
+          stdout:
+            type: raw
+            value: 'Hello? World'
+        - name: Triple
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\0777 World"'
+          stdout:
+            type: raw
+            value: 'Hello?7 World'
+      Hexadecimal:
+        - name: Empty
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\x World"'
+          stdout:
+            type: raw
+            value: 'Hellox World'
+        - name: Single Decimal
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\x9 World"'
+          stdout:
+            type: raw
+            value: "Hello\t World"
+        - name: Single Letter
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\xb World"'
+          stdout:
+            type: raw
+            value: "Hello\v World"
+        - name: Single Capital
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\xB World"'
+          stdout:
+            type: raw
+            value: "Hello\v World"
+        - name: Double
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\x41 World"'
+          stdout:
+            type: raw
+            value: 'HelloA World'
+        - name: Double Mixed
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\x4D World"'
+          stdout:
+            type: raw
+            value: 'HelloM World'
+        - name: Triple
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\x412 World"'
+          stdout:
+            type: raw
+            value: 'HelloA2 World'
+      Unicode:
+        - name: Empty
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u World"'
+          stdout:
+            type: raw
+            value: 'Hellou World'
+        - name: Single
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u9 World"'
+          stdout:
+            type: raw
+            value: "Hello\t World"
+        - name: Double
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u41 World"'
+          stdout:
+            type: raw
+            value: 'HelloA World'
+        - name: Triple
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u109 World"'
+          stdout:
+            type: raw
+            value: 'Helloĉ World'
+        - name: Quadrouple
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u246f World"'
+          stdout:
+            type: raw
+            value: 'Hello⑯ World'
+        - name: Quadrouple with leading zeros
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u0041 World"'
+          stdout:
+            type: raw
+            value: 'HelloA World'
+        - name: Quintuple
+          input:
+            type: raw
+            value: 'puts -nonewline "Hello\u0041A World"'
+          stdout:
+            type: raw
+            value: 'HelloAA World'
+
+    Argument types:
+      - name: Simple
+        input:
+          type: raw
+          value: 'puts -nonewline Hello\nWorld'
+        stdout:
+          type: raw
+          value: "Hello\nWorld"
+      - name: Quotes
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\nWorld"'
+        stdout:
+          type: raw
+          value: "Hello\nWorld"
+      - name: Braces
+        input:
+          type: raw
+          value: 'puts -nonewline {Hello\nWorld}'
+        stdout:
+          type: raw
+          value: 'Hello\nWorld'
+
+    Escape:
+      - name: Braces
+        input:
+          type: raw
+          value: 'puts -nonewline {Hello\}World}'
+        stdout:
+          type: raw
+          value: 'Hello\}World'
+      - name: Braces error
+        input:
+          type: raw
+          value: 'puts -nonewline {Hello}World}'
+        output:
+          type: error
+      - name: Quotes
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello\"World"'
+        stdout:
+          type: raw
+          value: 'Hello"World'
+      - name: Quotes error
+        input:
+          type: raw
+          value: 'puts -nonewline "Hello"World"'
+        output:
+          type: error
+      - name: Newlines in quotes
+        input:
+          type: raw
+          value: "puts -nonewline \"Hello\\\nWorld\""
+        stdout:
+          type: raw
+          value: 'Hello World'
+      - name: Newlines in braces
+        input:
+          type: raw
+          value: "puts -nonewline {Hello\\\nWorld}"
+        stdout:
+          type: raw
+          value: 'Hello World'
+      - name: Variables
+        input:
+          type: raw
+          value: 'set test hi; puts -nonewline "This is a \$test and a $test"'
+        stdout:
+          type: raw
+          value: 'This is a $test and a hi'
+      - name: Brackets
+        input:
+          type: raw
+          value: 'set test [puts -nonewline \[]'
+        stdout:
+          type: raw
+          value: '['
+
+  'Square Bracket Substitution':
+    - name: Simple
+      input:
+        type: raw
+        value: 'puts -nonewline [expr 3]'
+      stdout:
+        type: raw
+        value: '3'
+    - name: Nested
+      input:
+        type: raw
+        value: 'puts -nonewline [expr [expr 3 * 3] * 2]'
+      stdout:
+        type: raw
+        value: '18'
+    - name: Backslash
+      input:
+        type: raw
+        value: 'set test [puts [puts hi\nhi]]'
+      stdout:
+        type: raw
+        value: "hi\nhi\n\n"
+    - name: Variables
+      input:
+        type: raw
+        value: 'set test 5; puts -nonewline [expr [expr $test * 3] * 2]'
+      stdout:
+        type: raw
+        value: '30'
 
 #Execute examples from ./scripts
 Examples:

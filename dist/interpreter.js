@@ -152,7 +152,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            output = "";
+                            output = '';
                             _a.label = 1;
                         case 1: return [4, this.resolveFirstVariable(input, position)];
                         case 2:
@@ -387,6 +387,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             }
                             if (char === '[')
                                 depth++;
+                            if (char === '\\') {
+                                read();
+                                if (depth > 0) {
+                                    lastExpression += char;
+                                }
+                            }
                             read();
                             return [3, 1];
                         case 6:
@@ -401,7 +407,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             var simpleBackRegex = /\\(?<letter>[abfnrtv])/g;
             var octalBackRegex = /\\0(?<octal>[0-7]{0,2})/g;
             var unicodeBackRegex = /\\u(?<hexcode>[0-9a-fA-F]{1,4})/g;
-            var hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{0,2})/g;
+            var hexBackRegex = /\\x(?<hexcode>[0-9a-fA-F]{1,2})/g;
             var cleanUpBackRegex = /\\(?<character>.)/g;
             function codeToChar(hexCode) {
                 return String.fromCharCode(hexCode);
@@ -446,7 +452,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     args[_i] = arguments[_i];
                 }
                 var groups = args[args.length - 1];
-                var hex = parseInt(groups.hexcode, 16);
+                var hex = parseInt(groups.hexcode.toLowerCase(), 16);
                 return codeToChar(hex);
             });
             input = input.replace(hexBackRegex, function () {
@@ -455,7 +461,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     args[_i] = arguments[_i];
                 }
                 var groups = args[args.length - 1];
-                var hex = parseInt(groups.hexcode, 16);
+                var hex = parseInt(groups.hexcode.toLowerCase(), 16);
                 return codeToChar(hex);
             });
             input = input.replace(cleanUpBackRegex, function () {
