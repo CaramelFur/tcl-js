@@ -2,14 +2,15 @@ const Tcl = require('../dist/tcl');
 const chai = require('chai');
 const catchStdout = require('./testConsole').stdout;
 const fs = require('fs');
+const Yaml = require('js-yaml');
 const expect = chai.expect;
 
-const jsonString = fs.readFileSync('./test/tests.json', 'utf-8');
-const json = JSON.parse(jsonString);
+const yamlString = fs.readFileSync('./test/tests.yml', 'utf-8');
+const yaml = Yaml.safeLoad(yamlString);
 
 describe('Tcl', () => {
-  for (let testKey in json) {
-    let test = json[testKey];
+  for (let testKey in yaml) {
+    let test = yaml[testKey];
     describe(testKey, () => {
       for (let partTest of test) {
         it(partTest.name, async () => {

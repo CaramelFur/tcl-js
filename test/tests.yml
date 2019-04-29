@@ -1,0 +1,193 @@
+# Test if the puts command works
+Puts:
+  - name: Simple
+    input:
+      type: raw
+      value: 'puts HelloWorld'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'With -nonewline'
+    input:
+      type: raw
+      value: 'puts -nonewline HelloWorld'
+    stdout:
+      type: raw
+      value: HelloWorld
+
+  - name: 'With quotes'
+    input:
+      type: raw
+      value: 'puts "Hello World!"'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+
+  - name: 'With brackets'
+    input:
+      type: raw
+      value: 'puts {Hello World!}'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+
+  - name: 'With nested brackets'
+    input:
+      type: raw
+      value: 'puts {Hello World!, {{Hello} Earth!}}'
+    stdout:
+      type: raw
+      value: "Hello World!, {{Hello} Earth!}\n"
+
+  - name: 'With quotes and nested brackets'
+    input:
+      type: raw
+      value: 'puts "Hello World!, {{Hello} Earth!}"'
+    stdout:
+      type: raw
+      value: "Hello World!, {{Hello} Earth!}\n"
+
+# Test if TCL is able to load files
+Files:
+  - name: 'Hello World example'
+    input:
+      type: file
+      value: 'scripts/HelloWorld.tcl'
+    stdout:
+      type: file
+      value: 'results/HelloWorld.txt'
+
+# Test if comments are working
+Comments:
+  - name: Simple
+    input:
+      type: raw
+      value: '# This is a comment'
+
+  - name: 'Error on missing semicolon'
+    input:
+      type: raw
+      value: 'puts {Bad comment syntax example}   # *Error* - no semicolon!'
+    output:
+      type: error
+      value: ''
+
+# Test the functionality of variables
+Variables:
+  - name: Simple
+    input:
+      type: raw
+      value: 'set var HelloWorld'
+    output:
+      type: raw
+      value: HelloWorld
+
+  - name: 'Print variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'Retrieve variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; set var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+    output:
+      type: raw
+      value: HelloWorld
+
+  - name: 'Unset variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; unset var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'Set variable and change'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\nHelloEarth\n"
+
+  - name: 'Set variable, unset variable and set again'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\nHelloEarth\n"
+
+#Execute examples from ./scripts
+Examples:
+  - name: Puts
+    input:
+      type: file
+      value: 'scripts/puts.tcl'
+    stdout:
+      type: file
+      value: 'results/puts.txt'
+
+  - name: Variables
+    input:
+      type: file
+      value: 'scripts/set.tcl'
+    stdout:
+      type: file
+      value: 'results/set.txt'
+
+  - name: Substitution
+    input:
+      type: file
+      value: 'scripts/substitution.tcl'
+    stdout:
+      type: file
+      value: 'results/substitution.txt'
+
+  - name: 'Curly brace grouping'
+    input:
+      type: file
+      value: 'scripts/grouping.tcl'
+    stdout:
+      type: file
+      value: 'results/grouping.txt'
+
+  - name: 'Square bracket evaluation and substitution'
+    input:
+      type: file
+      value: 'scripts/square_evaluation.tcl'
+    stdout:
+      type: file
+      value: 'results/square_evaluation.txt'
+
+  - name: 'Math one'
+    input:
+      type: file
+      value: 'scripts/math_1.tcl'
+    stdout:
+      type: file
+      value: 'results/math_1.txt'
+
+  - name: 'Math two'
+    input:
+      type: file
+      value: 'scripts/math_2.tcl'
+    stdout:
+      type: file
+      value: 'results/math_2.txt'
+
+  - name: 'Math three'
+    input:
+      type: file
+      value: 'scripts/math_3.tcl'
+    stdout:
+      type: file
+      value: 'results/math_3.txt'
