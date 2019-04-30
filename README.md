@@ -65,6 +65,7 @@ Down below is the current project status of tcl-js, here you can see what parts 
   - The `x & y` and `x | y` (bitwise and/or) operators are now `band(x, y)` and `bor(x, y)`
   - The `a1 && a2 && a3 &&...` and `a1 || a2 || a3 ||...` (logical and/or) operators are now `land(a1, a2, a3, ...)` and `lor(a1, a2, a3, ...)`
   - The `eq`, `ne` and `ni` (string compare) operators are not implemented, please use `==`, `!=` and `not(x in y)` instead
+  - Numbers with leading zeros are just interpreted as decimal and not octal
 
 ### Currently working tcl commands
 

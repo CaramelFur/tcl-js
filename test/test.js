@@ -14,6 +14,12 @@ function runKey(keys) {
   return () => {
     for (let testKey in keys) {
       let test = keys[testKey];
+
+      if (typeof test === 'string') {
+        let file = fs.readFileSync('./test/' + test, 'utf-8');
+        test = Yaml.safeLoad(file);
+      }
+
       if (Array.isArray(test)) {
         describe(testKey, () => {
           for (let partTest of test) {

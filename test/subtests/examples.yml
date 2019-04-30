@@ -1,0 +1,63 @@
+- name: Puts
+  input:
+    type: file
+    value: 'scripts/puts.tcl'
+  stdout:
+    type: file
+    value: 'results/puts.txt'
+
+- name: Variables
+  input:
+    type: file
+    value: 'scripts/set.tcl'
+  stdout:
+    type: file
+    value: 'results/set.txt'
+
+- name: Substitution
+  input:
+    type: file
+    value: 'scripts/substitution.tcl'
+  stdout:
+    type: file
+    value: 'results/substitution.txt'
+
+- name: 'Curly brace grouping'
+  input:
+    type: file
+    value: 'scripts/grouping.tcl'
+  stdout:
+    type: file
+    value: 'results/grouping.txt'
+
+- name: 'Square bracket evaluation and substitution'
+  input:
+    type: file
+    value: 'scripts/square_evaluation.tcl'
+  stdout:
+    type: file
+    value: 'results/square_evaluation.txt'
+
+- name: 'Math one'
+  input:
+    type: file
+    value: 'scripts/math_1.tcl'
+  stdout:
+    type: file
+    value: 'results/math_1.txt'
+
+- name: 'Math two'
+  input:
+    type: file
+    value: 'scripts/math_2.tcl'
+  stdout:
+    type: file
+    value: 'results/math_2.txt'
+
+- name: 'Math three'
+  input:
+    type: file
+    value: 'scripts/math_3.tcl'
+  stdout:
+    type: file
+    value: 'results/math_3.txt'

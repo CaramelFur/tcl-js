@@ -1,0 +1,138 @@
+Simple:
+  - name: Simple
+    input:
+      type: raw
+      value: 'puts HelloWorld'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+Quotes:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'puts "-nonewline" "Hello World!"'
+    stdout:
+      type: raw
+      value: 'Hello World!'
+  - name: 'Uneven quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" "Hello"World!"'
+    output:
+      type: error
+  - name: 'Touching quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" "Hello""World!"'
+    output:
+      type: error
+  - name: 'Text after quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" "Hello World!"Hello'
+    output:
+      type: error
+  - name: 'Text before spaced quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" Hello"Hello World!"'
+    output:
+      type: error
+  - name: 'Text before unspaced quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" Hello"HelloWorld!"'
+    stdout:
+      type: raw
+      value: 'Hello"HelloWorld!"'
+
+Braces:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'puts {Hello World!}'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+  - name: 'Nested braces'
+    input:
+      type: raw
+      value: 'puts {Hello World!, {{Hello} Earth!}}'
+    stdout:
+      type: raw
+      value: "Hello World!, {{Hello} Earth!}\n"
+  - name: 'Nested braces in quotes'
+    input:
+      type: raw
+      value: 'puts "Hello World!, {{Hello} Earth!}"'
+    stdout:
+      type: raw
+      value: "Hello World!, {{Hello} Earth!}\n"
+  - name: 'Wrongly Nested braces'
+    input:
+      type: raw
+      value: 'puts {Hello World!, {{Hello Earth!}}'
+    output:
+      type: error
+  - name: 'Touching braces'
+    input:
+      type: raw
+      value: 'puts "-nonewline" {Hello}{World!}'
+    output:
+      type: error
+  - name: 'Text after braces'
+    input:
+      type: raw
+      value: 'puts "-nonewline" {Hello World!}Hello'
+    output:
+      type: error
+  - name: 'Text before spaced quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" Hello{Hello World!}'
+    output:
+      type: error
+  - name: 'Text before unspaced quotes'
+    input:
+      type: raw
+      value: 'puts "-nonewline" Hello{HelloWorld!}'
+    stdout:
+      type: raw
+      value: 'Hello{HelloWorld!}'
+Brackets:
+  - name: Simple
+    input:
+      type: raw
+      value: 'puts -nonewline [expr 3]'
+    stdout:
+      type: raw
+      value: '3'
+  - name: Nested
+    input:
+      type: raw
+      value: 'puts -nonewline [expr [expr 3]]'
+    stdout:
+      type: raw
+      value: '3'
+  - name: Touching
+    input:
+      type: raw
+      value: 'puts -nonewline [expr 3][expr 3]'
+    stdout:
+      type: raw
+      value: '33'
+  - name: Text before
+    input:
+      type: raw
+      value: 'puts -nonewline Hello[expr 3]'
+    stdout:
+      type: raw
+      value: 'Hello3'
+  - name: Text after
+    input:
+      type: raw
+      value: 'puts -nonewline [expr 3]Hello'
+    stdout:
+      type: raw
+      value: '3Hello'

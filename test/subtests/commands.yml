@@ -1,0 +1,110 @@
+# Test if the puts command works
+Puts:
+  - name: Simple
+    input:
+      type: raw
+      value: 'puts HelloWorld'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'With -nonewline'
+    input:
+      type: raw
+      value: 'puts -nonewline HelloWorld'
+    stdout:
+      type: raw
+      value: HelloWorld
+
+  - name: 'With longer text'
+    input:
+      type: raw
+      value: 'puts "Hello World!"'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+
+Expr:
+  - name: Simple
+    input:
+      type: raw
+      value: 'expr 3'
+    output:
+      type: raw
+      value: '3'
+  - name: Simple math
+    input:
+      type: raw
+      value: 'expr (3 +6) * (5 % 3) / 7 - 3^2'
+    output:
+      type: raw
+      value: '-6.428571428571429'
+  - name: Math with variables
+    input:
+      type: raw
+      value: 'set five 5; expr 3 + $five'
+    output:
+      type: raw
+      value: '8'
+
+# Test the functionality of variables
+'Set and Unset':
+  - name: Simple
+    input:
+      type: raw
+      value: 'set var HelloWorld'
+    output:
+      type: raw
+      value: HelloWorld
+
+  - name: 'Print variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'Retrieve variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; set var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+    output:
+      type: raw
+      value: HelloWorld
+
+  - name: 'Unset variable'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; unset var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+
+  - name: 'Set variable and change'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; set var HelloEarth; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\nHelloEarth\n"
+
+  - name: 'Set variable, unset variable and set again'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts $var; unset var; set var HelloEarth; puts $var;'
+    stdout:
+      type: raw
+      value: "HelloWorld\nHelloEarth\n"
+
+List:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'puts [list hello this is a list]'
+    stdout:
+      type: raw
+      value: "hello this is a list\n"

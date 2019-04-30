@@ -1,0 +1,262 @@
+# Simple substitution like \n
+Simple:
+  - name: Audible Bell
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\a World"'
+    stdout:
+      type: raw
+      value: "Hello\a World"
+  - name: Backspace
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\b World"'
+    stdout:
+      type: raw
+      value: "Hello\b World"
+  - name: From Feed
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\f World"'
+    stdout:
+      type: raw
+      value: "Hello\f World"
+  - name: New Line
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\n World"'
+    stdout:
+      type: raw
+      value: "Hello\n World"
+  - name: Carriage Return
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\r World"'
+    stdout:
+      type: raw
+      value: "Hello\r World"
+  - name: Tab
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\t World"'
+    stdout:
+      type: raw
+      value: "Hello\t World"
+  - name: Vertical Tab
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\v World"'
+    stdout:
+      type: raw
+      value: "Hello\v World"
+
+# Special substitution
+Special:
+  Octal:
+    - name: Empty
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\0 World"'
+      stdout:
+        type: raw
+        value: "Hello\0 World"
+    - name: Single
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\07 World"'
+      stdout:
+        type: raw
+        value: "Hello\a World"
+    - name: Double
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\077 World"'
+      stdout:
+        type: raw
+        value: 'Hello? World'
+    - name: Triple
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\0777 World"'
+      stdout:
+        type: raw
+        value: 'Hello?7 World'
+  Hexadecimal:
+    - name: Empty
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\x World"'
+      stdout:
+        type: raw
+        value: 'Hellox World'
+    - name: Single Decimal
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\x9 World"'
+      stdout:
+        type: raw
+        value: "Hello\t World"
+    - name: Single Letter
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\xb World"'
+      stdout:
+        type: raw
+        value: "Hello\v World"
+    - name: Single Capital
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\xB World"'
+      stdout:
+        type: raw
+        value: "Hello\v World"
+    - name: Double
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\x41 World"'
+      stdout:
+        type: raw
+        value: 'HelloA World'
+    - name: Double Mixed
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\x4D World"'
+      stdout:
+        type: raw
+        value: 'HelloM World'
+    - name: Triple
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\x412 World"'
+      stdout:
+        type: raw
+        value: 'HelloA2 World'
+  Unicode:
+    - name: Empty
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u World"'
+      stdout:
+        type: raw
+        value: 'Hellou World'
+    - name: Single
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u9 World"'
+      stdout:
+        type: raw
+        value: "Hello\t World"
+    - name: Double
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u41 World"'
+      stdout:
+        type: raw
+        value: 'HelloA World'
+    - name: Triple
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u109 World"'
+      stdout:
+        type: raw
+        value: 'Helloĉ World'
+    - name: Quadrouple
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u246f World"'
+      stdout:
+        type: raw
+        value: 'Hello⑯ World'
+    - name: Quadrouple with leading zeros
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u0041 World"'
+      stdout:
+        type: raw
+        value: 'HelloA World'
+    - name: Quintuple
+      input:
+        type: raw
+        value: 'puts -nonewline "Hello\u0041A World"'
+      stdout:
+        type: raw
+        value: 'HelloAA World'
+
+Argument types:
+  - name: Simple
+    input:
+      type: raw
+      value: 'puts -nonewline Hello\nWorld'
+    stdout:
+      type: raw
+      value: "Hello\nWorld"
+  - name: Quotes
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\nWorld"'
+    stdout:
+      type: raw
+      value: "Hello\nWorld"
+  - name: Braces
+    input:
+      type: raw
+      value: 'puts -nonewline {Hello\nWorld}'
+    stdout:
+      type: raw
+      value: 'Hello\nWorld'
+
+Escape:
+  - name: Braces
+    input:
+      type: raw
+      value: 'puts -nonewline {Hello\}World}'
+    stdout:
+      type: raw
+      value: 'Hello\}World'
+  - name: Braces error
+    input:
+      type: raw
+      value: 'puts -nonewline {Hello}World}'
+    output:
+      type: error
+  - name: Quotes
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello\"World"'
+    stdout:
+      type: raw
+      value: 'Hello"World'
+  - name: Quotes error
+    input:
+      type: raw
+      value: 'puts -nonewline "Hello"World"'
+    output:
+      type: error
+  - name: Newlines in quotes
+    input:
+      type: raw
+      value: "puts -nonewline \"Hello\\\nWorld\""
+    stdout:
+      type: raw
+      value: 'Hello World'
+  - name: Newlines in braces
+    input:
+      type: raw
+      value: "puts -nonewline {Hello\\\nWorld}"
+    stdout:
+      type: raw
+      value: 'Hello World'
+  - name: Variables
+    input:
+      type: raw
+      value: 'set test hi; puts -nonewline "This is a \$test and a $test"'
+    stdout:
+      type: raw
+      value: 'This is a $test and a hi'
+  - name: Brackets
+    input:
+      type: raw
+      value: 'set test [puts -nonewline \[]'
+    stdout:
+      type: raw
+      value: '['
