@@ -1,0 +1,40 @@
+Simple:
+  - name: 'Define only'
+    input:
+      type: raw
+      value: 'proc test {} {}'
+  - name: 'Define with content'
+    input:
+      type: raw
+      value: 'proc test {} {puts hi}'
+  - name: 'Define with content and argument'
+    input:
+      type: raw
+      value: 'proc test {sup} {puts $sup}'
+  - name: 'Define with content and arguments'
+    input:
+      type: raw
+      value: 'proc test {a b} {puts "$a$b"}'
+
+Running:
+  - name: 'Execute'
+    input:
+      type: raw
+      value: 'proc run {} {puts "Hello World!"}; run'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+  - name: 'Execute with argument'
+    input:
+      type: raw
+      value: 'proc run {thing} {puts "Hello $thing!"}; run World'
+    stdout:
+      type: raw
+      value: "Hello World!\n"
+  - name: 'Execute with arguments'
+    input:
+      type: raw
+      value: 'proc run {a b} {puts "$a $b!"}; run Hello World'
+    stdout:
+      type: raw
+      value: "Hello World!\n"

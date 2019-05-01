@@ -110,31 +110,47 @@ export class TclList extends TclVariable {
      * E.g. 'hi {hello there}' => ['hi', 'hello there']
      * and 'hi {this is a {nested list}} wow' => ['hi', 'this is a {nested list}', 'wow']
      *
-     * @param  {number=0} depth - This is a begin value of how many brackets deep the parser is
      * @returns string
      */
-    function parseBrace(depth: number = 0): string {
+    function parseBrace(): string {
       // Initialize a string to keep the return value
       let returnVar = '';
 
-      // Discard the first char because we do not want the first '{' to be included in the final string
-      read();
+      // Intialize a variable to keep track of how many braces deep we are
+      let depth = 0;
 
-      // Keep reading the string as long as we are inside one or more brackets
-      while (depth > 0) {
+      // Keep reading the string as long as we have input
+      while (idx < input.length) {
+        // Increase or decrease the depth depending on the brackets
+        if (char === '{') {
+          depth++;
+          // Ignore the outer brace
+          if (depth === 1) {
+            read();
+            continue;
+          }
+        }
+        if (char === '}') {
+          depth--;
+          // Ignore the outer brace
+          if (depth === 0) {
+            read();
+            break;
+          }
+        }
+
         // Add the next character to the output
         returnVar += read();
-
-        // Increase or decrease the depth depending on the brackets
-        if (char === '{') depth++;
-        if (char === '}') depth--;
       }
 
       // This is true when there are more closing brackets than opening brackets
-      if (depth < 0) throw new TclError('incorrect brackets in list');
+      if (depth !== 0) throw new TclError('incorrect brackets in list');
 
-      // Discard the last char because we do not want the last '}' to be included in the final string
-      read();
+      // Check if the character following the } is a whitespace
+      if (!Is.WordSeparator(char))
+        throw new TclError(
+          'list element in braces followed by character instead of space',
+        );
 
       return returnVar;
     }
@@ -147,36 +163,30 @@ export class TclList extends TclVariable {
       // Initialize an empty string to contain the next list item
       let tempWord = '';
 
-      // Keep reading until the current character is a wordseperator or there is no more string to read
-      while (!Is.WordSeparator(char) && idx < input.length) {
-        if (char === '{') {
-          // If the current char is '}', that means we need to read until the last }
+      // Skip all whitespace
+      while (Is.WordSeparator(char) && idx < input.length) {
+        read();
+      }
 
-          // If there is already data in tempWord we throw an error, because you are not supposed to attach text to a sublist
-          if (tempWord !== '') throw new TclError('unexpected {');
-
-          // Set the list item at the current index to the parsed braces
-          this.value[i] = new TclSimple(parseBrace(1));
-        } else {
-          // The current character is just a normal character
-
-          // Check if the item at the current list index is still empty
-          // If not that means that we have aleady encountered a sublist and are not supposed to be processing text again
-          if (this.value[i]) throw new TclError('unexpected text after }');
-
-          // Everything is ok, add the current char to the string
+      // Parse the braces if a brace is found
+      if (char === '{') {
+        tempWord += parseBrace();
+      }
+      // Just add the characters to the output if not
+      else {
+        while (!Is.WordSeparator(char) && idx < input.length) {
           tempWord += read();
         }
       }
 
       // Check if there was actually data read
-      if (this.value[i] || tempWord !== '') {
-        // Only set the current item to the tempWord when it is still empty
-        this.value[i] = this.value[i] || new TclSimple(tempWord);
+      if (tempWord === '') throw new TclError('Error while parsing list');
 
-        // Increment the item index because we had data
-        i++;
-      }
+      // Set the value correctly
+      this.value[i] = new TclSimple(tempWord);
+
+      // Increment the item index
+      i++;
 
       // Move to the next char and word, regardless if the index has incremented
       read();
@@ -507,9 +517,9 @@ export type TclProcFunction =
 
 // The given options for a proc
 export interface TclProcOptions {
-  pattern?: string,
+  pattern?: string;
   helpMessages: {
-    [index: string]: string
+    [index: string]: string;
   };
 }
 
@@ -523,7 +533,7 @@ export class TclProc {
   name: string;
   callback: TclProcFunction;
   options: TclProcOptions = {
-    helpMessages: {}
+    helpMessages: {},
   };
 
   /**

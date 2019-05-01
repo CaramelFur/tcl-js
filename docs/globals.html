@@ -962,6 +962,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 						<li>The <code>x &amp; y</code> and <code>x | y</code> (bitwise and/or) operators are now <code>band(x, y)</code> and <code>bor(x, y)</code></li>
 						<li>The <code>a1 &amp;&amp; a2 &amp;&amp; a3 &amp;&amp;...</code> and <code>a1 || a2 || a3 ||...</code> (logical and/or) operators are now <code>land(a1, a2, a3, ...)</code> and <code>lor(a1, a2, a3, ...)</code></li>
 						<li>The <code>eq</code>, <code>ne</code> and <code>ni</code> (string compare) operators are not implemented, please use <code>==</code>, <code>!=</code> and <code>not(x in y)</code> instead</li>
+						<li>Numbers with leading zeros are just interpreted as decimal and not octal</li>
 					</ul>
 				</li>
 			</ul>

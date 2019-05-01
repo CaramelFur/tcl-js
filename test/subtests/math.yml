@@ -194,6 +194,13 @@ Relational Operations:
       output:
         type: raw
         value: '0'
+    - name: If statement
+      input:
+        type: raw
+        value: 'expr {3 == 3 ? 2 : 1}'
+      output:
+        type: raw
+        value: '2'
   Strings:
     - name: Equal
       input:
@@ -223,3 +230,25 @@ Relational Operations:
       output:
         type: raw
         value: '1'
+  Braces:
+    - name: Simple
+      input:
+        type: raw
+        value: 'expr {4 * (4 / 2)}'
+      output:
+        type: raw
+        value: '8'
+    - name: Nested
+      input:
+        type: raw
+        value: 'expr {4 * ((sqrt(16) + 2) / 2)}'
+      output:
+        type: raw
+        value: '12'
+    - name: Nested with if
+      input:
+        type: raw
+        value: 'expr {(4 * ((sqrt(16) + 2) / 2)) == 12 ? 8 : 2}'
+      output:
+        type: raw
+        value: '8'

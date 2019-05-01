@@ -287,8 +287,22 @@ export function Load(scope: Scope) {
     ): Promise<TclVariable> => {
       const timeout = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-      await timeout(2000);
-      return new TclSimple('wow');
+      if (args.length !== 1) return helpers.sendHelp('wargs');
+      let number = args[0];
+      if (!(number instanceof TclSimple)) return helpers.sendHelp('wtype');
+      if (!number.isNumber()) return helpers.sendHelp('wtype');
+
+      let ms = number.getNumber(true);
+
+      await timeout(ms);
+      return new TclSimple('');
+    },
+    {
+      pattern: 'wait time',
+      helpMessages: {
+        wargs: `wrong # args`,
+        wtype: `wrong type`,
+      },
     },
   );
 }

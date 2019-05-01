@@ -67,41 +67,50 @@ var __extends = (this && this.__extends) || (function () {
                 char = input.charAt(idx);
                 return old;
             }
-            function parseBrace(depth) {
-                if (depth === void 0) { depth = 0; }
+            function parseBrace() {
                 var returnVar = '';
-                read();
-                while (depth > 0) {
-                    returnVar += read();
-                    if (char === '{')
+                var depth = 0;
+                while (idx < input.length) {
+                    if (char === '{') {
                         depth++;
-                    if (char === '}')
+                        if (depth === 1) {
+                            read();
+                            continue;
+                        }
+                    }
+                    if (char === '}') {
                         depth--;
+                        if (depth === 0) {
+                            read();
+                            break;
+                        }
+                    }
+                    returnVar += read();
                 }
-                if (depth < 0)
+                if (depth !== 0)
                     throw new tclerror_1.TclError('incorrect brackets in list');
-                read();
+                if (!Is.WordSeparator(char))
+                    throw new tclerror_1.TclError('list element in braces followed by character instead of space');
                 return returnVar;
             }
             var i = 0;
             while (idx < input.length) {
                 var tempWord = '';
-                while (!Is.WordSeparator(char) && idx < input.length) {
-                    if (char === '{') {
-                        if (tempWord !== '')
-                            throw new tclerror_1.TclError('unexpected {');
-                        this.value[i] = new TclSimple(parseBrace(1));
-                    }
-                    else {
-                        if (this.value[i])
-                            throw new tclerror_1.TclError('unexpected text after }');
+                while (Is.WordSeparator(char) && idx < input.length) {
+                    read();
+                }
+                if (char === '{') {
+                    tempWord += parseBrace();
+                }
+                else {
+                    while (!Is.WordSeparator(char) && idx < input.length) {
                         tempWord += read();
                     }
                 }
-                if (this.value[i] || tempWord !== '') {
-                    this.value[i] = this.value[i] || new TclSimple(tempWord);
-                    i++;
-                }
+                if (tempWord === '')
+                    throw new tclerror_1.TclError('Error while parsing list');
+                this.value[i] = new TclSimple(tempWord);
+                i++;
                 read();
             }
         };
@@ -256,7 +265,7 @@ var __extends = (this && this.__extends) || (function () {
     var TclProc = (function () {
         function TclProc(name, callback, options) {
             this.options = {
-                helpMessages: {}
+                helpMessages: {},
             };
             this.name = name;
             this.callback = callback;

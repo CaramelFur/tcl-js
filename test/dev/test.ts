@@ -9,6 +9,6 @@ let tcl = new Tcl();
 
 tcl
   //.run('puts hi\\nhi')
-  .run('expr {bnot 4}')
+  .run('set lst "zero one two {{three four} five} six"; puts [lindex $lst 3 0 1]')
   .then(console.log)
   .catch(console.error); /**/

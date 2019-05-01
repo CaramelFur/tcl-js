@@ -198,18 +198,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             },
         });
         scope.defineProc('wait', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var timeout;
+            var timeout, number, ms;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         timeout = function (ms) { return new Promise(function (res) { return setTimeout(res, ms); }); };
-                        return [4, timeout(2000)];
+                        if (args.length !== 1)
+                            return [2, helpers.sendHelp('wargs')];
+                        number = args[0];
+                        if (!(number instanceof types_1.TclSimple))
+                            return [2, helpers.sendHelp('wtype')];
+                        if (!number.isNumber())
+                            return [2, helpers.sendHelp('wtype')];
+                        ms = number.getNumber(true);
+                        return [4, timeout(ms)];
                     case 1:
                         _a.sent();
-                        return [2, new types_1.TclSimple('wow')];
+                        return [2, new types_1.TclSimple('')];
                 }
             });
-        }); });
+        }); }, {
+            pattern: 'wait time',
+            helpMessages: {
+                wargs: "wrong # args",
+                wtype: "wrong type",
+            },
+        });
     }
     exports.Load = Load;
 });

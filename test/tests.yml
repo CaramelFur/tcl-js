@@ -64,5 +64,8 @@ Functionality:
   Variables: 'subtests/variables.yml'
 
   Math: 'subtests/math.yml'
+
+  Scope: 
+    Special: 'subtests/scope.js'
 #Execute examples from ./scripts
 Examples: 'subtests/examples.yml'

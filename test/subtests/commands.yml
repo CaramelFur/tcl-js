@@ -23,6 +23,14 @@ Puts:
     stdout:
       type: raw
       value: "Hello World!\n"
+  
+  - name: 'To stderr'
+    input:
+      type: raw
+      value: 'puts stderr "Hello World!"'
+    stderr:
+      type: raw
+      value: "Hello World!\n"
 
 Expr:
   - name: Simple
@@ -108,3 +116,67 @@ List:
     stdout:
       type: raw
       value: "hello this is a list\n"
+  - name: 'With spaces'
+    input:
+      type: raw
+      value: 'puts [list   hello   this        is a list]'
+    stdout:
+      type: raw
+      value: "hello this is a list\n"
+
+Lindex:
+  - name: 'No depth'
+    input:
+      type: raw
+      value: 'set lst "one two three four five"; puts [lindex $lst]'
+    stdout:
+      type: raw
+      value: "one two three four five\n"
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'set lst "zero one two three four five"; puts [lindex $lst 2]'
+    stdout:
+      type: raw
+      value: "two\n"
+  - name: 'Nested'
+    input:
+      type: raw
+      value: 'set lst "zero one two {three four five} six"; puts [lindex $lst 3 1]'
+    stdout:
+      type: raw
+      value: "four\n"
+  - name: 'Double Nested'
+    input:
+      type: raw
+      value: 'set lst "zero one two {{three four} five} six"; puts [lindex $lst 3 0 1]'
+    stdout:
+      type: raw
+      value: "four\n"
+
+
+Eval:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'eval {puts -nonewline {Hello World!}}'
+    stdout:
+      type: raw
+      value: "Hello World!" 
+
+Wait:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'wait 5'
+
+Info:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'info commands'
+    output:
+      type: raw
+      value: "commands" 
+
+Proc: "subtests/proc.yml"
