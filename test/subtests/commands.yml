@@ -206,6 +206,13 @@ If:
     output:
       type: raw
       value: '3'
+  - name: 'Simple False'
+    input:
+      type: raw
+      value: 'if {false} {expr 3}'
+    output:
+      type: raw
+      value: ''
   - name: 'Simple with then'
     input:
       type: raw
@@ -227,3 +234,10 @@ If:
     output:
       type: raw
       value: '9'
+  - name: 'Wrong op error'
+    input:
+      type: raw
+      value: 'if {false} {expr 3} hmmm'
+    output:
+      type: error
+  
