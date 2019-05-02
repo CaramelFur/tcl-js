@@ -146,9 +146,7 @@ export function Load(scope: Scope) {
     async (interpreter, args, command, helpers) => {
       let expression = args.join(' ');
 
-      let solvedExpression = await interpreter.deepProcessVariables(expression);
-      if (typeof solvedExpression !== 'string')
-        throw new TclError('expression resolved to variable instead of string');
+      let solvedExpression = await helpers.solveExpression(expression);
 
       let parser = new Parser();
       // Try to solve the expression and return the result

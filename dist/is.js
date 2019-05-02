@@ -27,5 +27,7 @@
     exports.Brace = Brace;
     var Number = function (c) { return !isNaN(parseFloat(c)); };
     exports.Number = Number;
+    var True = function (input) { return input === 'yes' || input === 'true' || (typeof input === "number" ? input !== 0 : false); };
+    exports.True = True;
 });
 //# sourceMappingURL=is.js.map

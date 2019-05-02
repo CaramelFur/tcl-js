@@ -23,7 +23,7 @@ Puts:
     stdout:
       type: raw
       value: "Hello World!\n"
-  
+
   - name: 'To stderr'
     input:
       type: raw
@@ -54,6 +54,13 @@ Expr:
     output:
       type: raw
       value: '8'
+  - name: Nested expressions
+    input:
+      type: raw
+      value: 'expr {[expr 3]}'
+    output:
+      type: raw
+      value: '3'
 
 # Test the functionality of variables
 'Set and Unset':
@@ -119,7 +126,6 @@ Expr:
       type: raw
       value: 'set var HelloWorld; unset -nocomplain rav;'
 
-
 List:
   - name: 'Simple'
     input:
@@ -166,7 +172,6 @@ Lindex:
       type: raw
       value: "four\n"
 
-
 Eval:
   - name: 'Simple'
     input:
@@ -174,7 +179,7 @@ Eval:
       value: 'eval {puts -nonewline {Hello World!}}'
     stdout:
       type: raw
-      value: "Hello World!" 
+      value: 'Hello World!'
 
 Wait:
   - name: 'Simple'
@@ -189,6 +194,36 @@ Info:
       value: 'info commands'
     output:
       type: raw
-      value: "commands" 
+      value: 'commands'
 
-Proc: "subtests/proc.yml"
+Proc: 'subtests/proc.yml'
+
+If:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'if {true} {expr 3}'
+    output:
+      type: raw
+      value: '3'
+  - name: 'Simple with then'
+    input:
+      type: raw
+      value: 'if {true} then {expr 3}'
+    output:
+      type: raw
+      value: '3'
+  - name: 'With else'
+    input:
+      type: raw
+      value: 'if {false} {expr 3} else {expr 5}'
+    output:
+      type: raw
+      value: '5'
+  - name: 'With else if'
+    input:
+      type: raw
+      value: 'if {false} {expr 3} elseif {false} then {expr 5} elseif {false} {expr 2} else {expr 9}'
+    output:
+      type: raw
+      value: '9'

@@ -68,7 +68,7 @@ export class Interpreter {
 
     // Setup helper functions
     let helpers: TclProcHelpers = {
-      sendHelp: (helpType: string) => {
+      sendHelp: (helpType) => {
         let message = options.helpMessages[helpType] || 'Error';
 
         if (options.arguments.pattern)
@@ -81,8 +81,23 @@ export class Interpreter {
           }\n`,
         );
       },
+      solveExpression: async (expression) => {
+        // Process the subexpressions and variables
+        let solvedExpression = await this.deepProcess(expression);
+
+        // Check if it did not result in a string
+        if (typeof solvedExpression !== 'string') {
+          // If so convert if possible, otherwise throw error
+          if (solvedExpression instanceof TclSimple)
+            solvedExpression = solvedExpression.getValue();
+          else throw new TclError('expression resolved to unusable value');
+        }
+        return solvedExpression;
+      },
     };
 
+    // Check if the amount of arguments is correct
+    // Set to -1 for infinite
     if (typeof options.arguments.amount === 'number') {
       if (
         args.length !== options.arguments.amount &&
@@ -212,6 +227,7 @@ export class Interpreter {
     }
   }
 
+  // Not necessary
   /**
    * Function to loop over every variable and solve all of them in order
    *
@@ -219,6 +235,7 @@ export class Interpreter {
    * @param  {number=0} position - At what position in the string to start
    * @returns Promise - The solved result
    */
+  /*
   public async deepProcessVariables(
     input: string,
     position: number = 0,
@@ -254,6 +271,7 @@ export class Interpreter {
 
     return output;
   }
+  */
 
   /**
    * Function to read a string until the first found variable
@@ -540,6 +558,7 @@ export class Interpreter {
     return;
   }
 
+  // Not needed
   /**
    * Function to go over a string and solve all square bracket subexpressions accordingly
    *
@@ -547,6 +566,7 @@ export class Interpreter {
    * @param  {number=0} position - The starting position in the string
    * @returns Promise - The found and processed results
    */
+  /*
   private async deepProcessSquareBrackets(
     input: string,
     position: number = 0,
@@ -584,6 +604,7 @@ export class Interpreter {
 
     return output;
   }
+  */
 
   /**
    * Function to loop over all the subexpressions in a string an resolve all of them in order

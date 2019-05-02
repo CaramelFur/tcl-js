@@ -82,6 +82,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         Interpreter.prototype.processCommand = function (command) {
             return __awaiter(this, void 0, void 0, function () {
                 var args, i, _a, _b, proc, options, helpers, _i, args_1, arg;
+                var _this = this;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -111,6 +112,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                         message += ": should be \"" + options.arguments.pattern + "\"";
                                     throw new tclerror_1.TclError(message + "\n    while reading: \"" + command.source + "\"\n    at line #" + command.sourceLocation + "\n");
                                 },
+                                solveExpression: function (expression) { return __awaiter(_this, void 0, void 0, function () {
+                                    var solvedExpression;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4, this.deepProcess(expression)];
+                                            case 1:
+                                                solvedExpression = _a.sent();
+                                                if (typeof solvedExpression !== 'string') {
+                                                    if (solvedExpression instanceof types_1.TclSimple)
+                                                        solvedExpression = solvedExpression.getValue();
+                                                    else
+                                                        throw new tclerror_1.TclError('expression resolved to unusable value');
+                                                }
+                                                return [2, solvedExpression];
+                                        }
+                                    });
+                                }); },
                             };
                             if (typeof options.arguments.amount === 'number') {
                                 if (args.length !== options.arguments.amount &&
@@ -215,37 +233,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         return [2, null];
                     }
                     return [2];
-                });
-            });
-        };
-        Interpreter.prototype.deepProcessVariables = function (input, position) {
-            if (position === void 0) { position = 0; }
-            return __awaiter(this, void 0, void 0, function () {
-                var output, toProcess;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            output = '';
-                            _a.label = 1;
-                        case 1: return [4, this.resolveFirstVariable(input, position)];
-                        case 2:
-                            if (!(toProcess = _a.sent())) return [3, 3];
-                            while (position < toProcess.startPosition) {
-                                output += input.charAt(position);
-                                position++;
-                            }
-                            position = toProcess.endPosition;
-                            if (toProcess.raw === input)
-                                return [2, toProcess.value];
-                            output += toProcess.value.getValue();
-                            return [3, 1];
-                        case 3:
-                            while (position < input.length) {
-                                output += input.charAt(position);
-                                position++;
-                            }
-                            return [2, output];
-                    }
                 });
             });
         };
@@ -429,37 +416,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             output.setName(name);
             this.scope.define(name, output);
             return;
-        };
-        Interpreter.prototype.deepProcessSquareBrackets = function (input, position) {
-            if (position === void 0) { position = 0; }
-            return __awaiter(this, void 0, void 0, function () {
-                var output, toProcess;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            output = '';
-                            _a.label = 1;
-                        case 1: return [4, this.resolveFirstSquareBracket(input, position)];
-                        case 2:
-                            if (!(toProcess = _a.sent())) return [3, 3];
-                            while (position < toProcess.startPosition) {
-                                output += input.charAt(position);
-                                position++;
-                            }
-                            position = toProcess.endPosition;
-                            if (toProcess.raw === input)
-                                return [2, toProcess.value];
-                            output += toProcess.value.getValue();
-                            return [3, 1];
-                        case 3:
-                            while (position < input.length) {
-                                output += input.charAt(position);
-                                position++;
-                            }
-                            return [2, output];
-                    }
-                });
-            });
         };
         Interpreter.prototype.resolveFirstSquareBracket = function (input, position) {
             return __awaiter(this, void 0, void 0, function () {

@@ -61,3 +61,11 @@
   stdout:
     type: file
     value: 'results/math_3.txt'
+
+- name: 'If statement'
+  input:
+    type: file
+    value: 'scripts/if.tcl'
+  stdout:
+    type: file
+    value: 'results/if.txt'

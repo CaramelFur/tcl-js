@@ -83,6 +83,7 @@ These commands should be fully working according to the tcl wiki
 - puts
 - set
 - unset
+- if
 
 ### Partially working commands
 

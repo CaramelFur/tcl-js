@@ -555,6 +555,7 @@ export interface TclProcOptionsEmpty {
 // The helper functions while running a proc
 export interface TclProcHelpers {
   sendHelp: (helpType: string) => never;
+  solveExpression: (expression: string) => Promise<string>;
 }
 
 // A tcl proc
@@ -565,6 +566,8 @@ export class TclProc {
     helpMessages: {
       wargs: `wrong # args`,
       wtype: `wrong type`,
+      wexpression: `expression resolved to unusable value`,
+      undefifop: `undefined if operation`
     },
     arguments: {
       amount: -1,

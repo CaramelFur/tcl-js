@@ -129,11 +129,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 switch (_a.label) {
                     case 0:
                         expression = args.join(' ');
-                        return [4, interpreter.deepProcessVariables(expression)];
+                        return [4, helpers.solveExpression(expression)];
                     case 1:
                         solvedExpression = _a.sent();
-                        if (typeof solvedExpression !== 'string')
-                            throw new tclerror_1.TclError('expression resolved to variable instead of string');
                         parser = new mathParser_1.Parser();
                         result = parser.parse(solvedExpression).evaluate();
                         if (typeof result === 'boolean')

@@ -279,6 +279,8 @@ var __assign = (this && this.__assign) || function () {
                 helpMessages: {
                     wargs: "wrong # args",
                     wtype: "wrong type",
+                    wexpression: "expression resolved to unusable value",
+                    undefifop: "undefined if operation"
                 },
                 arguments: {
                     amount: -1,
