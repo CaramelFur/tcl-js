@@ -81,7 +81,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         Interpreter.prototype.processCommand = function (command) {
             return __awaiter(this, void 0, void 0, function () {
-                var args, i, _a, _b, proc, helpers;
+                var args, i, _a, _b, proc, options, helpers, _i, args_1, arg;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -103,15 +103,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             proc = this.scope.resolveProc(command.command);
                             if (!proc)
                                 throw new tclerror_1.TclError("invalid command name \"" + command.command + "\"");
+                            options = proc.options;
                             helpers = {
                                 sendHelp: function (helpType) {
-                                    var options = proc.options;
                                     var message = options.helpMessages[helpType] || 'Error';
-                                    if (options.pattern)
-                                        message += ": should be \"" + options.pattern + "\"";
+                                    if (options.arguments.pattern)
+                                        message += ": should be \"" + options.arguments.pattern + "\"";
                                     throw new tclerror_1.TclError(message + "\n    while reading: \"" + command.source + "\"\n    at line #" + command.sourceLocation + "\n");
                                 },
                             };
+                            if (typeof options.arguments.amount === 'number') {
+                                if (args.length !== options.arguments.amount &&
+                                    options.arguments.amount !== -1)
+                                    return [2, helpers.sendHelp('wargs')];
+                            }
+                            else {
+                                if ((args.length < options.arguments.amount.start &&
+                                    options.arguments.amount.start !== -1) ||
+                                    (args.length > options.arguments.amount.end &&
+                                        options.arguments.amount.end !== -1))
+                                    return [2, helpers.sendHelp('wargs')];
+                            }
+                            if (options.arguments.textOnly === true) {
+                                for (_i = 0, args_1 = args; _i < args_1.length; _i++) {
+                                    arg = args_1[_i];
+                                    if (!(arg instanceof types_1.TclSimple))
+                                        return [2, helpers.sendHelp('wtype')];
+                                }
+                                args = args.map(function (arg) { return arg.getValue(); });
+                            }
                             return [2, proc.callback(this, args, command, helpers)];
                     }
                 });

@@ -9,6 +9,7 @@ import {
   TclList,
   TclProcHelpers,
   TclProc,
+  ProcArgs,
 } from './types';
 import { TclError } from './tclerror';
 
@@ -53,7 +54,7 @@ export class Interpreter {
    */
   private async processCommand(command: CommandToken): Promise<TclVariable> {
     // Map the args from wordtokens to tclvariables
-    let args: TclVariable[] = [];
+    let args: ProcArgs = [];
     for (let i = 0; i < command.args.length; i++) {
       args[i] = await this.processArg(command.args[i]);
     }
@@ -63,13 +64,15 @@ export class Interpreter {
     // First check if function exists
     if (!proc) throw new TclError(`invalid command name "${command.command}"`);
 
+    let options = (<TclProc>proc).options;
+
     // Setup helper functions
     let helpers: TclProcHelpers = {
       sendHelp: (helpType: string) => {
-        let options = (<TclProc>proc).options;
         let message = options.helpMessages[helpType] || 'Error';
 
-        if (options.pattern) message += `: should be "${options.pattern}"`;
+        if (options.arguments.pattern)
+          message += `: should be "${options.arguments.pattern}"`;
 
         // Throw an advanced error
         throw new TclError(
@@ -79,6 +82,32 @@ export class Interpreter {
         );
       },
     };
+
+    if (typeof options.arguments.amount === 'number') {
+      if (
+        args.length !== options.arguments.amount &&
+        options.arguments.amount !== -1
+      )
+        return helpers.sendHelp('wargs');
+    } else {
+      if (
+        (args.length < options.arguments.amount.start &&
+          options.arguments.amount.start !== -1) ||
+        (args.length > options.arguments.amount.end &&
+          options.arguments.amount.end !== -1)
+      )
+        return helpers.sendHelp('wargs');
+    }
+
+    if (options.arguments.textOnly === true) {
+      // Check if arguments are correct
+      for (let arg of args) {
+        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
+      }
+
+      // Create a full expression by joining all arguments
+      args = (<TclSimple[]>args).map((arg) => arg.getValue());
+    }
 
     // Call the function
     return proc.callback(this, args, command, helpers);
@@ -95,7 +124,7 @@ export class Interpreter {
     let output: string | TclVariable = arg.value;
 
     // Check if the lexer allows solving
-    if (arg.hasVariable && arg.hasVariable &&typeof output === 'string') {
+    if (arg.hasVariable && arg.hasVariable && typeof output === 'string') {
       // If so, resolve those
       output = await this.deepProcess(output);
     }
@@ -113,7 +142,7 @@ export class Interpreter {
 
   /**
    * Function to go over a string and solve expressions and variables accordingly
-   * 
+   *
    * @param  {string} input - The string to go over
    * @param  {number=0} position - At what point to start in the string
    * @returns Promise - The found results
@@ -513,7 +542,7 @@ export class Interpreter {
 
   /**
    * Function to go over a string and solve all square bracket subexpressions accordingly
-   * 
+   *
    * @param  {string} input - The string to loop over
    * @param  {number=0} position - The starting position in the string
    * @returns Promise - The found and processed results

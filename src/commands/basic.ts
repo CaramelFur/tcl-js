@@ -1,9 +1,8 @@
 import { Interpreter } from '../interpreter';
-import { TclVariable, TclSimple, TclProcHelpers } from '../types';
+import { TclSimple } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
 import { Parser } from '../mathParser';
-import { CommandToken } from '../parser';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
 const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
@@ -23,12 +22,7 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'set',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
+    (interpreter, args, command, helpers) => {
       const [varName, tclValue] = args;
 
       // Interface for return object
@@ -85,11 +79,15 @@ export function Load(scope: Scope) {
       return helpers.sendHelp('wargs');
     },
     {
-      pattern: 'set varName ?newValue?',
       helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
         wvarname: `incorrect variable name`,
+      },
+      arguments: {
+        pattern: 'set varName ?newValue?',
+        amount: {
+          start: 1,
+          end: 2,
+        },
       },
     },
   );
@@ -103,39 +101,35 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'unset',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
-      // Check if there are enough arguments
-      if (args.length === 0) return helpers.sendHelp('wargs');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
+    (interpreter, args, command, helpers) => {
+      args = <string[]>args;
 
       // Set the nocomplain variable
       let nocomplain = false;
-      if (args[0].getValue() === '-nocomplain') {
+      if (args[0] === '-nocomplain') {
         nocomplain = true;
         args.shift();
       }
 
-      // Loop over every argument and unset it
-      for (let arg of args) {
-        interpreter.scope.undefine(arg.getValue());
+      try {
+        // Loop over every argument and unset it
+        for (let arg of args) {
+          interpreter.scope.undefine(arg);
+        }
+      } catch (e) {
+        if (!nocomplain) throw e;
       }
 
       return new TclSimple('');
     },
     {
-      pattern: 'unset ?-nocomplain? varName ?varName ...?',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'unset ?-nocomplain? varName ?varName ...?',
+        textOnly: true,
+        amount: {
+          start: 1,
+          end: -1,
+        },
       },
     },
   );
@@ -149,23 +143,8 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'expr',
-    async (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): Promise<TclVariable> => {
-      // Check if there are enough arguments
-      if (args.length === 0) return helpers.sendHelp('warg');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
-
-      // Create a full expression by joining all arguments
-      let stringArgs = args.map((arg) => arg.getValue());
-      let expression = stringArgs.join(' ');
+    async (interpreter, args, command, helpers) => {
+      let expression = args.join(' ');
 
       let solvedExpression = await interpreter.deepProcessVariables(expression);
       if (typeof solvedExpression !== 'string')
@@ -185,10 +164,13 @@ export function Load(scope: Scope) {
       return new TclSimple(`${result}`);
     },
     {
-      pattern: 'expr arg ?arg arg ...?',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        textOnly: true,
+        pattern: 'expr arg ?arg arg ...?',
+        amount: {
+          start: 1,
+          end: -1,
+        },
       },
     },
   );
@@ -202,23 +184,8 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'eval',
-    async (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): Promise<TclVariable> => {
-      // Check if there are enough arguments
-      if (args.length === 0) return helpers.sendHelp('warg');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
-
-      // Create a full expression by joining all arguments
-      let stringArgs = args.map((arg) => arg.getValue());
-      let code = stringArgs.join(' ');
+    async (interpreter, args, command, helpers) => {
+      let code = args.join(' ');
 
       // Interpret the tcl code with a subscope
       let newInterpreter = new Interpreter(
@@ -231,10 +198,17 @@ export function Load(scope: Scope) {
       return await newInterpreter.run();
     },
     {
-      pattern: 'eval arg ?arg arg ...?',
       helpMessages: {
         wargs: `wrong # args`,
         wtype: `wrong type`,
+      },
+      arguments: {
+        textOnly: true,
+        pattern: 'eval arg ?arg arg ...?',
+        amount: {
+          start: 1,
+          end: -1,
+        },
       },
     },
   );
@@ -248,20 +222,11 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'info',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
-      // Check if there are enough arguments
-      if (args.length === 0) return helpers.sendHelp('wargs');
-
+    (interpreter, args, command, helpers) => {
       let type = args.shift();
-      if (!(type instanceof TclSimple)) return helpers.sendHelp('wtype');
 
       // Execute the correct thing
-      switch (type.getValue()) {
+      switch (type) {
         case 'commands':
           return new TclSimple('commands');
       }
@@ -269,25 +234,19 @@ export function Load(scope: Scope) {
       return new TclSimple('');
     },
     {
-      pattern: 'info option ?arg arg ...?',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'info option ?arg arg ...?',
+        textOnly: true,
+        amount: 1,
       },
     },
   );
 
   scope.defineProc(
     'wait',
-    async (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): Promise<TclVariable> => {
+    async (interpreter, args, command, helpers) => {
       const timeout = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-      if (args.length !== 1) return helpers.sendHelp('wargs');
       let number = args[0];
       if (!(number instanceof TclSimple)) return helpers.sendHelp('wtype');
       if (!number.isNumber()) return helpers.sendHelp('wtype');
@@ -298,10 +257,9 @@ export function Load(scope: Scope) {
       return new TclSimple('');
     },
     {
-      pattern: 'wait time',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'wait time',
+        amount: 1,
       },
     },
   );

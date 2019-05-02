@@ -925,6 +925,8 @@ img { max-width: 100%; }
 			<h2 id="about">About</h2>
 			<p>tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
 			tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.</p>
+			<h2 id="why">Why</h2>
+			<p>Yes I know there are already packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because when you link the binary interpreter directly into node, you add a lot of vulnerabilities. When you open this interpreter up to your users, they have access to execute dangerous commands on your server via the tcl-sh compiler. With tcl-js you can easily disable commands and be sure that users can&#39;t mess with anything except maybe the program itself.</p>
 			<h2 id="disclaimer">Disclaimer</h2>
 			<p>This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.</p>
 			<p>Because this project is still not finished any new PRs or found issues being added would be highly aprreciated.</p>
@@ -1008,6 +1010,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 						<h3>External modules</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-external-module"><a href="modules/_commands_basic_.html" class="tsd-kind-icon">"commands/basic"</a></li>
+							<li class="tsd-kind-external-module"><a href="modules/_commands_if_.html" class="tsd-kind-icon">"commands/if"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_commands_index_.html" class="tsd-kind-icon">"commands/index"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_commands_list_.html" class="tsd-kind-icon">"commands/list"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_commands_proc_.html" class="tsd-kind-icon">"commands/proc"</a></li>

@@ -12,6 +12,10 @@
 tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
 tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.
 
+## Why
+
+Yes I know there are already packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because when you link the binary interpreter directly into node, you add a lot of vulnerabilities. When you open this interpreter up to your users, they have access to execute dangerous commands on your server via the tcl-sh compiler. With tcl-js you can easily disable commands and be sure that users can't mess with anything except maybe the program itself.
+
 ## Disclaimer
 
 This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.

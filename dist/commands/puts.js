@@ -48,32 +48,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function Load(scope) {
         var _this = this;
         scope.defineProc('puts', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var nonewline, channelId, string, _i, args_1, arg, stringArgs;
+            var nonewline, channelId, string;
             return __generator(this, function (_a) {
                 nonewline = false;
                 channelId = 'stdout';
                 string = '';
-                for (_i = 0, args_1 = args; _i < args_1.length; _i++) {
-                    arg = args_1[_i];
-                    if (!(arg instanceof types_1.TclSimple))
-                        return [2, helpers.sendHelp('wtype')];
+                args = args;
+                if (args.length === 1) {
+                    string = args[0];
                 }
-                stringArgs = args.map(function (arg) { return arg.getValue(); });
-                if (stringArgs.length === 1) {
-                    string = stringArgs[0];
-                }
-                else if (stringArgs.length === 2 && stringArgs[0] === '-nonewline') {
+                else if (args.length === 2 && args[0] === '-nonewline') {
                     nonewline = true;
-                    string = stringArgs[1];
+                    string = args[1];
                 }
-                else if (stringArgs.length === 2) {
-                    channelId = stringArgs[0];
-                    string = stringArgs[1];
+                else if (args.length === 2) {
+                    channelId = args[0];
+                    string = args[1];
                 }
-                else if (stringArgs.length === 3 && stringArgs[0] === '-nonewline') {
+                else if (args.length === 3 && args[0] === '-nonewline') {
                     nonewline = true;
-                    channelId = stringArgs[1];
-                    string = stringArgs[2];
+                    channelId = args[1];
+                    string = args[2];
                 }
                 else {
                     return [2, helpers.sendHelp('wargs')];
@@ -82,10 +77,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 return [2, new types_1.TclSimple('')];
             });
         }); }, {
-            pattern: 'puts ?-nonewline? ?channelId? string',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                pattern: 'puts ?-nonewline? ?channelId? string',
+                textOnly: true,
             },
         });
     }

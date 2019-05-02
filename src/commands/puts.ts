@@ -1,12 +1,5 @@
-import { Interpreter } from '../interpreter';
-import {
-  TclVariable,
-  TclProcHelpers,
-  TclSimple,
-} from '../types';
+import { TclSimple } from '../types';
 import { Scope } from '../scope';
-import { TclError } from '../tclerror';
-import { CommandToken } from '../parser';
 
 /**
  * Function to load the procs into the scope
@@ -23,37 +16,26 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'puts',
-    async (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): Promise<TclVariable> => {
+    async (interpreter, args, command, helpers) => {
       let nonewline = false;
       let channelId = 'stdout';
       let string = '';
 
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
-
-      // Create a full expression by joining all arguments
-      let stringArgs = args.map((arg) => arg.getValue());
+      args = <string[]>args;
 
       // Check for every corresponding argument mix and set variables accordingly
-      if (stringArgs.length === 1) {
-        string = stringArgs[0];
-      } else if (stringArgs.length === 2 && stringArgs[0] === '-nonewline') {
+      if (args.length === 1) {
+        string = args[0];
+      } else if (args.length === 2 && args[0] === '-nonewline') {
         nonewline = true;
-        string = stringArgs[1];
-      } else if (stringArgs.length === 2) {
-        channelId = stringArgs[0];
-        string = stringArgs[1];
-      } else if (stringArgs.length === 3 && stringArgs[0] === '-nonewline') {
+        string = args[1];
+      } else if (args.length === 2) {
+        channelId = args[0];
+        string = args[1];
+      } else if (args.length === 3 && args[0] === '-nonewline') {
         nonewline = true;
-        channelId = stringArgs[1];
-        string = stringArgs[2];
+        channelId = args[1];
+        string = args[2];
       } else {
         return helpers.sendHelp('wargs');
       }
@@ -68,10 +50,9 @@ export function Load(scope: Scope) {
       return new TclSimple('');
     },
     {
-      pattern: 'puts ?-nonewline? ?channelId? string',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'puts ?-nonewline? ?channelId? string',
+        textOnly: true,
       },
     },
   );

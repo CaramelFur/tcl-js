@@ -2,9 +2,10 @@ import { Load as puts } from './puts';
 import { Load as basic } from './basic';
 import { Load as list } from './list';
 import { Load as proc } from './proc';
+import { Load as iff } from './if';
 import { Scope } from '../scope';
 
 // Import all loadfunctions and add them to the array
-let LoadFunctions: Array<(scope: Scope) => void> = [puts, basic, list, proc];
+let LoadFunctions: Array<(scope: Scope) => void> = [puts, basic, list, proc, iff];
 
 export { LoadFunctions };

@@ -947,11 +947,17 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 			<a href="../interfaces/_types_.tclprocholder.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Holder</a>
 		</li>
-		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 			<a href="../interfaces/_types_.tclprocoptions.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+			<a href="../interfaces/_types_.tclprocoptionsempty.html" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Options<wbr>Empty</a>
+		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 			<a href="../interfaces/_types_.tclvariableholder.html" class="tsd-kind-icon">Tcl<wbr>Variable<wbr>Holder</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+			<a href="../modules/_types_.html#procargs" class="tsd-kind-icon">Proc<wbr>Args</a>
 		</li>
 		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 			<a href="../modules/_types_.html#tclprocfunction" class="tsd-kind-icon">Tcl<wbr>Proc<wbr>Function</a>
@@ -1000,13 +1006,13 @@ img { max-width: 100%; }
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Proc<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_types_.html#tclprocfunction" class="tsd-signature-type">TclProcFunction</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_types_.tclprocoptions.html" class="tsd-signature-type">TclProcOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclproc.html" class="tsd-signature-type">TclProc</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Proc<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><a href="../modules/_types_.html#tclprocfunction" class="tsd-signature-type">TclProcFunction</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_types_.tclprocoptionsempty.html" class="tsd-signature-type">TclProcOptionsEmpty</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_types_.tclproc.html" class="tsd-signature-type">TclProc</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/5fcbfeb/src/types.ts#L537">types.ts:537</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L575">types.ts:575</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1027,7 +1033,7 @@ img { max-width: 100%; }
 								</div>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_types_.tclprocoptions.html" class="tsd-signature-type">TclProcOptions</a></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_types_.tclprocoptionsempty.html" class="tsd-signature-type">TclProcOptionsEmpty</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_types_.tclproc.html" class="tsd-signature-type">TclProc</a></h4>
@@ -1043,7 +1049,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">callback<span class="tsd-signature-symbol">:</span> <a href="../modules/_types_.html#tclprocfunction" class="tsd-signature-type">TclProcFunction</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/5fcbfeb/src/types.ts#L534">types.ts:534</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L563">types.ts:563</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1053,7 +1059,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/5fcbfeb/src/types.ts#L533">types.ts:533</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L562">types.ts:562</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1066,23 +1072,88 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/5fcbfeb/src/types.ts#L535">types.ts:535</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L564">types.ts:564</a></li>
 					</ul>
 				</aside>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-object-literal">
+					<a name="options.arguments" class="tsd-anchor"></a>
+					<h3>arguments</h3>
+					<div class="tsd-signature tsd-kind-icon">arguments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L569">types.ts:569</a></li>
+						</ul>
+					</aside>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.arguments.amount" class="tsd-anchor"></a>
+						<h3>amount</h3>
+						<div class="tsd-signature tsd-kind-icon">amount<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;-1</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L570">types.ts:570</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.arguments.pattern" class="tsd-anchor"></a>
+						<h3>pattern</h3>
+						<div class="tsd-signature tsd-kind-icon">pattern<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;blank&#x60;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L571">types.ts:571</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.arguments.simpleonly" class="tsd-anchor"></a>
+						<h3>simple<wbr>Only</h3>
+						<div class="tsd-signature tsd-kind-icon">simple<wbr>Only<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L573">types.ts:573</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.arguments.textonly" class="tsd-anchor"></a>
+						<h3>text<wbr>Only</h3>
+						<div class="tsd-signature tsd-kind-icon">text<wbr>Only<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L572">types.ts:572</a></li>
+							</ul>
+						</aside>
+					</section>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-object-literal">
 					<a name="options.helpmessages" class="tsd-anchor"></a>
 					<h3>help<wbr>Messages</h3>
 					<div class="tsd-signature tsd-kind-icon">help<wbr>Messages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/5fcbfeb/src/types.ts#L536">types.ts:536</a></li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L565">types.ts:565</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-						</ul>
-					</div>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.helpmessages.wargs" class="tsd-anchor"></a>
+						<h3>wargs</h3>
+						<div class="tsd-signature tsd-kind-icon">wargs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;wrong # args&#x60;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L566">types.ts:566</a></li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
+						<a name="options.helpmessages.wtype" class="tsd-anchor"></a>
+						<h3>wtype</h3>
+						<div class="tsd-signature tsd-kind-icon">wtype<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&#x60;wrong type&#x60;</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/1c1ff4e/src/types.ts#L567">types.ts:567</a></li>
+							</ul>
+						</aside>
+					</section>
 				</section>
 			</section>
 		</section>

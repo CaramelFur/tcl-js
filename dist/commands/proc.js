@@ -15,18 +15,13 @@
     var tclerror_1 = require("../tclerror");
     function Load(scope) {
         scope.defineProc('proc', function (interpreter, args, commandToken, helpers) {
-            if (args.length !== 3)
-                return helpers.sendHelp('wargs');
-            for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
-                var arg = args_1[_i];
-                if (!(arg instanceof types_1.TclSimple))
-                    return helpers.sendHelp('wtype');
-            }
+            args = args;
             var commandArgsString = args[1];
             var command = args[0].getValue();
             var commandArgs = commandArgsString.getList();
             var tclCode = args[2].getValue();
             var commandFunction = function (parsedInterpreter, parsedArgs) {
+                parsedArgs = parsedArgs;
                 if (parsedArgs.length !== commandArgs.getLength())
                     throw new tclerror_1.TclError("wrong # args on procedure \"" + command + "\"");
                 var newScope = new scope_1.Scope(undefined, interpreter.tcl.disabledCommands);
@@ -41,10 +36,10 @@
             interpreter.scope.defineProc(command, commandFunction);
             return new types_1.TclSimple('');
         }, {
-            pattern: 'proc name arguments body',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                amount: 3,
+                pattern: 'proc name arguments body',
+                simpleOnly: true,
             },
         });
     }

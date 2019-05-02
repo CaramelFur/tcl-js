@@ -1,13 +1,5 @@
-import { Interpreter } from '../interpreter';
-import {
-  TclVariable,
-  TclSimple,
-  TclProcFunction,
-  TclProcHelpers,
-} from '../types';
+import { TclSimple } from '../types';
 import { Scope } from '../scope';
-import { TclError } from '../tclerror';
-import { CommandToken } from '../parser';
 
 /**
  * Function to load the procs into the scope
@@ -24,36 +16,25 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'list',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
-      // Check if there are enough arguments
-      if (args.length === 0) return helpers.sendHelp('warg');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
-
-      // Create a full expression by joining all arguments
-      let stringArgs = args.map((arg) => arg.getValue());
+    (interpreter, args, command, helpers) => {
+      args = <string[]>args;
 
       // Add {} to every argument that has a space
-      stringArgs = stringArgs.map(
+      args = args.map(
         (arg: string): string => (arg.indexOf(' ') > -1 ? `{${arg}}` : arg),
       );
 
       // Return the arguments joined by spaces
-      return new TclSimple(stringArgs.join(' '));
+      return new TclSimple(args.join(' '));
     },
     {
-      pattern: 'list ?arg arg ...?',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'list ?arg arg ...?',
+        amount: {
+          start: 1,
+          end: -1,
+        },
+        textOnly: true,
       },
     },
   );
@@ -68,19 +49,8 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'lindex',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      command: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
-      // Check if there are enough arguments
-      if (args.length === 0) throw new TclError('wrong # args: should be "');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
+    (interpreter, oldArgs, command, helpers) => {
+      let args = <TclSimple[]>oldArgs;
 
       // Create a number array
       let numArr: number[] = [];
@@ -88,7 +58,7 @@ export function Load(scope: Scope) {
       // Go over every next argument
       for (let i = 1; i < args.length; i++) {
         // Check if the argument is TclSimple an a number
-        if (!(<TclSimple>args[i]).isNumber()) return helpers.sendHelp('wtype');
+        if (!args[i].isNumber()) return helpers.sendHelp('wtype');
 
         // Add the number to the array
         numArr[i - 1] = (<TclSimple>args[i]).getNumber();
@@ -101,10 +71,13 @@ export function Load(scope: Scope) {
       return simple.getList().getSubValue(...numArr);
     },
     {
-      pattern: 'list list ?index ...?',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        pattern: 'list list ?index ...?',
+        amount: {
+          start: 1,
+          end: -1,
+        },
+        simpleOnly: true,
       },
     },
   );

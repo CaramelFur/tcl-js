@@ -3,11 +3,9 @@ import {
   TclVariable,
   TclSimple,
   TclProcFunction,
-  TclProcHelpers,
 } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
-import { CommandToken } from '../parser';
 
 /**
  * Function to load the procs into the scope
@@ -24,19 +22,8 @@ export function Load(scope: Scope) {
    */
   scope.defineProc(
     'proc',
-    (
-      interpreter: Interpreter,
-      args: Array<TclVariable>,
-      commandToken: CommandToken,
-      helpers: TclProcHelpers,
-    ): TclVariable => {
-      // Check if there are enough arguments
-      if (args.length !== 3) return helpers.sendHelp('wargs');
-
-      // Check if arguments are correct
-      for (let arg of args) {
-        if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
-      }
+    (interpreter, args, commandToken, helpers) => {
+      args = <TclSimple[]>args;
 
       // Load the procedure arguments
       let commandArgsString = <TclSimple>args[1];
@@ -48,9 +35,11 @@ export function Load(scope: Scope) {
 
       // Create a function to be executed on this procedure call
       let commandFunction: TclProcFunction = (
-        parsedInterpreter: Interpreter,
-        parsedArgs: Array<TclVariable>,
+        parsedInterpreter,
+        parsedArgs,
       ) => {
+        parsedArgs = <TclVariable[]>parsedArgs;
+
         // Check if the arguments length is correct
         if (parsedArgs.length !== commandArgs.getLength())
           throw new TclError(`wrong # args on procedure "${command}"`);
@@ -83,10 +72,10 @@ export function Load(scope: Scope) {
       return new TclSimple('');
     },
     {
-      pattern: 'proc name arguments body',
-      helpMessages: {
-        wargs: `wrong # args`,
-        wtype: `wrong type`,
+      arguments: {
+        amount: 3,
+        pattern: 'proc name arguments body',
+        simpleOnly: true,
       },
     },
   );

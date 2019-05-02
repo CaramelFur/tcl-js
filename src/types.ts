@@ -500,26 +500,55 @@ export interface TclProcHolder {
   [index: string]: TclProc;
 }
 
+export type ProcArgs = Array<TclVariable> | Array<string>;
+
 // Types of functions a proc can have
 export type TclProcFunction =
   | ((
       interpreter: Interpreter,
-      args: Array<TclVariable>,
+      args: ProcArgs,
       command: CommandToken,
       helpers: TclProcHelpers,
     ) => TclVariable)
   | ((
       interpreter: Interpreter,
-      args: Array<TclVariable>,
+      args: ProcArgs,
       command: CommandToken,
       helpers: TclProcHelpers,
     ) => Promise<TclVariable>);
 
 // The given options for a proc
-export interface TclProcOptions {
-  pattern?: string;
+interface TclProcOptions {
   helpMessages: {
     [index: string]: string;
+  };
+  arguments: {
+    pattern: string;
+    textOnly: boolean;
+    simpleOnly: boolean;
+    amount:
+      | number
+      | {
+          start: number;
+          end: number;
+        };
+  };
+}
+
+export interface TclProcOptionsEmpty {
+  helpMessages?: {
+    [index: string]: string;
+  };
+  arguments?: {
+    pattern?: string;
+    textOnly?: boolean;
+    simpleOnly?: boolean;
+    amount?:
+      | number
+      | {
+          start: number;
+          end: number;
+        };
   };
 }
 
@@ -533,7 +562,16 @@ export class TclProc {
   name: string;
   callback: TclProcFunction;
   options: TclProcOptions = {
-    helpMessages: {},
+    helpMessages: {
+      wargs: `wrong # args`,
+      wtype: `wrong type`,
+    },
+    arguments: {
+      amount: -1,
+      pattern: `blank`,
+      textOnly: false,
+      simpleOnly: false,
+    },
   };
 
   /**
@@ -545,10 +583,30 @@ export class TclProc {
   constructor(
     name: string,
     callback: TclProcFunction,
-    options?: TclProcOptions,
+    options?: TclProcOptionsEmpty,
   ) {
     this.name = name;
     this.callback = callback;
-    if (options) this.options = options;
+
+    // Set the options
+
+    if (options) {
+      if (options.helpMessages)
+        this.options.helpMessages = {
+          ...this.options.helpMessages,
+          ...options.helpMessages,
+        };
+
+      if (options.arguments) {
+        if (options.arguments.amount)
+          this.options.arguments.amount = options.arguments.amount;
+        if (options.arguments.pattern)
+          this.options.arguments.pattern = options.arguments.pattern;
+        if (options.arguments.textOnly)
+          this.options.arguments.textOnly = options.arguments.textOnly;
+        if (options.arguments.textOnly || options.arguments.simpleOnly)
+          this.options.arguments.simpleOnly = true;
+      }
+    }
   }
 }

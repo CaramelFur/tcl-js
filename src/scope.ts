@@ -4,7 +4,7 @@ import {
   TclProc,
   TclProcHolder,
   TclProcFunction,
-  TclProcOptions,
+  TclProcOptionsEmpty,
 } from './types';
 import { LoadFunctions } from './commands';
 import { TclError } from './tclerror';
@@ -130,7 +130,7 @@ export class Scope {
   public defineProc(
     name: string,
     callback: TclProcFunction,
-    options?: TclProcOptions,
+    options?: TclProcOptionsEmpty,
   ) {
     this.procedures[name] = new TclProc(name, callback, options);
   }

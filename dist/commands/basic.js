@@ -84,52 +84,51 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             }
             return helpers.sendHelp('wargs');
         }, {
-            pattern: 'set varName ?newValue?',
             helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
                 wvarname: "incorrect variable name",
+            },
+            arguments: {
+                pattern: 'set varName ?newValue?',
+                amount: {
+                    start: 1,
+                    end: 2,
+                },
             },
         });
         scope.defineProc('unset', function (interpreter, args, command, helpers) {
-            if (args.length === 0)
-                return helpers.sendHelp('wargs');
-            for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
-                var arg = args_1[_i];
-                if (!(arg instanceof types_1.TclSimple))
-                    return helpers.sendHelp('wtype');
-            }
+            args = args;
             var nocomplain = false;
-            if (args[0].getValue() === '-nocomplain') {
+            if (args[0] === '-nocomplain') {
                 nocomplain = true;
                 args.shift();
             }
-            for (var _a = 0, args_2 = args; _a < args_2.length; _a++) {
-                var arg = args_2[_a];
-                interpreter.scope.undefine(arg.getValue());
+            try {
+                for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+                    var arg = args_1[_i];
+                    interpreter.scope.undefine(arg);
+                }
+            }
+            catch (e) {
+                if (!nocomplain)
+                    throw e;
             }
             return new types_1.TclSimple('');
         }, {
-            pattern: 'unset ?-nocomplain? varName ?varName ...?',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                pattern: 'unset ?-nocomplain? varName ?varName ...?',
+                textOnly: true,
+                amount: {
+                    start: 1,
+                    end: -1,
+                },
             },
         });
         scope.defineProc('expr', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var _i, args_3, arg, stringArgs, expression, solvedExpression, parser, result;
+            var expression, solvedExpression, parser, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (args.length === 0)
-                            return [2, helpers.sendHelp('warg')];
-                        for (_i = 0, args_3 = args; _i < args_3.length; _i++) {
-                            arg = args_3[_i];
-                            if (!(arg instanceof types_1.TclSimple))
-                                return [2, helpers.sendHelp('wtype')];
-                        }
-                        stringArgs = args.map(function (arg) { return arg.getValue(); });
-                        expression = stringArgs.join(' ');
+                        expression = args.join(' ');
                         return [4, interpreter.deepProcessVariables(expression)];
                     case 1:
                         solvedExpression = _a.sent();
@@ -147,54 +146,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 }
             });
         }); }, {
-            pattern: 'expr arg ?arg arg ...?',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                textOnly: true,
+                pattern: 'expr arg ?arg arg ...?',
+                amount: {
+                    start: 1,
+                    end: -1,
+                },
             },
         });
         scope.defineProc('eval', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var _i, args_4, arg, stringArgs, code, newInterpreter;
+            var code, newInterpreter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (args.length === 0)
-                            return [2, helpers.sendHelp('warg')];
-                        for (_i = 0, args_4 = args; _i < args_4.length; _i++) {
-                            arg = args_4[_i];
-                            if (!(arg instanceof types_1.TclSimple))
-                                return [2, helpers.sendHelp('wtype')];
-                        }
-                        stringArgs = args.map(function (arg) { return arg.getValue(); });
-                        code = stringArgs.join(' ');
+                        code = args.join(' ');
                         newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
                         return [4, newInterpreter.run()];
                     case 1: return [2, _a.sent()];
                 }
             });
         }); }, {
-            pattern: 'eval arg ?arg arg ...?',
             helpMessages: {
                 wargs: "wrong # args",
                 wtype: "wrong type",
             },
+            arguments: {
+                textOnly: true,
+                pattern: 'eval arg ?arg arg ...?',
+                amount: {
+                    start: 1,
+                    end: -1,
+                },
+            },
         });
         scope.defineProc('info', function (interpreter, args, command, helpers) {
-            if (args.length === 0)
-                return helpers.sendHelp('wargs');
             var type = args.shift();
-            if (!(type instanceof types_1.TclSimple))
-                return helpers.sendHelp('wtype');
-            switch (type.getValue()) {
+            switch (type) {
                 case 'commands':
                     return new types_1.TclSimple('commands');
             }
             return new types_1.TclSimple('');
         }, {
-            pattern: 'info option ?arg arg ...?',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                pattern: 'info option ?arg arg ...?',
+                textOnly: true,
+                amount: 1,
             },
         });
         scope.defineProc('wait', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
@@ -203,8 +200,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 switch (_a.label) {
                     case 0:
                         timeout = function (ms) { return new Promise(function (res) { return setTimeout(res, ms); }); };
-                        if (args.length !== 1)
-                            return [2, helpers.sendHelp('wargs')];
                         number = args[0];
                         if (!(number instanceof types_1.TclSimple))
                             return [2, helpers.sendHelp('wtype')];
@@ -218,10 +213,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 }
             });
         }); }, {
-            pattern: 'wait time',
-            helpMessages: {
-                wargs: "wrong # args",
-                wtype: "wrong type",
+            arguments: {
+                pattern: 'wait time',
+                amount: 1,
             },
         });
     }

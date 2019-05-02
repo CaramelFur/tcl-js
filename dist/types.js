@@ -11,6 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -265,12 +276,33 @@ var __extends = (this && this.__extends) || (function () {
     var TclProc = (function () {
         function TclProc(name, callback, options) {
             this.options = {
-                helpMessages: {},
+                helpMessages: {
+                    wargs: "wrong # args",
+                    wtype: "wrong type",
+                },
+                arguments: {
+                    amount: -1,
+                    pattern: "blank",
+                    textOnly: false,
+                    simpleOnly: false,
+                },
             };
             this.name = name;
             this.callback = callback;
-            if (options)
-                this.options = options;
+            if (options) {
+                if (options.helpMessages)
+                    this.options.helpMessages = __assign({}, this.options.helpMessages, options.helpMessages);
+                if (options.arguments) {
+                    if (options.arguments.amount)
+                        this.options.arguments.amount = options.arguments.amount;
+                    if (options.arguments.pattern)
+                        this.options.arguments.pattern = options.arguments.pattern;
+                    if (options.arguments.textOnly)
+                        this.options.arguments.textOnly = options.arguments.textOnly;
+                    if (options.arguments.textOnly || options.arguments.simpleOnly)
+                        this.options.arguments.simpleOnly = true;
+                }
+            }
         }
         return TclProc;
     }());
