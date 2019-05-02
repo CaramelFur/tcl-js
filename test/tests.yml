@@ -65,7 +65,29 @@ Functionality:
 
   Math: 'subtests/math.yml'
 
-  Scope: 
+  Lists:
+    - name: Char after brace
+      input:
+        type: raw
+        value: 'set test "hello {there}general kenobi"; puts [lindex $test 1]'
+      output:
+        type: error
+    - name: Spaces
+      input:
+        type: raw
+        value: 'set test "hello     {there}     general      kenobi"; puts [lindex $test 2]'
+      stdout:
+        type: raw
+        value: "general\n"
+    - name: Out of list bounds
+      input:
+        type: raw
+        value: 'set test "hello {there} general kenobi"; puts [lindex $test 5]'
+      stdout:
+        type: raw
+        value: "\n"
+
+  Scope:
     Special: 'subtests/scope.js'
 #Execute examples from ./scripts
 Examples: 'subtests/examples.yml'

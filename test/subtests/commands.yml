@@ -108,6 +108,18 @@ Expr:
       type: raw
       value: "HelloWorld\nHelloEarth\n"
 
+  - name: 'Unset non-existing'
+    input:
+      type: raw
+      value: 'set var HelloWorld; unset rav;'
+    output:
+      type: error
+  - name: 'Unset non-existing with nocomplain'
+    input:
+      type: raw
+      value: 'set var HelloWorld; unset -nocomplain rav;'
+
+
 List:
   - name: 'Simple'
     input:

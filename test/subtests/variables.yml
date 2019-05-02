@@ -115,6 +115,12 @@ Array:
       value: 'set var(0) HelloWorld; puts $var(0;'
     output:
       type: error
+  - name: 'Error on delete non-existing'
+    input:
+      type: raw
+      value: 'set var(0) HelloWorld; unset var(1);'
+    output:
+      type: error
 Object:
   - name: 'Simple'
     input:
@@ -187,6 +193,12 @@ Object:
     input:
       type: raw
       value: 'set var(hello) HelloWorld; puts $var(hello;'
+    output:
+      type: error
+  - name: 'Error on delete non-existing'
+    input:
+      type: raw
+      value: 'set var(hello) HelloWorld; unset var(hi);'
     output:
       type: error
 Brace Variables:

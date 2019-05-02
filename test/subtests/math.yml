@@ -108,147 +108,205 @@ Relational Operations:
       output:
         type: raw
         value: '1'
-  Integer Operations:
-    - name: Bitwise NOT
-      input:
-        type: raw
-        value: 'expr bnot(4)'
-      output:
-        type: raw
-        value: '-5'
-    - name: Logical NOT
-      input:
-        type: raw
-        value: 'expr not(1)'
-      output:
-        type: raw
-        value: '0'
-    - name: Remainder
-      input:
-        type: raw
-        value: 'expr 5 % 3'
-      output:
-        type: raw
-        value: '2'
-    - name: Left bit shift
-      input:
-        type: raw
-        value: 'expr lshift(2, 2)'
-      output:
-        type: raw
-        value: '8'
-    - name: Right bit shift
-      input:
-        type: raw
-        value: 'expr rshift(8, 2)'
-      output:
-        type: raw
-        value: '2'
-    - name: Bitwise AND
-      input:
-        type: raw
-        value: 'expr band(28, 7)'
-      output:
-        type: raw
-        value: '4'
-    - name: Bitwise exlusive OR
-      input:
-        type: raw
-        value: 'expr bxor(28, 7)'
-      output:
-        type: raw
-        value: '27'
-    - name: Bitwise OR
-      input:
-        type: raw
-        value: 'expr bor(28, 7)'
-      output:
-        type: raw
-        value: '31'
-  Logical Operations:
-    - name: AND true
-      input:
-        type: raw
-        value: 'expr land(true, true)'
-      output:
-        type: raw
-        value: '1'
-    - name: AND false
-      input:
-        type: raw
-        value: 'expr land(true, false)'
-      output:
-        type: raw
-        value: '0'
-    - name: OR true
-      input:
-        type: raw
-        value: 'expr lor(true, false)'
-      output:
-        type: raw
-        value: '1'
-    - name: OR false
-      input:
-        type: raw
-        value: 'expr lor(false, false)'
-      output:
-        type: raw
-        value: '0'
-    - name: If statement
-      input:
-        type: raw
-        value: 'expr {3 == 3 ? 2 : 1}'
-      output:
-        type: raw
-        value: '2'
-  Strings:
-    - name: Equal
-      input:
-        type: raw
-        value: 'expr {"test" == "test"}'
-      output:
-        type: raw
-        value: '1'
-    - name: Not Equal
-      input:
-        type: raw
-        value: 'expr {"jup" != "test"}'
-      output:
-        type: raw
-        value: '1'
-    - name: Greater than
-      input:
-        type: raw
-        value: 'expr {"z" > "a"}'
-      output:
-        type: raw
-        value: '1'
-    - name: Smaller than
-      input:
-        type: raw
-        value: 'expr {"Z" < "a"}'
-      output:
-        type: raw
-        value: '1'
-  Braces:
-    - name: Simple
-      input:
-        type: raw
-        value: 'expr {4 * (4 / 2)}'
-      output:
-        type: raw
-        value: '8'
-    - name: Nested
-      input:
-        type: raw
-        value: 'expr {4 * ((sqrt(16) + 2) / 2)}'
-      output:
-        type: raw
-        value: '12'
-    - name: Nested with if
-      input:
-        type: raw
-        value: 'expr {(4 * ((sqrt(16) + 2) / 2)) == 12 ? 8 : 2}'
-      output:
-        type: raw
-        value: '8'
+Integer Operations:
+  - name: Bitwise NOT
+    input:
+      type: raw
+      value: 'expr bnot(4)'
+    output:
+      type: raw
+      value: '-5'
+  - name: Logical NOT
+    input:
+      type: raw
+      value: 'expr not(1)'
+    output:
+      type: raw
+      value: '0'
+  - name: Remainder
+    input:
+      type: raw
+      value: 'expr 5 % 3'
+    output:
+      type: raw
+      value: '2'
+  - name: Left bit shift
+    input:
+      type: raw
+      value: 'expr lshift(2, 2)'
+    output:
+      type: raw
+      value: '8'
+  - name: Right bit shift
+    input:
+      type: raw
+      value: 'expr rshift(8, 2)'
+    output:
+      type: raw
+      value: '2'
+  - name: Bitwise AND
+    input:
+      type: raw
+      value: 'expr band(28, 7)'
+    output:
+      type: raw
+      value: '4'
+  - name: Bitwise exlusive OR
+    input:
+      type: raw
+      value: 'expr bxor(28, 7)'
+    output:
+      type: raw
+      value: '27'
+  - name: Bitwise OR
+    input:
+      type: raw
+      value: 'expr bor(28, 7)'
+    output:
+      type: raw
+      value: '31'
+Logical Operations:
+  - name: AND true
+    input:
+      type: raw
+      value: 'expr land(true, true)'
+    output:
+      type: raw
+      value: '1'
+  - name: AND false
+    input:
+      type: raw
+      value: 'expr land(true, false)'
+    output:
+      type: raw
+      value: '0'
+  - name: OR true
+    input:
+      type: raw
+      value: 'expr lor(true, false)'
+    output:
+      type: raw
+      value: '1'
+  - name: OR false
+    input:
+      type: raw
+      value: 'expr lor(false, false)'
+    output:
+      type: raw
+      value: '0'
+  - name: If statement
+    input:
+      type: raw
+      value: 'expr {3 == 3 ? 2 : 1}'
+    output:
+      type: raw
+      value: '2'
+Strings:
+  - name: Equal
+    input:
+      type: raw
+      value: 'expr {"test" == "test"}'
+    output:
+      type: raw
+      value: '1'
+  - name: Not Equal
+    input:
+      type: raw
+      value: 'expr {"jup" != "test"}'
+    output:
+      type: raw
+      value: '1'
+  - name: Greater than
+    input:
+      type: raw
+      value: 'expr {"z" > "a"}'
+    output:
+      type: raw
+      value: '1'
+  - name: Smaller than
+    input:
+      type: raw
+      value: 'expr {"Z" < "a"}'
+    output:
+      type: raw
+      value: '1'
+Braces:
+  - name: Simple
+    input:
+      type: raw
+      value: 'expr {4 * (4 / 2)}'
+    output:
+      type: raw
+      value: '8'
+  - name: Nested
+    input:
+      type: raw
+      value: 'expr {4 * ((sqrt(16) + 2) / 2)}'
+    output:
+      type: raw
+      value: '12'
+  - name: Nested with if
+    input:
+      type: raw
+      value: 'expr {(4 * ((sqrt(16) + 2) / 2)) == 12 ? 8 : 2}'
+    output:
+      type: raw
+      value: '8'
+Advanced:
+  - name: fmod
+    input:
+      type: raw
+      value: 'expr {fmod(10, 3)}'
+    output:
+      type: raw
+      value: '1'
+  - name: bool
+    input:
+      type: raw
+      value: 'expr {bool(10)}'
+    output:
+      type: raw
+      value: '1'
+  - name: double
+    input:
+      type: raw
+      value: 'expr {double(10)}'
+    output:
+      type: raw
+      value: '10'
+  - name: entier
+    input:
+      type: raw
+      value: 'expr {entier(10)}'
+    output:
+      type: raw
+      value: '10'
+  - name: wide
+    input:
+      type: raw
+      value: 'expr {wide(10)}'
+    output:
+      type: raw
+      value: '10'
+  - name: int
+    input:
+      type: raw
+      value: 'expr {int(10 / 3)}'
+    output:
+      type: raw
+      value: '3'
+  - name: isqrt
+    input:
+      type: raw
+      value: 'expr {isqrt(13)}'
+    output:
+      type: raw
+      value: '3'
+  - name: isqrt
+    input:
+      type: raw
+      value: 'expr {srand(3) * 0 + 1}'
+      # Yes i do realize what i have put here
+    output:
+      type: raw
+      value: '1'

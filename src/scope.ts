@@ -102,11 +102,13 @@ export class Scope {
     return null;
   }
   
+  // Not needed 
   /**
    * Function to fetch all stored variables
    * 
    * @returns TclVariable
    */
+  /*
   public resolveAll(): TclVariable[] {
     let out: TclVariable[] = [];
 
@@ -118,7 +120,7 @@ export class Scope {
 
     // Stitch together and return
     return [...out, ...values];
-  }
+  }*/
 
   /**
    * This is used to add a new function to the current scope
