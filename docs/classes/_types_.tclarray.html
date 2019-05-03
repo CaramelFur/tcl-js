@@ -927,9 +927,6 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="_types_.tclarray.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a href="_types_.tclarray.html#getrawvalue" class="tsd-kind-icon">get<wbr>Raw<wbr>Value</a>
-				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_types_.tclarray.html#getsubvalue" class="tsd-kind-icon">get<wbr>Sub<wbr>Value</a>
 				</li>
@@ -941,9 +938,6 @@ img { max-width: 100%; }
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="_types_.tclarray.html#setname" class="tsd-kind-icon">set<wbr>Name</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a href="_types_.tclarray.html#setvalue" class="tsd-kind-icon">set<wbr>Value</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_types_.tclarray.html#unset" class="tsd-kind-icon">unset</a>
@@ -990,6 +984,23 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>A variable for holding a tcl array, this is comparable to the standard JS array</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>export</dt>
+					<dd></dd>
+					<dt>class</dt>
+					<dd><p>TclArray</p>
+					</dd>
+					<dt>extends</dt>
+					<dd><p>{TclVariable}</p>
+					</dd>
+				</dl>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -1025,12 +1036,10 @@ img { max-width: 100%; }
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_types_.tclarray.html#getlength" class="tsd-kind-icon">get<wbr>Length</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_types_.tclarray.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_types_.tclarray.html#getrawvalue" class="tsd-kind-icon">get<wbr>Raw<wbr>Value</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_types_.tclarray.html#getsubvalue" class="tsd-kind-icon">get<wbr>Sub<wbr>Value</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_types_.tclarray.html#getvalue" class="tsd-kind-icon">get<wbr>Value</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_types_.tclarray.html#set" class="tsd-kind-icon">set</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_types_.tclarray.html#setname" class="tsd-kind-icon">set<wbr>Name</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_types_.tclarray.html#setvalue" class="tsd-kind-icon">set<wbr>Value</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_types_.tclarray.html#unset" class="tsd-kind-icon">unset</a></li>
 						</ul>
 					</section>
@@ -1050,13 +1059,18 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Overrides <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#constructor">constructor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L413">types.ts:413</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L478">types.ts:478</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Construct a new TclArray and set the value to an empty array if it is not set</p>
+								<p>Creates an instance of TclArray.</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1081,7 +1095,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#name">name</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L8">types.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L14">types.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1092,7 +1106,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#value">value</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L7">types.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L13">types.ts:13</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1109,16 +1123,20 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L488">types.ts:488</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L559">types.ts:559</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Get the length of the array</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						<p>number</p>
 					</li>
 				</ul>
 			</section>
@@ -1133,44 +1151,23 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#getname">getName</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L56">types.ts:56</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L71">types.ts:71</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>This function returns the name of the variable, as long as it has one</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclVariable</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
 							<span class="tsd-signature-symbol"> | </span>
 							<span class="tsd-signature-type">undefined</span>
 						</h4>
-						<p>string</p>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-				<a name="getrawvalue" class="tsd-anchor"></a>
-				<h3>get<wbr>Raw<wbr>Value</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Raw<wbr>Value<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#getrawvalue">getRawValue</a></p>
-							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L47">types.ts:47</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>This function should not be used but is here in case you need it for testing
-								It return the raw interal data storage of the variable</p>
-							</div>
-						</div>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						<p>any</p>
 					</li>
 				</ul>
 			</section>
@@ -1184,13 +1181,18 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L473">types.ts:473</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L543">types.ts:543</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Get the value at a specified index</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1202,7 +1204,9 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
-						<p>TclVariable - The found value</p>
+						<ul>
+							<li>The found value</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -1217,16 +1221,20 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Overrides <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#getvalue">getValue</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L463">types.ts:463</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L532">types.ts:532</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>You are not meant to directly get the value of an array, so throw an error</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						<p>string</p>
 					</li>
 				</ul>
 			</section>
@@ -1240,13 +1248,18 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L432">types.ts:432</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L499">types.ts:499</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Set a value to a specified index in the array and return the value</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1264,7 +1277,9 @@ img { max-width: 100%; }
 							<span class="tsd-signature-symbol"> | </span>
 							<span class="tsd-signature-type">undefined</span>
 						</h4>
-						<p>TclVariable - The value specified</p>
+						<ul>
+							<li>The value specified</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -1279,13 +1294,18 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#setname">setName</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L65">types.ts:65</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L81">types.ts:81</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>This function sets the name of the variable</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclVariable</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1294,37 +1314,6 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						<p>string</p>
-					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-				<a name="setvalue" class="tsd-anchor"></a>
-				<h3>set<wbr>Value</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">set<wbr>Value<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<p>Inherited from <a href="_types_.tclvariable.html">TclVariable</a>.<a href="_types_.tclvariable.html#setvalue">setValue</a></p>
-							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L36">types.ts:36</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Set the value of any tcl type, this can be anything</p>
-							</div>
-						</div>
-						<h4 class="tsd-parameters-title">Parameters</h4>
-						<ul class="tsd-parameters">
-							<li>
-								<h5>value: <span class="tsd-signature-type">any</span></h5>
-							</li>
-						</ul>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						<p>any</p>
 					</li>
 				</ul>
 			</section>
@@ -1338,13 +1327,18 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/34c2f04/src/types.ts#L453">types.ts:453</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/types.ts#L521">types.ts:521</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Remove an index from the array</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>TclArray</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1353,7 +1347,6 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						<p>void</p>
 					</li>
 				</ul>
 			</section>

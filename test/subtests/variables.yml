@@ -129,6 +129,13 @@ Object:
     stdout:
       type: raw
       value: "HelloWorld\n"
+  - name: 'Simple Empty'
+    input:
+      type: raw
+      value: 'set var() HelloWorld; puts $var();'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
   - name: 'With space'
     input:
       type: raw

@@ -1,0 +1,8 @@
+List:
+  - name: 'Incorrect amount of brackets'
+    input:
+      type: raw
+      value: 'set lst "hello {there"; lindex $lst 1'
+    output:
+      type: error
+      value: 'incorrect brackets in list'

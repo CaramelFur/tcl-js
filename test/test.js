@@ -29,6 +29,7 @@ function runKey(keys) {
             testKey + (filename ? ` - (${filename})` : ''),
             require('./' + test),
           );
+
           test = null;
         } else {
           throw new Error('Wrong file: ' + test);
@@ -101,10 +102,13 @@ function runTest(partTest) {
       });
       stdout = stdout.join('');
       stderr = stderr.join('');
+      expect(partTest.output.type).to.not.equal('error');
     } catch (e) {
-      //console.log({partTest, e})
-      if (partTest.output.type === 'error') {
+      if (partTest.output.type === 'error' && e.name !== 'AssertionError') {
         expect(e.name).to.equal('TclError');
+        if (partTest.output.value && partTest.output.value !== '') {
+          expect(e.message).to.equal(partTest.output.value);
+        }
       } else {
         throw e;
       }

@@ -46,13 +46,6 @@ var __assign = (this && this.__assign) || function () {
         TclVariable.prototype.getValue = function () {
             return this.value;
         };
-        TclVariable.prototype.setValue = function (value) {
-            this.value = value;
-            return value;
-        };
-        TclVariable.prototype.getRawValue = function () {
-            return this.value;
-        };
         TclVariable.prototype.getName = function () {
             return this.name;
         };
@@ -100,7 +93,7 @@ var __assign = (this && this.__assign) || function () {
                 }
                 if (depth !== 0)
                     throw new tclerror_1.TclError('incorrect brackets in list');
-                if (!Is.WordSeparator(char))
+                if (!Is.WordSeparator(char) && char !== '')
                     throw new tclerror_1.TclError('list element in braces followed by character instead of space');
                 return returnVar;
             }
@@ -119,25 +112,11 @@ var __assign = (this && this.__assign) || function () {
                     }
                 }
                 if (tempWord === '')
-                    throw new tclerror_1.TclError('Error while parsing list');
+                    break;
                 this.value[i] = new TclSimple(tempWord);
                 i++;
                 read();
             }
-        };
-        TclList.prototype.set = function (index, value) {
-            if (!value) {
-                if (!this.value[index])
-                    throw new tclerror_1.TclError('cannot delete list item, item does not exist');
-                this.value.splice(index, 1);
-            }
-            else {
-                this.value[index] = value;
-            }
-            return value;
-        };
-        TclList.prototype.unset = function (index) {
-            this.set(index);
         };
         TclList.prototype.getValue = function () {
             return this.value.map(function (val) { return val.getValue(); }).join(' ');
@@ -156,19 +135,12 @@ var __assign = (this && this.__assign) || function () {
                     return new TclSimple('');
             }
             var tempList = this;
-            var out;
+            var out = new TclSimple('');
             for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {
                 var arg = args_1[_a];
-                if (!tempList)
-                    throw new tclerror_1.TclError('item is no list');
                 out = tempList.getSubValue(arg);
-                if (out instanceof TclSimple)
-                    tempList = out.getList();
-                else
-                    tempList = undefined;
+                tempList = out.getList();
             }
-            if (!out)
-                throw new tclerror_1.TclError('no such element in array');
             return out;
         };
         TclList.prototype.getLength = function () {
@@ -208,8 +180,6 @@ var __assign = (this && this.__assign) || function () {
             return _this;
         }
         TclObject.prototype.set = function (name, value) {
-            if (name === '')
-                throw new tclerror_1.TclError('invalid object key');
             if (!value)
                 delete this.value[name];
             else
@@ -280,7 +250,7 @@ var __assign = (this && this.__assign) || function () {
                     wargs: "wrong # args",
                     wtype: "wrong type",
                     wexpression: "expression resolved to unusable value",
-                    undefifop: "undefined if operation"
+                    undefifop: "undefined if operation",
                 },
                 arguments: {
                     amount: -1,

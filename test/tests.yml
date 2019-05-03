@@ -86,8 +86,20 @@ Functionality:
       stdout:
         type: raw
         value: "\n"
+    - name: 'Unfindable word'
+      input:
+        type: raw
+        value: 'set lst "hello there    "; lindex $lst 1'
+      output:
+        type: output
+        value: 'there'
+
+  Types: 'subtests/types.js'
 
   Scope:
     Special: 'subtests/scope.js'
+
+Errors: 'subtests/errors.yml'
+
 #Execute examples from ./scripts
 Examples: 'subtests/examples.yml'
