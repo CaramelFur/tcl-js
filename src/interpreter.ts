@@ -13,6 +13,12 @@ import {
 } from './types';
 import { TclError } from './tclerror';
 
+/**
+ * Executes a tcl program
+ *
+ * @export
+ * @class Interpreter
+ */
 export class Interpreter {
   program: Program;
   scope: Scope;
@@ -20,11 +26,12 @@ export class Interpreter {
   tcl: Tcl;
 
   /**
-   * Create a new interpreter with with a given code and scope
+   * Creates an instance of Interpreter.
    *
-   * @param  {Tcl} tcl - The parent Tcl for keeping certain variables
-   * @param  {string} input - The input code you want to interpret
-   * @param  {Scope} scope - The scope you wat
+   * @param {Tcl} tcl - The parent Tcl for keeping certain variables
+   * @param {string} input - The input code you want to interpret
+   * @param {Scope} scope - The scope you want to use
+   * @memberof Interpreter
    */
   public constructor(tcl: Tcl, input: string, scope: Scope) {
     let parser = new Parser(input);
@@ -37,7 +44,8 @@ export class Interpreter {
   /**
    * Actually runs the code
    *
-   * @returns Promise - Value of the last command ran
+   * @returns {Promise<TclVariable>} - Value of the last command ran
+   * @memberof Interpreter
    */
   public async run(): Promise<TclVariable> {
     for (let command of this.program.commands) {
@@ -49,8 +57,10 @@ export class Interpreter {
   /**
    * Internal function to process commands
    *
-   * @param  {CommandToken} command - Command to process
-   * @returns Promise - Processed result
+   * @private
+   * @param {CommandToken} command - Command to process
+   * @returns {Promise<TclVariable>} - Processed result
+   * @memberof Interpreter
    */
   private async processCommand(command: CommandToken): Promise<TclVariable> {
     // Map the args from wordtokens to tclvariables
@@ -131,8 +141,10 @@ export class Interpreter {
   /**
    * Processes arguments
    *
-   * @param  {ArgToken} arg
-   * @returns Promise
+   * @private
+   * @param {ArgToken} arg
+   * @returns {Promise<TclVariable>}
+   * @memberof Interpreter
    */
   private async processArg(arg: ArgToken): Promise<TclVariable> {
     // Define an output to return
@@ -158,9 +170,10 @@ export class Interpreter {
   /**
    * Function to go over a string and solve expressions and variables accordingly
    *
-   * @param  {string} input - The string to go over
-   * @param  {number=0} position - At what point to start in the string
-   * @returns Promise - The found results
+   * @param {string} input - The string to go over
+   * @param {number} [position=0] - At what point to start in the string
+   * @returns {(Promise<TclVariable | string>)} - The found results
+   * @memberof Interpreter
    */
   public async deepProcess(
     input: string,
@@ -198,6 +211,15 @@ export class Interpreter {
     return output;
   }
 
+  /**
+   * Function to return the first resolved variable or subexpression
+   *
+   * @private
+   * @param {string} input - What string to read for those expressions
+   * @param {number} [position=0] - Where in the string to start searching
+   * @returns {(Promise<FoundVariable | null>)} - The found result
+   * @memberof Interpreter
+   */
   private async resolveFirst(
     input: string,
     position: number = 0,
@@ -277,9 +299,11 @@ export class Interpreter {
    * Function to read a string until the first found variable
    * It will then solve the variable and return that
    *
-   * @param  {string} input - The string that will be searched for variables
-   * @param  {number=0} position - The position to start searching at
-   * @returns Promise - The found results
+   * @private
+   * @param {string} input - The string that will be searched for variables
+   * @param {number} [position=0] - The position to start searching at
+   * @returns {(Promise<FoundVariable | null>)} - The found results
+   * @memberof Interpreter
    */
   private async resolveFirstVariable(
     input: string,
@@ -302,7 +326,11 @@ export class Interpreter {
     // Keep track if we are in a bracket () or not
     let inBracket = false;
 
-    // Function to progress one char
+    /**
+     * Function to progress one char
+     *
+     * @param {boolean} appendOnOriginal
+     */
     function read(appendOnOriginal: boolean) {
       if (appendOnOriginal) currentVar.originalString += char;
       position += 1;
@@ -386,8 +414,10 @@ export class Interpreter {
 
       // Check for escape chars
       if (char === '\\') {
-        if (inBracket) currentVar.bracket += char;
-        else currentVar.name += char;
+        if (currentVar.curly) {
+          if (inBracket) currentVar.bracket += char;
+          else currentVar.name += char;
+        }
         read(true);
       }
 
@@ -432,9 +462,10 @@ export class Interpreter {
   /**
    * Grabs a variable with full name parsing: so "name" "name(obj)" and "name(3)" will all work
    *
-   * @param  {string} variableName - The advanced variable name
-   * @param  {string|number|null} variableKey - If necessary, the array or object key in the variable
-   * @returns TclVariable - The resolved variable
+   * @param {string} variableName - The advanced variable name
+   * @param {(string | number | null)} variableKey - If necessary, the array or object key in the variable
+   * @returns {TclVariable} - The resolved variable
+   * @memberof Interpreter
    */
   public getVariable(
     variableName: string,
@@ -477,9 +508,11 @@ export class Interpreter {
   /**
    * Sets a variable with full name parsing
    *
-   * @param  {string} variableName - The advanced variable name
-   * @param  {string|number|null} variableKey - If necessary, the array or object key in the variable
-   * @param  {TclVariable} variable - The variable to put at that index
+   * @param {string} variableName - The advanced variable name
+   * @param {(string | number | null)} variableKey - If necessary, the array or object key in the variable
+   * @param {TclVariable} variable - The variable to put at that index
+   * @returns
+   * @memberof Interpreter
    */
   public setVariable(
     variableName: string,
@@ -607,10 +640,13 @@ export class Interpreter {
   */
 
   /**
-   * Function to loop over all the subexpressions in a string an resolve all of them in order
+   * Function to find and resolve the first subexpression that it hits
    *
-   * @param  {string} input - The input string
-   * @returns Promise - The processed output
+   * @private
+   * @param {string} input - The input string
+   * @param {number} position - Where in the string to start searching
+   * @returns {(Promise<FoundVariable | null>)} - The processed output
+   * @memberof Interpreter
    */
   private async resolveFirstSquareBracket(
     input: string,
@@ -694,8 +730,10 @@ export class Interpreter {
   /**
    * Function to replace all backslash sequences correctly
    *
-   * @param  {string} input - The string to process
-   * @returns string - The processed string
+   * @private
+   * @param {string} input - The string to process
+   * @returns {string} - The processed string
+   * @memberof Interpreter
    */
   private processBackSlash(input: string): string {
     // Intialize all regexes
@@ -785,13 +823,19 @@ export class Interpreter {
 /**
  * Checks if a variable is a number
  *
- * @param  {any} input - The variable to check
+ * @export
+ * @param {*} input - The variable to check
+ * @returns
  */
 export function isNumber(input: any) {
   return !isNaN(<number>(<unknown>input)) && !isNaN(parseInt(input, 10));
 }
 
-// An interface for holding a found variable
+/**
+ * An interface for holding a found variable
+ *
+ * @interface FoundVariable
+ */
 interface FoundVariable {
   raw: string;
   startPosition: number;

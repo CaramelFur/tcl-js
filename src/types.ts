@@ -453,7 +453,7 @@ export class TclObject extends TclVariable {
     if (name === '') return new TclSimple(this.getValue(), this.getName());
 
     // Throw error when key does not exist
-    if (!this.value[name]) throw new TclError('no value found at given key');
+    if (!this.value[name]) throw new TclError(`no value found at given key: ${name}`);
     return this.value[name];
   }
 
@@ -546,7 +546,7 @@ export class TclArray extends TclVariable {
       return new TclSimple(this.getValue(), this.getName());
 
     // Throw error if index does not exist
-    if (!this.value[index]) throw new TclError('no value found at given index');
+    if (!this.value[index]) throw new TclError(`no value found at given index: ${index}`);
     return this.value[index];
   }
 

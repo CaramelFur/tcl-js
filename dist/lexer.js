@@ -78,9 +78,6 @@
             }
         };
         Lexer.prototype.nextBraceWord = function () {
-            if (this.currentChar !== '{')
-                throw new tclerror_1.TclError('asked to read bracket when none exist');
-            this.currentChar = this.currentChar;
             var out = this.newWordToken();
             var depth = 0;
             while (this.pos < this.input.length) {
@@ -111,8 +108,6 @@
             return out;
         };
         Lexer.prototype.nextQuoteWord = function () {
-            if (this.currentChar !== '"')
-                throw new tclerror_1.TclError('nextQuoteWord was called without a quote exisiting');
             this.read();
             var out = this.newWordToken();
             while (this.pos < this.input.length && this.currentChar !== '"') {
@@ -164,9 +159,6 @@
             return out;
         };
         Lexer.prototype.readBrackets = function () {
-            if (this.currentChar !== '[')
-                throw new tclerror_1.TclError('asked to read bracket when none exist');
-            this.currentChar = this.currentChar;
             var output = '';
             var depth = 0;
             while (this.pos < this.input.length) {
@@ -183,9 +175,6 @@
             return output;
         };
         Lexer.prototype.readVariable = function () {
-            if (this.currentChar !== '$')
-                throw new tclerror_1.TclError('asked to read variable when none exist');
-            this.currentChar = this.currentChar;
             var output = '';
             output += this.read();
             if (this.currentChar === '{') {

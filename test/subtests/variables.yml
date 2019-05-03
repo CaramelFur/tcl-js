@@ -143,6 +143,13 @@ Object:
     stdout:
       type: raw
       value: "HelloWorld\n"
+  - name: 'With escape'
+    input:
+      type: raw
+      value: 'set "var(test\ this)" HelloWorld; puts $var(test\ this);'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
   - name: 'Nested'
     input:
       type: raw
@@ -233,7 +240,7 @@ Brace Variables:
   - name: 'Weird chars object'
     input:
       type: raw
-      value: 'set {*!@&#^#^@!!*^#(!@&#^#^@!)} HelloWorld; puts ${*!@&#^#^@!!*^#(!@&#^#^@!)};'
+      value: 'set {*!@&#^#\^@!!*^#(!@&#^#^@!)} HelloWorld; puts ${*!@&#^#\^@!!*^#(!@&#^#^@!)};'
     stdout:
       type: raw
       value: "HelloWorld\n"

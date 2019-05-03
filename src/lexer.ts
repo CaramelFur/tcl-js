@@ -1,6 +1,12 @@
 import * as Is from './is';
 import { TclError } from './tclerror';
 
+/**
+ * This class reads a raw tcl and allows you to keep requesting tokens until the whole tcl code is processed
+ *
+ * @export
+ * @class Lexer
+ */
 export class Lexer {
   // Initialize current read position
   pos = 0;
@@ -14,9 +20,9 @@ export class Lexer {
   currentLine: number = 0;
 
   /**
-   * Create a new lexer with the given code
-   *
-   * @param  {string} input - Tcl code to be run over by the lexer
+   * Creates an instance of Lexer.
+   * @param {string} input - Tcl code to be run over by the lexer
+   * @memberof Lexer
    */
   public constructor(input: string) {
     this.input = input;
@@ -27,7 +33,9 @@ export class Lexer {
   /**
    * Progresses the currently processing char by one
    *
-   * @returns string - The previous character
+   * @private
+   * @returns {string} - The previous character
+   * @memberof Lexer
    */
   private read(): string {
     let old = this.currentChar;
@@ -41,7 +49,8 @@ export class Lexer {
   /**
    * Keeps reading chars until the current char is not a whitespace character
    *
-   * @returns void
+   * @private
+   * @memberof Lexer
    */
   private readWhitespace(): void {
     while (Is.Whitespace(this.currentChar)) {
@@ -52,7 +61,8 @@ export class Lexer {
   /**
    * Keeps reading chars until an endline character
    *
-   * @returns void
+   * @private
+   * @memberof Lexer
    */
   private readComment(): void {
     while (this.pos < this.input.length && this.currentChar !== '\n') {
@@ -63,7 +73,8 @@ export class Lexer {
   /**
    * Keeps reading chars until the next command is hit
    *
-   * @returns void
+   * @private
+   * @memberof Lexer
    */
   private readEndOfCommand(): void {
     while (Is.WordSeparator(this.currentChar)) {
@@ -74,7 +85,8 @@ export class Lexer {
   /**
    * Makes the lexer process the input until a new complete word is found
    *
-   * @returns WordToken - Returns null when the end of the input is hit
+   * @returns {(WordToken | null)} - Returns null when the end of the input is hit
+   * @memberof Lexer
    */
   public nextToken(): WordToken | null {
     let token = this.getNextToken();
@@ -88,7 +100,9 @@ export class Lexer {
   /**
    * Internal function for fetching a new token
    *
-   * @returns WordToken
+   * @private
+   * @returns {(WordToken | null)}
+   * @memberof Lexer
    */
   private getNextToken(): WordToken | null {
     // Get rid of all whitespace
@@ -139,15 +153,13 @@ export class Lexer {
 
   /**
    * Reads a word that starts with { and parses everything in between correctly
+   * Only call if currentChar is {
    *
-   * @returns WordToken
+   * @private
+   * @returns {WordToken}
+   * @memberof Lexer
    */
   private nextBraceWord(): WordToken {
-    // Check if called correctly
-    if (this.currentChar !== '{')
-      throw new TclError('asked to read bracket when none exist');
-    this.currentChar = <string>this.currentChar;
-
     // Initialize some variables
     let out = this.newWordToken();
     let depth = 0;
@@ -191,14 +203,13 @@ export class Lexer {
 
   /**
    * Reads the input until the next found quote
+   * Only call if currentchar is a quote
    *
-   * @returns WordToken - The processed word
+   * @private
+   * @returns {WordToken} - The processed word
+   * @memberof Lexer
    */
   private nextQuoteWord(): WordToken {
-    // Check if the function was called when necessary
-    if (this.currentChar !== '"')
-      throw new TclError('nextQuoteWord was called without a quote exisiting');
-
     // Discard the opening quote
     this.read();
 
@@ -243,7 +254,9 @@ export class Lexer {
   /**
    * Reads the input until a word seperator is found
    *
-   * @returns WordToken - The processed word
+   * @private
+   * @returns {WordToken} - The processed word
+   * @memberof Lexer
    */
   private nextSimpleWord(): WordToken {
     // Initialize a token
@@ -279,15 +292,13 @@ export class Lexer {
 
   /**
    * Reads the input until the last closing bracket
+   * Only call if currentchar is [
    *
-   * @returns string
+   * @private
+   * @returns {string}
+   * @memberof Lexer
    */
   private readBrackets(): string {
-    // Check if called correctly
-    if (this.currentChar !== '[')
-      throw new TclError('asked to read bracket when none exist');
-    this.currentChar = <string>this.currentChar;
-
     // Initialize some variables
     let output = '';
     let depth = 0;
@@ -312,15 +323,13 @@ export class Lexer {
 
   /**
    * Function to read a variable completely and return the variable
-   *
-   * @returns string
+   * Only call if currentchar is $
+   * 
+   * @private
+   * @returns {string}
+   * @memberof Lexer
    */
   private readVariable(): string {
-    // Check if called correctly
-    if (this.currentChar !== '$')
-      throw new TclError('asked to read variable when none exist');
-    this.currentChar = <string>this.currentChar;
-
     // Initialize an output buffer
     let output = '';
     output += this.read();
@@ -394,7 +403,9 @@ export class Lexer {
   /**
    * Generates a new empty wordtoken
    *
-   * @returns WordToken
+   * @private
+   * @returns {WordToken} - The generated token
+   * @memberof Lexer
    */
   private newWordToken(): WordToken {
     return {
@@ -409,7 +420,12 @@ export class Lexer {
   }
 }
 
-// An interface to hold every generated token
+/**
+ * An interface to hold every generated token
+ *
+ * @export
+ * @interface WordToken
+ */
 export interface WordToken {
   value: string;
   index: number;

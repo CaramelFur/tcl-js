@@ -319,10 +319,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             if (currentVar.curly && char === '}')
                                 return [3, 8];
                             if (char === '\\') {
-                                if (inBracket)
-                                    currentVar.bracket += char;
-                                else
-                                    currentVar.name += char;
+                                if (currentVar.curly) {
+                                    if (inBracket)
+                                        currentVar.bracket += char;
+                                    else
+                                        currentVar.name += char;
+                                }
                                 read(true);
                             }
                             if (inBracket)

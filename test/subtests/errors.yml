@@ -13,3 +13,18 @@ Files:
       value: 'subtest/nonexisting.tcl'
     output:
       type: error
+Parsing:
+  - name: 'Unclosed brace'
+    input:
+      type: raw
+      value: 'puts {hello'
+    output:
+      type: error
+      value: 'uneven amount of curly braces'
+  - name: 'Unclosed quote'
+    input:
+      type: raw
+      value: 'puts "hello'
+    output:
+      type: error
+      value: 'missing "'

@@ -196,7 +196,7 @@ var __assign = (this && this.__assign) || function () {
             if (name === '')
                 return new TclSimple(this.getValue(), this.getName());
             if (!this.value[name])
-                throw new tclerror_1.TclError('no value found at given key');
+                throw new tclerror_1.TclError("no value found at given key: " + name);
             return this.value[name];
         };
         TclObject.prototype.getSize = function () {
@@ -234,7 +234,7 @@ var __assign = (this && this.__assign) || function () {
             if (index === undefined || index === null)
                 return new TclSimple(this.getValue(), this.getName());
             if (!this.value[index])
-                throw new tclerror_1.TclError('no value found at given index');
+                throw new tclerror_1.TclError("no value found at given index: " + index);
             return this.value[index];
         };
         TclArray.prototype.getLength = function () {
