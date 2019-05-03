@@ -1,4 +1,5 @@
 const Types = require('../../dist/types');
+const TclError = require('../../dist/tclerror').TclError;
 const expect = require('chai').expect;
 
 module.exports = () => {
@@ -57,5 +58,11 @@ module.exports = () => {
   it('Construct proc 2', async () => {
     let test = new Types.TclProc('test', () => {}, { arguments: {} });
     expect(test instanceof Types.TclProc).to.equal(true);
+  });
+
+  it('Construct Error', async () => {
+    let test = new TclError();
+    expect(test instanceof Error).to.equal(true);
+    expect(test.name).to.equal("TclError");
   });
 };

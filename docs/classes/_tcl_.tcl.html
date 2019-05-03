@@ -936,6 +936,20 @@ img { max-width: 100%; }
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>The main class that will be imported, this handles the scope and all settings for the interpreter</p>
+				</div>
+				<dl class="tsd-comment-tags">
+					<dt>export</dt>
+					<dd></dd>
+					<dt>class</dt>
+					<dd><p>Tcl</p>
+					</dd>
+				</dl>
+			</div>
+		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
@@ -984,22 +998,23 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L10">tcl.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L17">tcl.ts:17</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Initialize a full tcl interpreter, and disable any unwanted tcl commands</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Tcl</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> disableCommands: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-									</div>
-								</div>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_tcl_.tcl.html" class="tsd-signature-type">Tcl</a></h4>
@@ -1015,7 +1030,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">disabled<wbr>Commands<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L10">tcl.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L17">tcl.ts:17</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1025,7 +1040,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">global<wbr>Scope<span class="tsd-signature-symbol">:</span> <a href="_scope_.scope.html" class="tsd-signature-type">Scope</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L8">tcl.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L15">tcl.ts:15</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1035,7 +1050,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">io<span class="tsd-signature-symbol">:</span> <a href="_io_.io.html" class="tsd-signature-type">IO</a><span class="tsd-signature-symbol"> =&nbsp;new IO()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L9">tcl.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L16">tcl.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1052,13 +1067,18 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L28">tcl.ts:28</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L37">tcl.ts:37</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Run a string containing tcl code and return the last expression</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Tcl</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1067,7 +1087,9 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						<p>Promise - Returns last TclVariable</p>
+						<ul>
+							<li>Returns last TclVariable</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -1081,13 +1103,18 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/dc10961/src/tcl.ts#L39">tcl.ts:39</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/47b7174/src/tcl.ts#L49">tcl.ts:49</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
 								<p>Run a file containing tcl code and return the last expression</p>
 							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Tcl</p>
+								</dd>
+							</dl>
 						</div>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
@@ -1096,7 +1123,9 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_types_.tclvariable.html" class="tsd-signature-type">TclVariable</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						<p>Promise - Returns last TclVariable</p>
+						<ul>
+							<li>Returns last TclVariable</li>
+						</ul>
 					</li>
 				</ul>
 			</section>

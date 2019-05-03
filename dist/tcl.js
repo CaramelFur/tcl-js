@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./scope", "./io", "fs", "./interpreter"], factory);
+        define(["require", "exports", "./scope", "./io", "fs", "./interpreter", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -48,6 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var io_1 = require("./io");
     var fs = require("fs");
     var interpreter_1 = require("./interpreter");
+    var tclerror_1 = require("./tclerror");
     var Tcl = (function () {
         function Tcl(disableCommands) {
             this.io = new io_1.IO();
@@ -73,7 +74,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         case 0: return [4, new Promise(function (resolve, reject) {
                                 fs.readFile(location, { encoding: 'utf-8' }, function (err, data) {
                                     if (err)
-                                        reject(err);
+                                        reject(new tclerror_1.TclError(err.message));
                                     resolve(data);
                                 });
                             })];

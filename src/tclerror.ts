@@ -1,8 +1,9 @@
 export class TclError extends Error {
-  /** 
-   * Construct a new TclError
+  /**
+   * Creates an instance of TclError.
    * 
-   * @param  {any} ...args
+   * @param {...any} args
+   * @memberof TclError
    */
   public constructor(...args: any) {
     super(...args);

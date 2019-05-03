@@ -31,9 +31,6 @@
                 }
             }
         }
-        Scope.prototype.pop = function () {
-            return this.parent;
-        };
         Scope.prototype.define = function (name, value) {
             this.members[name] = value;
             return this;

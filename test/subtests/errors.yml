@@ -6,3 +6,10 @@ List:
     output:
       type: error
       value: 'incorrect brackets in list'
+Files:
+  - name: 'Non-existing file'
+    input:
+      type: file
+      value: 'subtest/nonexisting.tcl'
+    output:
+      type: error

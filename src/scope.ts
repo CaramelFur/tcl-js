@@ -9,6 +9,12 @@ import {
 import { LoadFunctions } from './commands';
 import { TclError } from './tclerror';
 
+/**
+ * A class to keep track of all variables in an interpreter, and manage access to them
+ *
+ * @export
+ * @class Scope
+ */
 export class Scope {
   parent: Scope | null = null;
 
@@ -17,10 +23,11 @@ export class Scope {
   procedures: TclProcHolder = {};
 
   /**
-   * Construct a new scope
-   *
-   * @param  {Scope} parent? - Parent scope, it will extract variables from here if it doesnt have then itself
-   * @param  {Array<string>=[]} disableProcs - A list of procs you want disabled
+   * Creates an instance of Scope.
+   * 
+   * @param {Scope} [parent] - Parent scope, it will extract variables from here if it doesnt have then itself
+   * @param {Array<string>} [disableProcs=[]] - A list of procedures you want disabled
+   * @memberof Scope
    */
   public constructor(parent?: Scope, disableProcs: Array<string> = []) {
     // Set the scope if present
@@ -38,21 +45,24 @@ export class Scope {
     }
   }
 
+  // Not needed
   /**
    * Return the parent of the scope
    *
    * @returns Scope
    */
+  /*
   public pop(): Scope | null {
     return this.parent;
-  }
+  }*/
 
   /**
    * Define a variable in the current scope
    *
-   * @param  {string} name - The name of the variable
-   * @param  {TclVariable} value - The variable to put there
-   * @returns Scope - The current scope
+   * @param {string} name - The name of the variable
+   * @param {TclVariable} value - The variable to put there
+   * @returns {Scope} - The current scope
+   * @memberof Scope
    */
   public define(name: string, value: TclVariable): Scope {
     this.members[name] = value;
@@ -62,9 +72,10 @@ export class Scope {
   /**
    * Delete a variable from the scope
    *
-   * @param  {string} name - Name variable to be deleted
-   * @param  {boolean} nocomplain? - If true, will throw error if variable does not exist
-   * @returns TclVariable - The value of the deleted variable
+   * @param {string} name - Name of the variable to be deleted
+   * @param {boolean} [nocomplain] - If true, will throw error if variable does not exist
+   * @returns {TclVariable} - The value of the deleted variable
+   * @memberof Scope
    */
   public undefine(name: string, nocomplain?: boolean): TclVariable {
     // Check if variable exists
@@ -85,8 +96,9 @@ export class Scope {
   /**
    * Resolves a variable and returns it
    *
-   * @param  {string} name - The name of the variable
-   * @returns TclVariable - The variable requested, null if not found
+   * @param {string} name - The name of the variable
+   * @returns {(TclVariable | null)} - The variable requested, null if not found
+   * @memberof Scope
    */
   public resolve(name: string): TclVariable | null {
     // Check this scope
@@ -101,11 +113,11 @@ export class Scope {
     // Return null if variable is not found
     return null;
   }
-  
-  // Not needed 
+
+  // Not needed
   /**
    * Function to fetch all stored variables
-   * 
+   *
    * @returns TclVariable
    */
   /*
@@ -125,9 +137,10 @@ export class Scope {
   /**
    * This is used to add a new function to the current scope
    *
-   * @param  {string} name - The name of the procedure
-   * @param  {TclProcFunction} callback - The js function that will be called to process the procedure
-   * @param  {TclProcOptions} options? - The options for the procedure
+   * @param {string} name - The name of the procedure
+   * @param {TclProcFunction} callback - The js function that will be called to process the procedure
+   * @param {TclProcOptionsEmpty} [options] - The options for the procedure
+   * @memberof Scope
    */
   public defineProc(
     name: string,
@@ -140,7 +153,8 @@ export class Scope {
   /**
    * This is used to remove a function from the current scope
    *
-   * @param  {string} name - The name of the procedure
+   * @param {string} name - The name of the procedure
+   * @memberof Scope
    */
   public disableProc(name: string) {
     // Remove the procedure if it exists, if not throw an error
@@ -154,8 +168,9 @@ export class Scope {
   /**
    * This is used to request the scope for a procedure
    *
-   * @param  {string} name - The name of the procedure you want to get
-   * @returns TclProc - An object containing the callback with its name, null if not found
+   * @param {string} name - The name of the procedure you want to get
+   * @returns {(TclProc | null)} - An object containing the callback with its name, null if not found
+   * @memberof Scope
    */
   public resolveProc(name: string): TclProc | null {
     // Check if this scope has the function and return if so
