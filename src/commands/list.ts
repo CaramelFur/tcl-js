@@ -4,7 +4,8 @@ import { Scope } from '../scope';
 /**
  * Function to load the procs into the scope
  *
- * @param  {Scope} scope
+ * @export
+ * @param {Scope} scope
  */
 export function Load(scope: Scope) {
   /**

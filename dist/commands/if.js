@@ -83,7 +83,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             return [3, 1];
                         }
                         else if (nextop === undefined) {
-                            return [3, 3];
+                            return [3, 1];
                         }
                         else {
                             return [2, helpers.sendHelp('undefifop')];

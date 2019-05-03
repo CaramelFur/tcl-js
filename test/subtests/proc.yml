@@ -38,3 +38,10 @@ Running:
     stdout:
       type: raw
       value: "Hello World!\n"
+  - name: 'Error on invalid amount'
+    input:
+      type: raw
+      value: 'proc run {a b} {puts "$a $b!"}; run Hello'
+    output:
+      type: error
+      value: 'wrong # args on procedure "run"'

@@ -1,0 +1,74 @@
+- name: 'Simple true'
+  input:
+    type: raw
+    value: 'if {true} {expr 3}'
+  output:
+    type: raw
+    value: '3'
+- name: 'Simple yes'
+  input:
+    type: raw
+    value: 'if {yes} {expr 3}'
+  output:
+    type: raw
+    value: '3'
+- name: 'Simple 1'
+  input:
+    type: raw
+    value: 'if {1} {expr 3}'
+  output:
+    type: raw
+    value: '3'
+- name: 'Simple False'
+  input:
+    type: raw
+    value: 'if {false} {expr 3}'
+  output:
+    type: raw
+    value: ''
+- name: 'Simple 0'
+  input:
+    type: raw
+    value: 'if {0} {expr 3}'
+  output:
+    type: raw
+    value: ''
+- name: 'Simple with then'
+  input:
+    type: raw
+    value: 'if {true} then {expr 3}'
+  output:
+    type: raw
+    value: '3'
+- name: 'With else'
+  input:
+    type: raw
+    value: 'if {false} {expr 3} else {expr 5}'
+  output:
+    type: raw
+    value: '5'
+- name: 'With else if'
+  input:
+    type: raw
+    value: 'if {false} {expr 3} elseif {false} then {expr 5} elseif {false} {expr 2} else {expr 9}'
+  output:
+    type: raw
+    value: '9'
+- name: 'Wrong op error'
+  input:
+    type: raw
+    value: 'if {false} {expr 3} hmmm'
+  output:
+    type: error
+- name: 'Error on missing args'
+  input:
+    type: raw
+    value: 'if {true}'
+  output:
+    type: error
+- name: 'Error on missing args with else'
+  input:
+    type: raw
+    value: 'if {false} {expr 3} else '
+  output:
+    type: error

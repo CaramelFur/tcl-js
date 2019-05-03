@@ -6,7 +6,8 @@ import { Interpreter } from '../interpreter';
 /**
  * Function to load the procs into the scope
  *
- * @param  {Scope} scope
+ * @export
+ * @param {Scope} scope
  */
 export function Load(scope: Scope) {
   /**
@@ -81,9 +82,9 @@ export function Load(scope: Scope) {
           continue;
         }
         
-        // If it is undefined (this means there are no more arguments), break
+        // If it is undefined (this means there are no more arguments), also continue, it will stop the loop
         else if (nextop === undefined) {
-          break;
+          continue;
         } 
         
         // Otherwise it is an undefined if operation

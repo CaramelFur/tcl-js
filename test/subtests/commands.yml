@@ -31,7 +31,7 @@ Puts:
     stderr:
       type: raw
       value: "Hello World!\n"
-  
+
   - name: 'Error on uncomplete'
     input:
       type: raw
@@ -134,6 +134,13 @@ Expr:
       type: raw
       value: 'set var HelloWorld; unset -nocomplain rav;'
 
+  - name: 'Error on unfinshed variable name'
+    input:
+      type: raw
+      value: 'set (wow)'
+    output:
+      type: error
+
   - name: 'Error on uncomplete'
     input:
       type: raw
@@ -156,6 +163,13 @@ List:
     stdout:
       type: raw
       value: "hello this is a list\n"
+  - name: 'With captured spaces'
+    input:
+      type: raw
+      value: 'puts [list   "hello   this"        is a list]'
+    stdout:
+      type: raw
+      value: "{hello   this} is a list\n"
 
 Lindex:
   - name: 'No depth'
@@ -186,6 +200,12 @@ Lindex:
     stdout:
       type: raw
       value: "four\n"
+  - name: 'Error on not number'
+    input:
+      type: raw
+      value: 'set lst "one two three four five"; puts [lindex $lst wow]'
+    output:
+      type: error
 
 Eval:
   - name: 'Simple'
@@ -201,6 +221,12 @@ Wait:
     input:
       type: raw
       value: 'wait 5'
+  - name: 'Error on wrong arg'
+    input:
+      type: raw
+      value: 'wait five'
+    output:
+      type: error
 
 Info:
   - name: 'Simple'
@@ -210,69 +236,14 @@ Info:
     output:
       type: raw
       value: 'commands'
+  - name: 'Empty'
+    input:
+      type: raw
+      value: 'info empty'
+    output:
+      type: raw
+      value: ''
 
 Proc: 'subtests/proc.yml'
 
-If:
-  - name: 'Simple true'
-    input:
-      type: raw
-      value: 'if {true} {expr 3}'
-    output:
-      type: raw
-      value: '3'
-  - name: 'Simple yes'
-    input:
-      type: raw
-      value: 'if {yes} {expr 3}'
-    output:
-      type: raw
-      value: '3'
-  - name: 'Simple 1'
-    input:
-      type: raw
-      value: 'if {1} {expr 3}'
-    output:
-      type: raw
-      value: '3'
-  - name: 'Simple False'
-    input:
-      type: raw
-      value: 'if {false} {expr 3}'
-    output:
-      type: raw
-      value: ''
-  - name: 'Simple 0'
-    input:
-      type: raw
-      value: 'if {0} {expr 3}'
-    output:
-      type: raw
-      value: ''
-  - name: 'Simple with then'
-    input:
-      type: raw
-      value: 'if {true} then {expr 3}'
-    output:
-      type: raw
-      value: '3'
-  - name: 'With else'
-    input:
-      type: raw
-      value: 'if {false} {expr 3} else {expr 5}'
-    output:
-      type: raw
-      value: '5'
-  - name: 'With else if'
-    input:
-      type: raw
-      value: 'if {false} {expr 3} elseif {false} then {expr 5} elseif {false} {expr 2} else {expr 9}'
-    output:
-      type: raw
-      value: '9'
-  - name: 'Wrong op error'
-    input:
-      type: raw
-      value: 'if {false} {expr 3} hmmm'
-    output:
-      type: error
+If: 'subtests/if.yml'

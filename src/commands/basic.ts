@@ -10,7 +10,8 @@ const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<objec
 /**
  * Function to load the procs into the scope
  *
- * @param  {Scope} scope
+ * @export
+ * @param {Scope} scope
  */
 export function Load(scope: Scope) {
   /**
@@ -34,8 +35,8 @@ export function Load(scope: Scope) {
       /**
        * Function to destruct a variable into name/key combinations
        *
-       * @param  {string} input - The raw variable
-       * @returns solveVarReturn - The solved result
+       * @param {string} input - The raw variable
+       * @returns {solveVarReturn} - The solved result
        */
       function solveVar(input: string): solveVarReturn {
         // Execute the regex

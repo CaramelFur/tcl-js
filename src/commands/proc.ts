@@ -10,7 +10,8 @@ import { TclError } from '../tclerror';
 /**
  * Function to load the procs into the scope
  *
- * @param  {Scope} scope
+ * @export
+ * @param {Scope} scope
  */
 export function Load(scope: Scope) {
   /**
@@ -33,7 +34,13 @@ export function Load(scope: Scope) {
       let commandArgs = commandArgsString.getList();
       let tclCode = args[2].getValue();
 
-      // Create a function to be executed on this procedure call
+      /**
+       * The function to be executed on the procedure call
+       *
+       * @param {*} parsedInterpreter
+       * @param {*} parsedArgs
+       * @returns
+       */
       let commandFunction: TclProcFunction = (
         parsedInterpreter,
         parsedArgs,
