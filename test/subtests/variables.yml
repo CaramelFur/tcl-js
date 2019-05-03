@@ -48,6 +48,12 @@ Simple:
     stdout:
       type: raw
       value: "3Hello World\n"
+  - name: 'Error on non-existent'
+    input:
+      type: raw
+      value: 'puts $var;'
+    output:
+      type: error
 Array:
   - name: 'Simple'
     input:
@@ -56,6 +62,13 @@ Array:
     stdout:
       type: raw
       value: "HelloWorld\n"
+  - name: 'Double simple'
+    input:
+      type: raw
+      value: 'set var(0) HelloWorld; puts $var(0); set var(0) Wow; puts $var(0);'
+    stdout:
+      type: raw
+      value: "HelloWorld\nWow\n"
   - name: 'Nested'
     input:
       type: raw
@@ -121,6 +134,18 @@ Array:
       value: 'set var(0) HelloWorld; unset var(1);'
     output:
       type: error
+  - name: 'Error on object in array'
+    input:
+      type: raw
+      value: 'set var(3) HelloWorld; set var(hello) Hi;'
+    output:
+      type: error
+  - name: 'Error on array in normal'
+    input:
+      type: raw
+      value: 'set var HelloWorld; set var(3) Hi;'
+    output:
+      type: error
 Object:
   - name: 'Simple'
     input:
@@ -129,6 +154,13 @@ Object:
     stdout:
       type: raw
       value: "HelloWorld\n"
+  - name: 'Double simple'
+    input:
+      type: raw
+      value: 'set var(hi) HelloWorld; puts $var(hi); set var(hi) Wow; puts $var(hi);'
+    stdout:
+      type: raw
+      value: "HelloWorld\nWow\n"
   - name: 'Simple Empty'
     input:
       type: raw
@@ -215,6 +247,18 @@ Object:
       value: 'set var(hello) HelloWorld; unset var(hi);'
     output:
       type: error
+  - name: 'Error on array in object'
+    input:
+      type: raw
+      value: 'set var(hello) HelloWorld; set var(3) Hi;'
+    output:
+      type: error
+  - name: 'Error on object in normal'
+    input:
+      type: raw
+      value: 'set var HelloWorld; set var(hello) Hi;'
+    output:
+      type: error
 Brace Variables:
   - name: 'Simple'
     input:
@@ -237,10 +281,23 @@ Brace Variables:
     stdout:
       type: raw
       value: "HelloWorld\n"
-  - name: 'Weird chars object'
+  - name: 'Weird chars object with escape outside'
     input:
       type: raw
       value: 'set {*!@&#^#\^@!!*^#(!@&#^#^@!)} HelloWorld; puts ${*!@&#^#\^@!!*^#(!@&#^#^@!)};'
     stdout:
       type: raw
       value: "HelloWorld\n"
+  - name: 'Weird chars object with escape inside'
+    input:
+      type: raw
+      value: 'set {*!@&#^#^@!!*^#(!@&#\^#^@!)} HelloWorld; puts ${*!@&#^#^@!!*^#(!@&#\^#^@!)};'
+    stdout:
+      type: raw
+      value: "HelloWorld\n"
+  - name: 'Error on unexpected end'
+    input:
+      type: raw
+      value: 'set var HelloWorld; puts ${var'
+    output:
+      type: error

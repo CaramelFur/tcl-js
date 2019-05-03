@@ -31,6 +31,13 @@ Puts:
     stderr:
       type: raw
       value: "Hello World!\n"
+  
+  - name: 'Error on uncomplete'
+    input:
+      type: raw
+      value: 'puts'
+    output:
+      type: error
 
 Expr:
   - name: Simple
@@ -121,10 +128,18 @@ Expr:
       value: 'set var HelloWorld; unset rav;'
     output:
       type: error
+
   - name: 'Unset non-existing with nocomplain'
     input:
       type: raw
       value: 'set var HelloWorld; unset -nocomplain rav;'
+
+  - name: 'Error on uncomplete'
+    input:
+      type: raw
+      value: 'set'
+    output:
+      type: error
 
 List:
   - name: 'Simple'

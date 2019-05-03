@@ -216,13 +216,13 @@ export class Interpreter {
    *
    * @private
    * @param {string} input - What string to read for those expressions
-   * @param {number} [position=0] - Where in the string to start searching
+   * @param {number} [position] - Where in the string to start searching
    * @returns {(Promise<FoundVariable | null>)} - The found result
    * @memberof Interpreter
    */
   private async resolveFirst(
     input: string,
-    position: number = 0,
+    position: number,
   ): Promise<FoundVariable | null> {
     // Setup necessary variables
     let char = input.charAt(position);

@@ -209,7 +209,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             });
         };
         Interpreter.prototype.resolveFirst = function (input, position) {
-            if (position === void 0) { position = 0; }
             return __awaiter(this, void 0, void 0, function () {
                 function read() {
                     position += 1;

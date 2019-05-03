@@ -324,7 +324,7 @@ export class Lexer {
   /**
    * Function to read a variable completely and return the variable
    * Only call if currentchar is $
-   * 
+   *
    * @private
    * @returns {string}
    * @memberof Lexer
