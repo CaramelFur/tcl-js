@@ -1,6 +1,18 @@
 import { Parser as EParser } from 'expr-eval';
 
+/**
+ * This function is used to parse math operation into a solution
+ *
+ * @export
+ * @class Parser
+ * @extends {EParser}
+ */
 export class Parser extends EParser {
+  /**
+   * Creates an instance of Parser.
+   * 
+   * @memberof Parser
+   */
   constructor() {
     super({
       operators: {
@@ -105,9 +117,9 @@ funcs.srand = (a: number): number => {
 /**
  * Function to rename an item in an object
  *
- * @param  {{[index:string]:any}} object - The object to rename in
- * @param  {string} from - The name of the item
- * @param  {string} to - The name you want to give the item
+ * @param {{ [index: string]: any }} object - The object to rename in
+ * @param {string} from - The name of the item
+ * @param {string} to - The name you want to give the item
  */
 function rename(object: { [index: string]: any }, from: string, to: string) {
   let buf = object[from];

@@ -1,6 +1,12 @@
 import { Lexer, WordToken } from './lexer';
 import { TclError } from './tclerror';
 
+/**
+ * This class will create new lexer and arrange all the tokens from there in the correct position
+ *
+ * @export
+ * @class Parser
+ */
 export class Parser {
   lexer: Lexer;
   program: Program = {
@@ -8,9 +14,11 @@ export class Parser {
   };
 
   /**
-   * Constructor for the parser, parses text with the lexer into a program
+   * Creates an instance of Parser.
+   * Parses text with the lexer into a program
    *
-   * @param  {string} input - Tcl code
+   * @param {string} input - Tcl code
+   * @memberof Parser
    */
   public constructor(input: string) {
     // Initialize a new lexer with the given code
@@ -31,6 +39,7 @@ export class Parser {
       }
       // If not the token is an argument
       else {
+        // TODO: Check if this is ever hit
         // Check if there is atleast 1 command in the commands array
         if (this.program.commands.length === 0)
           throw new TclError('encountered argument but no command exists');
@@ -56,7 +65,8 @@ export class Parser {
   /**
    * Return the processed program
    *
-   * @returns Program - Processed program
+   * @returns {Program} - Processed program
+   * @memberof Parser
    */
   public get(): Program {
     //writeFileSync('./test/dev/out.json', JSON.stringify(this.program, null, 2));
@@ -65,10 +75,22 @@ export class Parser {
   }
 }
 
+/**
+ * The interface to hold an entire program
+ *
+ * @export
+ * @interface Program
+ */
 export interface Program {
   commands: Array<CommandToken>;
 }
 
+/**
+ * This holds a command with pointers to where it origninated in the source code
+ *
+ * @export
+ * @interface CommandToken
+ */
 export interface CommandToken {
   command: string;
   args: Array<ArgToken>;
@@ -76,6 +98,12 @@ export interface CommandToken {
   sourceLocation: number;
 }
 
+/**
+ * This holds an argument for a command, with all the necessary settings
+ *
+ * @export
+ * @interface ArgToken
+ */
 export interface ArgToken {
   value: string;
   hasVariable: boolean;

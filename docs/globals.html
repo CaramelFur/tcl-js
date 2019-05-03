@@ -919,15 +919,15 @@ img { max-width: 100%; }
 				<p>A native javascript tcl interpreter</p>
 			</blockquote>
 			<p><a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/v/tcl-js.svg?style=flat&color" alt="tcl-js"></a>
+				<a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/dm/tcl-js.svg" alt="tcl-js"></a>
 				<a href="https://travis-ci.org/rubikscraft/tcl-js"><img src="https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat" alt="Build Status"></a>
 				<a href="https://codecov.io/gh/rubikscraft/tcl-js"><img src="https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg" alt="codecov"></a>
 			<a href="https://packagephobia.now.sh/result?p=tcl-js"><img src="https://packagephobia.now.sh/badge?p=tcl-js&style=flat" alt="install size"></a></p>
 			<h2 id="about">About</h2>
-			<p>tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
-			tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.</p>
-			<h2 id="why">Why</h2>
+			<p>tcl-js is an interpreter for TCL written in typescript, it tries to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below. It is not built for speed, but for ease of use and modularity. Everything has therefore as much documentation as possible, so anyone with some coding knowledge can figure out what is going on.</p>
+			<h3 id="why">Why</h3>
 			<p>Yes I know there are already packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because when you link the binary interpreter directly into node, you add a lot of vulnerabilities. When you open this interpreter up to your users, they have access to execute dangerous commands on your server via the tcl-sh compiler. With tcl-js you can easily disable commands and be sure that users can&#39;t mess with anything except maybe the program itself.</p>
-			<h2 id="disclaimer">Disclaimer</h2>
+			<h3 id="disclaimer">Disclaimer</h3>
 			<p>This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.</p>
 			<p>Because this project is still not finished any new PRs or found issues being added would be highly aprreciated.</p>
 			<h2 id="getting-started">Getting started</h2>

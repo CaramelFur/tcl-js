@@ -260,13 +260,20 @@ Advanced:
     output:
       type: raw
       value: '1'
-  - name: bool
+  - name: bool true
     input:
       type: raw
       value: 'expr {bool(10)}'
     output:
       type: raw
       value: '1'
+  - name: bool false
+    input:
+      type: raw
+      value: 'expr {bool(0)}'
+    output:
+      type: raw
+      value: '0'
   - name: double
     input:
       type: raw

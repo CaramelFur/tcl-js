@@ -29,13 +29,19 @@ module.exports = () => {
   });
 
   // TclObject
-  it('Empty constructor object', async () => {
-    let test = new Types.TclObject();
-    test = test.getSize();
-    expect(test).to.equal(0);
+  it('Filled constructor object', async () => {
+    let obj = new Types.TclObject({
+      hi: new Types.TclSimple('hello'),
+    });
+    let test = obj.getSize();
+    expect(test).to.equal(1);
+
+    test = obj.getSubValue('hi');
+    expect(test instanceof Types.TclSimple).to.equal(true);
+    expect(test.getValue()).to.equal('hello');
   });
 
-  it('Empty constructor array', async () => {
+  it('Filled constructor array', async () => {
     let test = new Types.TclArray();
     test = test.getLength();
     expect(test).to.equal(0);
@@ -63,6 +69,6 @@ module.exports = () => {
   it('Construct Error', async () => {
     let test = new TclError();
     expect(test instanceof Error).to.equal(true);
-    expect(test.name).to.equal("TclError");
+    expect(test.name).to.equal('TclError');
   });
 };

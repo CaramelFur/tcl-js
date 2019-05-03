@@ -3,20 +3,20 @@
 > A native javascript tcl interpreter
 
 [![tcl-js](https://img.shields.io/npm/v/tcl-js.svg?style=flat&color)](https://www.npmjs.com/package/tcl-js)
+[![tcl-js](https://img.shields.io/npm/dm/tcl-js.svg)](https://www.npmjs.com/package/tcl-js)
 [![Build Status](https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat)](https://travis-ci.org/rubikscraft/tcl-js)
 [![codecov](https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg)](https://codecov.io/gh/rubikscraft/tcl-js)
 [![install size](https://packagephobia.now.sh/badge?p=tcl-js&style=flat)](https://packagephobia.now.sh/result?p=tcl-js)
 
 ## About
 
-tcl-js is a project I started because it was impossible to find a pre-existing replacement that already fit all my needs. And since I need to up my typescript skill anyways, took on this project.
-tcl-js is mean to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below.
+tcl-js is an interpreter for TCL written in typescript, it tries to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below. It is not built for speed, but for ease of use and modularity. Everything has therefore as much documentation as possible, so anyone with some coding knowledge can figure out what is going on.
 
-## Why
+### Why
 
 Yes I know there are already packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because when you link the binary interpreter directly into node, you add a lot of vulnerabilities. When you open this interpreter up to your users, they have access to execute dangerous commands on your server via the tcl-sh compiler. With tcl-js you can easily disable commands and be sure that users can't mess with anything except maybe the program itself.
 
-## Disclaimer
+### Disclaimer
 
 This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.
 

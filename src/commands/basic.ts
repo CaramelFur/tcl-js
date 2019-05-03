@@ -111,13 +111,9 @@ export function Load(scope: Scope) {
         args.shift();
       }
 
-      try {
-        // Loop over every argument and unset it
-        for (let arg of args) {
-          interpreter.scope.undefine(arg);
-        }
-      } catch (e) {
-        if (!nocomplain) throw e;
+      // Loop over every argument and unset it
+      for (let arg of args) {
+        interpreter.scope.undefine(arg, nocomplain);
       }
 
       return new TclSimple('');

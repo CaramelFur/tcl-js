@@ -102,15 +102,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 nocomplain = true;
                 args.shift();
             }
-            try {
-                for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
-                    var arg = args_1[_i];
-                    interpreter.scope.undefine(arg);
-                }
-            }
-            catch (e) {
-                if (!nocomplain)
-                    throw e;
+            for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+                var arg = args_1[_i];
+                interpreter.scope.undefine(arg, nocomplain);
             }
             return new types_1.TclSimple('');
         }, {
