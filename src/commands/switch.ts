@@ -49,7 +49,7 @@ export function Load(scope: Scope) {
 
       // Easy function to throw errors
       function setType(type: string) {
-        if (options.type === '') return helpers.sendHelp('wset');
+        if (options.type !== null) return helpers.sendHelp('wset');
         options.type = type;
       }
 
@@ -171,7 +171,7 @@ export function Load(scope: Scope) {
 
           if (op.expression === 'default') continue;
 
-          if (minimatch(op.expression, matchAgainst)) {
+          if (minimatch(matchAgainst, op.expression, { nocomment: true })) {
             runCode = getCodeAtIndex(i);
             break;
           }

@@ -53,7 +53,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         var _this = this;
         scope.defineProc('switch', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
             function setType(type) {
-                if (options.type === '')
+                if (options.type !== null)
                     return helpers.sendHelp('wset');
                 options.type = type;
             }
@@ -161,7 +161,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             op.expression = op.expression.toLowerCase();
                         if (op.expression === 'default')
                             continue;
-                        if (minimatch(op.expression, matchAgainst)) {
+                        if (minimatch(matchAgainst, op.expression, { nocomment: true })) {
                             runCode = getCodeAtIndex(i);
                             break;
                         }

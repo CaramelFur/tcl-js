@@ -1,0 +1,141 @@
+Normal:
+  - name: 'Simple'
+    input:
+      type: raw
+      value: 'switch 3 {3 {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'No case'
+    input:
+      type: raw
+      value: 'switch -nocase HeLLo {hello {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Exact'
+    input:
+      type: raw
+      value: 'switch -exact 3 {3 {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Exact with escape'
+    input:
+      type: raw
+      value: 'switch -exact -- 3 {3 {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Glob'
+    input:
+      type: raw
+      value: 'switch -glob hello {{hel*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Regex'
+    input:
+      type: raw
+      value: 'switch -regexp hello {{.*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Regex with match'
+    input:
+      type: raw
+      value: 'switch -regexp -matchvar hi hello {{.*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Regex with index'
+    input:
+      type: raw
+      value: 'switch -regexp -indexvar hi hello {{.*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Fallthrough'
+    input:
+      type: raw
+      value: 'switch hello {hello - next {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'With default'
+    input:
+      type: raw
+      value: 'switch hello {hello {expr 1} default {expr 3}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'With default hit'
+    input:
+      type: raw
+      value: 'switch cholera {hello {expr 1} default {expr 3}}'
+    output:
+      type: raw
+      value: '3'
+  - name: 'With nothing hit'
+    input:
+      type: raw
+      value: 'switch cholera {hello {expr 1} there {expr 3}}'
+    output:
+      type: raw
+      value: ''
+Errors:
+  - name: 'Double set'
+    input:
+      type: raw
+      value: 'switch -glob -regexp 3 {3 {expr 1}}'
+    output:
+      type: error
+  - name: 'Incomplete matchvar'
+    input:
+      type: raw
+      value: 'switch -regexp -matchvar'
+    output:
+      type: error
+  - name: 'Incomplete indexvar'
+    input:
+      type: raw
+      value: 'switch -regexp -indexvar'
+    output:
+      type: error
+  - name: 'Unwanted matchvar and indexvar'
+    input:
+      type: raw
+      value: 'switch -indexvar test -matchvar wow 3 {3 {expr 1}}'
+    output:
+      type: error
+  - name: 'Unrecognized option'
+    input:
+      type: raw
+      value: 'switch -tyfus 3 {3 {expr 1}}'
+    output:
+      type: error
+      value: 'unrecognized option: -tyfus'
+  - name: 'Incomplete matchvar'
+    input:
+      type: raw
+      value: 'switch -regexp -indexvar idx --'
+    output:
+      type: error
+  - name: 'Incomplete functions'
+    input:
+      type: raw
+      value: 'switch -regexp -indexvar idx -- match'
+    output:
+      type: error
+  - name: 'Incomplete code'
+    input:
+      type: raw
+      value: 'switch -regexp -indexvar idx -- match match'
+    output:
+      type: error
+  - name: 'Infinite fallthrough'
+    input:
+      type: raw
+      value: 'switch hello {hello - next -}'
+    output:
+      type: error

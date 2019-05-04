@@ -243,6 +243,14 @@ Info:
     output:
       type: raw
       value: ''
+  - name: Error on wrong arguments
+    input:
+      type: raw
+      value: 'info'
+    output:
+      type: error
+
+Switch: 'subtests/switch.yml'
 
 Proc: 'subtests/proc.yml'
 
