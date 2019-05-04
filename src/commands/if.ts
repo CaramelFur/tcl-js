@@ -23,7 +23,7 @@ export function Load(scope: Scope) {
    *     bodyN
    * }?
    *
-   * @see https://wiki.tcl-lang.org/page/proc
+   * @see https://wiki.tcl-lang.org/page/if
    */
   scope.defineProc(
     'if',

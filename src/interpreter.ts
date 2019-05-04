@@ -124,12 +124,13 @@ export class Interpreter {
         return helpers.sendHelp('wargs');
     }
 
-    if (options.arguments.textOnly === true) {
-      // Check if arguments are correct
+    if(options.arguments.textOnly || options.arguments.simpleOnly){
+      // Check if arguments are correct if simpleonly
       for (let arg of args) {
         if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
       }
-
+    }
+    if (options.arguments.textOnly === true) {
       // Create a full expression by joining all arguments
       args = (<TclSimple[]>args).map((arg) => arg.getValue());
     }

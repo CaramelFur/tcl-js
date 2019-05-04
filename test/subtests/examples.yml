@@ -45,7 +45,6 @@
   stdout:
     type: file
     value: 'results/math_1.txt'
-
 - name: 'Math two'
   input:
     type: file
@@ -53,7 +52,6 @@
   stdout:
     type: file
     value: 'results/math_2.txt'
-
 - name: 'Math three'
   input:
     type: file
@@ -69,3 +67,32 @@
   stdout:
     type: file
     value: 'results/if.txt'
+
+- name: 'Switch one'
+  input:
+    type: file
+    value: 'scripts/switch_1.tcl'
+  stdout:
+    type: file
+    value: 'results/switch_1.txt'
+- name: 'Switch two'
+  input:
+    type: file
+    value: 'scripts/switch_2.tcl'
+  stdout:
+    type: file
+    value: 'results/switch_2.txt'
+- name: 'Switch three'
+  input:
+    type: file
+    value: 'scripts/switch_3.tcl'
+  stdout:
+    type: file
+    value: 'results/switch_3.txt'
+- name: 'Switch advanced'
+  input:
+    type: file
+    value: 'scripts/switch_advanced.tcl'
+  stdout:
+    type: file
+    value: 'results/switch_advanced.txt'

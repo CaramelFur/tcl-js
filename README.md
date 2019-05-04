@@ -84,6 +84,7 @@ These commands should be fully working according to the tcl wiki
 - set
 - unset
 - if
+- switch
 
 ### Partially working commands
 

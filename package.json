@@ -1,6 +1,6 @@
 {
   "name": "tcl-js",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "tcl-js is a tcl intepreter written completely in Typescript. It is meant to replicate the tcl-sh interpreter as closely as possible.",
   "main": "dist/tcl.js",
   "scripts": {
@@ -39,7 +39,7 @@
   "homepage": "https://github.com/rubikscraft/tcl-js#readme",
   "devDependencies": {
     "@types/mathjs": "^5.0.1",
-    "@types/node": "^11.13.9",
+    "@types/node": "^11.13.10",
     "chai": "^4.2.0",
     "codecov": "^3.3.0",
     "js-yaml": "^3.13.1",
@@ -50,6 +50,7 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "expr-eval": "^1.2.2"
+    "expr-eval": "^1.2.2",
+    "minimatch": "^3.0.4"
   }
 }

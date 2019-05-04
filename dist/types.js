@@ -28,13 +28,14 @@ var __assign = (this && this.__assign) || function () {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./is", "./tclerror"], factory);
+        define(["require", "exports", "./is", "./tclerror", "util"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Is = require("./is");
     var tclerror_1 = require("./tclerror");
+    var util_1 = require("util");
     var TclVariable = (function () {
         function TclVariable(value, name) {
             this.value = '';
@@ -59,7 +60,10 @@ var __assign = (this && this.__assign) || function () {
         __extends(TclList, _super);
         function TclList(value, name) {
             var _this = _super.call(this, [], name) || this;
-            _this.destruct(value);
+            if (typeof value === 'string')
+                _this.destruct(value);
+            else
+                _this.value = value;
             return _this;
         }
         TclList.prototype.destruct = function (input) {
@@ -119,7 +123,11 @@ var __assign = (this && this.__assign) || function () {
             }
         };
         TclList.prototype.getValue = function () {
-            return this.value.map(function (val) { return val.getValue(); }).join(' ');
+            var toReturn = this.value.map(function (val) { return val.getValue(); });
+            toReturn = toReturn.map(function (val) {
+                return val.indexOf(' ') > -1 ? "{" + val + "}" : val;
+            });
+            return toReturn.join(' ');
         };
         TclList.prototype.getSubValue = function () {
             var args = [];
@@ -146,13 +154,26 @@ var __assign = (this && this.__assign) || function () {
         TclList.prototype.getLength = function () {
             return this.value.length;
         };
+        TclList.createList = function (input) {
+            var processable = input.slice();
+            for (var i = 0; i < processable.length; i++) {
+                if (util_1.isArray(processable[i])) {
+                    processable[i] = TclList.createList(processable[i]);
+                }
+            }
+            var simpleResults = processable.map(function (r) {
+                return r instanceof TclVariable ? r : new TclSimple(r);
+            });
+            var listResult = new TclList(simpleResults).getSubValue();
+            return listResult;
+        };
         return TclList;
     }(TclVariable));
     exports.TclList = TclList;
     var TclSimple = (function (_super) {
         __extends(TclSimple, _super);
         function TclSimple(value, name) {
-            return _super.call(this, value, name) || this;
+            return _super.call(this, "" + value, name) || this;
         }
         TclSimple.prototype.getList = function () {
             var list = new TclList(this.value, this.getName());

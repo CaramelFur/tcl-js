@@ -21,13 +21,31 @@
             this.currentChar = this.input.charAt(0);
         }
         Lexer.prototype.read = function () {
+            var _this = this;
             var old = this.currentChar;
-            this.pos += 1;
-            this.currentChar = this.input.charAt(this.pos);
-            this.currentSentence += old;
-            if (old === '\n')
-                this.currentLine += 1;
+            var subRead = function () {
+                _this.pos += 1;
+                _this.currentChar = _this.input.charAt(_this.pos);
+                _this.currentSentence += old;
+                if (old === '\n')
+                    _this.currentLine += 1;
+            };
+            subRead();
+            if (this.currentChar === '\\' && this.input.charAt(this.pos + 1) === '\n') {
+                subRead();
+                this.currentChar = ' ';
+                while (Is.WordSeparator(this.input.charAt(this.pos + 1))) {
+                    subRead();
+                }
+            }
             return old;
+        };
+        Lexer.prototype.hasMoreChars = function () {
+            if (Is.WordSeparator(this.currentChar))
+                return false;
+            if (this.currentChar === '')
+                return false;
+            return true;
         };
         Lexer.prototype.readWhitespace = function () {
             while (Is.Whitespace(this.currentChar)) {
@@ -103,7 +121,7 @@
             }
             if (depth !== 0)
                 throw new tclerror_1.TclError('uneven amount of curly braces');
-            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+            if (this.hasMoreChars())
                 throw new tclerror_1.TclError('extra characters after close-brace');
             return out;
         };
@@ -130,7 +148,7 @@
             var close = this.read();
             if (close !== '"')
                 throw new tclerror_1.TclError('missing "');
-            if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+            if (this.hasMoreChars())
                 throw new tclerror_1.TclError('extra characters after close-quote');
             this.wordIdx += 1;
             return out;
@@ -209,11 +227,10 @@
                 }
                 if (Is.WordSeparator(this.currentChar) ||
                     Is.Brace(this.currentChar) ||
-                    this.currentChar === '$') {
+                    this.currentChar === '$' ||
+                    this.currentChar === '\\') {
                     break;
                 }
-                if (this.currentChar === '\\')
-                    output += this.read();
                 output += this.read();
             }
             return output;

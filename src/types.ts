@@ -2,6 +2,7 @@ import * as Is from './is';
 import { TclError } from './tclerror';
 import { Interpreter } from './interpreter';
 import { CommandToken } from './parser';
+import { isArray } from 'util';
 
 /**
  * The basic structure for any variable in this interpreter
@@ -94,13 +95,14 @@ export class TclList extends TclVariable {
   /**
    * Creates an instance of TclList.
    *
-   * @param {string} value - The string to parse into the variable
+   * @param {(string | Array<TclVariable>)} - The string to parse into the variable
    * @param {string} [name] - An optional name for the variable
    * @memberof TclList
    */
-  public constructor(value: string, name?: string) {
+  public constructor(value: string | Array<TclVariable>, name?: string) {
     super([], name);
-    this.destruct(value);
+    if (typeof value === 'string') this.destruct(value);
+    else this.value = value;
   }
 
   /**
@@ -264,7 +266,11 @@ export class TclList extends TclVariable {
    * @memberof TclList
    */
   public getValue(): string {
-    return this.value.map((val: TclSimple) => val.getValue()).join(' ');
+    let toReturn = this.value.map((val: TclSimple) => val.getValue());
+    toReturn = toReturn.map((val: string) =>
+      val.indexOf(' ') > -1 ? `{${val}}` : val,
+    );
+    return toReturn.join(' ');
   }
 
   /**
@@ -327,6 +333,29 @@ export class TclList extends TclVariable {
   public getLength(): number {
     return this.value.length;
   }
+
+  /**
+   * Function to create a list from an array of arrays
+   *
+   * @static
+   * @param {Array<any>} input - The nested arrays
+   * @returns {TclSimple} - The generated list
+   * @memberof TclList
+   */
+  public static createList(input: Array<any>): TclSimple {
+    let processable = [...input];
+    for (let i = 0; i < processable.length; i++) {
+      if (isArray(processable[i])) {
+        processable[i] = TclList.createList(processable[i]);
+      }
+    }
+
+    let simpleResults = processable.map((r) =>
+      r instanceof TclVariable ? r : new TclSimple(r),
+    );
+    let listResult = new TclList(simpleResults).getSubValue();
+    return listResult;
+  }
 }
 
 /**
@@ -345,7 +374,7 @@ export class TclSimple extends TclVariable {
    * @memberof TclSimple
    */
   constructor(value: string, name?: string) {
-    super(value, name);
+    super(`${value}`, name);
   }
 
   /**
@@ -453,7 +482,8 @@ export class TclObject extends TclVariable {
     if (name === '') return new TclSimple(this.getValue(), this.getName());
 
     // Throw error when key does not exist
-    if (!this.value[name]) throw new TclError(`no value found at given key: ${name}`);
+    if (!this.value[name])
+      throw new TclError(`no value found at given key: ${name}`);
     return this.value[name];
   }
 
@@ -546,7 +576,8 @@ export class TclArray extends TclVariable {
       return new TclSimple(this.getValue(), this.getName());
 
     // Throw error if index does not exist
-    if (!this.value[index]) throw new TclError(`no value found at given index: ${index}`);
+    if (!this.value[index])
+      throw new TclError(`no value found at given index: ${index}`);
     return this.value[index];
   }
 

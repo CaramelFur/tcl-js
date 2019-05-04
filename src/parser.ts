@@ -1,5 +1,6 @@
 import { Lexer, WordToken } from './lexer';
 import { TclError } from './tclerror';
+// import { writeFileSync } from 'fs';
 
 /**
  * This class will create new lexer and arrange all the tokens from there in the correct position

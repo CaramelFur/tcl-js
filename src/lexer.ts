@@ -39,11 +39,41 @@ export class Lexer {
    */
   private read(): string {
     let old = this.currentChar;
-    this.pos += 1;
-    this.currentChar = this.input.charAt(this.pos);
-    this.currentSentence += old;
-    if (old === '\n') this.currentLine += 1;
+
+    // An internal function to read a char
+    let subRead = () => {
+      this.pos += 1;
+      this.currentChar = this.input.charAt(this.pos);
+      this.currentSentence += old;
+      if (old === '\n') this.currentLine += 1;
+    };
+
+    // Read at least one
+    subRead();
+
+    // If there is an escaped endline, return a space with all whitechars removed
+    if (this.currentChar === '\\' && this.input.charAt(this.pos + 1) === '\n') {
+      subRead();
+      this.currentChar = ' ';
+      while (Is.WordSeparator(this.input.charAt(this.pos + 1))) {
+        subRead();
+      }
+    }
+
     return old;
+  }
+
+  /**
+   * Function to check if the current char is seperating a word
+   *
+   * @private
+   * @returns {boolean}
+   * @memberof Lexer
+   */
+  private hasMoreChars(): boolean {
+    if (Is.WordSeparator(this.currentChar)) return false;
+    if (this.currentChar === '') return false;
+    return true;
   }
 
   /**
@@ -195,7 +225,7 @@ export class Lexer {
     if (depth !== 0) throw new TclError('uneven amount of curly braces');
 
     // Check for characters after closing brace
-    if (!Is.WordSeparator(this.currentChar) && this.currentChar !== '')
+    if (this.hasMoreChars())
       throw new TclError('extra characters after close-brace');
 
     return out;
@@ -243,7 +273,7 @@ export class Lexer {
     if (close !== '"') throw new TclError('missing "');
 
     // Check if the next char is word-seperator, if not there is incorrect user input
-    if (!Is.WordSeparator(this.currentChar) && <string>this.currentChar !== '')
+    if (this.hasMoreChars())
       throw new TclError('extra characters after close-quote');
 
     // Change the word index
@@ -386,13 +416,12 @@ export class Lexer {
       if (
         Is.WordSeparator(this.currentChar) ||
         Is.Brace(this.currentChar) ||
-        this.currentChar === '$'
+        this.currentChar === '$' ||
+        this.currentChar === '\\'
       ) {
         break;
       }
 
-      // Handle escape strings
-      if (this.currentChar === '\\') output += this.read();
       output += this.read();
     }
 

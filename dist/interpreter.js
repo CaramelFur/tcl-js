@@ -142,12 +142,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                         options.arguments.amount.end !== -1))
                                     return [2, helpers.sendHelp('wargs')];
                             }
-                            if (options.arguments.textOnly === true) {
+                            if (options.arguments.textOnly || options.arguments.simpleOnly) {
                                 for (_i = 0, args_1 = args; _i < args_1.length; _i++) {
                                     arg = args_1[_i];
                                     if (!(arg instanceof types_1.TclSimple))
                                         return [2, helpers.sendHelp('wtype')];
                                 }
+                            }
+                            if (options.arguments.textOnly === true) {
                                 args = args.map(function (arg) { return arg.getValue(); });
                             }
                             return [2, proc.callback(this, args, command, helpers)];
