@@ -61,7 +61,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             return __awaiter(this, void 0, void 0, function () {
                 var interpreter;
                 return __generator(this, function (_a) {
-                    interpreter = new interpreter_1.Interpreter(this, input, this.globalScope);
+                    interpreter = new interpreter_1.Interpreter(this, input, new scope_1.Scope(this.globalScope));
                     return [2, interpreter.run()];
                 });
             });

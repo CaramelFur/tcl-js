@@ -1,0 +1,38 @@
+Break:
+  - name: 'Simple break'
+    input:
+      type: raw
+      value: 'set i 0; while {true} {puts hi; set i [expr {$i + 1}]; if {$i > 5} break}'
+    stdout:
+      type: raw
+      value: "hi\nhi\nhi\nhi\nhi\nhi\n"
+    output:
+      type: raw
+      value: ''
+  - name: 'Break outside of loop'
+    input:
+      type: raw
+      value: 'break'
+    output:
+      type: error
+      value: 'executed break outside of loop'
+      
+
+Continue:
+  - name: 'Simple continue'
+    input:
+      type: raw
+      value: 'set i 0; while {$i < 10} { set i [expr {$i + 1}]; if {($i % 2) == 1} continue; puts hi;}'
+    stdout:
+      type: raw
+      value: "hi\nhi\nhi\nhi\nhi\n"
+    output:
+      type: raw
+      value: ''
+  - name: 'Continue outside of loop'
+    input:
+      type: raw
+      value: 'continue'
+    output:
+      type: error
+      value: 'executed continue outside of loop'

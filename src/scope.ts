@@ -9,6 +9,12 @@ import {
 import { LoadFunctions } from './commands';
 import { TclError } from './tclerror';
 
+type settingObj =
+  | boolean
+  | {
+      [index: string]: boolean;
+    };
+
 /**
  * A class to keep track of all variables in an interpreter, and manage access to them
  *
@@ -21,10 +27,13 @@ export class Scope {
   // Initialize two holders for variables and for procedures
   members: TclVariableHolder = {};
   procedures: TclProcHolder = {};
+  settings: {
+    [index: string]: settingObj;
+  } = {};
 
   /**
    * Creates an instance of Scope.
-   * 
+   *
    * @param {Scope} [parent] - Parent scope, it will extract variables from here if it doesnt have then itself
    * @param {Array<string>} [disableProcs=[]] - A list of procedures you want disabled
    * @memberof Scope
@@ -65,7 +74,12 @@ export class Scope {
    * @memberof Scope
    */
   public define(name: string, value: TclVariable): Scope {
-    this.members[name] = value;
+    // Try to define the variable in the top most scope
+    if (this.parent !== null) {
+      this.parent.define(name, value);
+    } else {
+      this.members[name] = value;
+    }
     return this;
   }
 
@@ -90,6 +104,7 @@ export class Scope {
     // Delete the variable and return its value
     let returnValue = this.members[name];
     delete this.members[name];
+
     return returnValue;
   }
 
@@ -147,7 +162,12 @@ export class Scope {
     callback: TclProcFunction,
     options?: TclProcOptionsEmpty,
   ) {
-    this.procedures[name] = new TclProc(name, callback, options);
+    // Try to define the procedure in the top most scope
+    if (this.parent !== null) {
+      this.parent.defineProc(name, callback, options);
+    } else {
+      this.procedures[name] = new TclProc(name, callback, options);
+    }
   }
 
   /**
@@ -172,6 +192,7 @@ export class Scope {
    * @returns {(TclProc | null)} - An object containing the callback with its name, null if not found
    * @memberof Scope
    */
+
   public resolveProc(name: string): TclProc | null {
     // Check if this scope has the function and return if so
     if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
@@ -183,5 +204,75 @@ export class Scope {
     }
     // Return null if the function is not found
     return null;
+  }
+
+  /**
+   * Set a scoped setting
+   *
+   * @param {string} name - The name of the setting to set
+   * @param {(boolean | null)} value - The value to put there, use null to remove setting
+   * @memberof Scope
+   */
+  public setSetting(name: string, value: boolean | null) {
+    if (value !== null) this.settings[name] = value;
+    else delete this.settings[name];
+  }
+
+  /**
+   * Set a sub setting, this will replace the main setting with an object
+   *
+   * @param {string} setting - The main setting to put the subsetting in
+   * @param {string} subsetting - The name of the subsetting
+   * @param {(boolean | null)} value - The value to put there, use null to remove setting
+   * @returns {boolean} - If it succeeded
+   * @memberof Scope
+   */
+  public setSubSetting(
+    setting: string,
+    subsetting: string,
+    value: boolean | null,
+  ): boolean {
+    // Check if the setting is in this scope
+    if (this.settings[setting] !== undefined) {
+      // If the setting is still a boolean replace it with an object
+      if (typeof this.settings[setting] === 'boolean')
+        this.settings[setting] = {};
+
+      // If the value to set is null, remove the subsetting
+      if (value === null) {
+        delete (<{ [index: string]: boolean }>this.settings[setting])[
+          subsetting
+        ];
+      } 
+      
+      // Otherwise set the subsetting to the correct variable
+      else {
+        (<{ [index: string]: boolean }>this.settings[setting])[
+          subsetting
+        ] = value;
+      }
+      return true;
+    } 
+
+    // If not test in the parent
+    else if (this.parent !== null) {
+      return this.parent.setSubSetting(setting, subsetting, value);
+    }
+    
+    // If there is no parent return false
+    else return false;
+  }
+
+  /**
+   * Get a scoped setting
+   *
+   * @param {string} name
+   * @returns {(settingObj | null)}
+   * @memberof Scope
+   */
+  public getSetting(name: string): settingObj | null {
+    if (this.settings[name] !== undefined) return this.settings[name];
+    else if (this.parent !== null) return this.parent.getSetting(name);
+    else return null;
   }
 }

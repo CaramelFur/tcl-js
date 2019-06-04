@@ -1,0 +1,31 @@
+- name: 'Simple while'
+  input:
+    type: raw
+    value: 'set i 0; while {$i < 1} {puts hi; set i [expr {$i + 1}]}'
+  stdout:
+    type: raw
+    value: "hi\n"
+  output:
+    type: raw
+    value: '1'
+- name: 'Long while'
+  input:
+    type: raw
+    value: 'set i 0; while {$i < 10} {puts hi; set i [expr {$i + 1}]}'
+  stdout:
+    type: raw
+    value: "hi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\n"
+  output:
+    type: raw
+    value: '10'
+- name: 'Empty while'
+  input:
+    type: raw
+    value: 'set i 0; while {$i} {puts hi; set i [expr {$i + 1}]}'
+  stdout:
+    type: raw
+    value: ''
+  output:
+    type: raw
+    value: ''
+

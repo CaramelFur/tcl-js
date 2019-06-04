@@ -12,6 +12,7 @@ import {
   ProcArgs,
 } from './types';
 import { TclError } from './tclerror';
+import { Parser as MathParser } from './mathParser';
 
 /**
  * Executes a tcl program
@@ -20,7 +21,8 @@ import { TclError } from './tclerror';
  * @class Interpreter
  */
 export class Interpreter {
-  program: Program;
+  private program: Program;
+
   scope: Scope;
   lastValue: TclVariable = new TclSimple('');
   tcl: Tcl;
@@ -50,9 +52,49 @@ export class Interpreter {
   public async run(): Promise<TclVariable> {
     for (let command of this.program.commands) {
       this.lastValue = await this.processCommand(command);
+
+      // Check if it should stop running commands when hitting a break or continue
+      let checkLoop = this.scope.getSetting('loop');
+      if (checkLoop && typeof checkLoop !== 'boolean') {
+        if (checkLoop.break || checkLoop.continue) break;
+      }
     }
     return this.lastValue;
   }
+
+  /**
+   * This will reset the state of the interpreter, but keep the processed code
+   *
+   * @param {Scope} scope
+   * @memberof Interpreter
+   */
+  public reset(scope?: Scope) {
+    if (scope) this.scope = scope;
+    this.lastValue = new TclSimple('');
+  }
+
+  /**
+   * Stops the interpreter from executing code
+   *
+   * @memberof Interpreter
+   */
+  /*public setState(type: string) {
+    if (type === 'break') this.state.hitBreak = true;
+    else if (type === 'continue') this.state.hitContinue = true;
+    else throw new TclError('unrecognized state: ' + type);
+  }*/
+
+  /**
+   * Gets the state of the interpreter
+   *
+   * @returns {string}
+   * @memberof Interpreter
+   */
+  /*public getState(): string {
+    if (this.state.hitBreak) return 'break';
+    else if (this.state.hitContinue) return 'continue';
+    else return '';
+  }*/
 
   /**
    * Internal function to process commands
@@ -93,15 +135,33 @@ export class Interpreter {
       },
       solveExpression: async (expression) => {
         // Process the subexpressions and variables
-        let solvedExpression = await this.deepProcess(expression);
+        let processedExpression = await this.deepProcess(expression);
 
         // Check if it did not result in a string
-        if (typeof solvedExpression !== 'string') {
+        if (typeof processedExpression !== 'string') {
           // If so convert if possible, otherwise throw error
-          if (solvedExpression instanceof TclSimple)
-            solvedExpression = solvedExpression.getValue();
+          if (processedExpression instanceof TclSimple)
+            processedExpression = processedExpression.getValue();
           else throw new TclError('expression resolved to unusable value');
         }
+
+        if (processedExpression === 'yes') processedExpression = 'true';
+        if (processedExpression === 'no') processedExpression = 'false';
+
+        let parser = new MathParser();
+        // Try to solve the expression and return the result
+        let solvedExpression = parser.parse(processedExpression).evaluate();
+
+        //Check if the result is usable
+        if (typeof solvedExpression === 'string')
+          solvedExpression = parseFloat(solvedExpression);
+        if (typeof solvedExpression === 'boolean')
+          solvedExpression = solvedExpression ? 1 : 0;
+        if (typeof solvedExpression !== 'number')
+          throw new TclError('expression resolved to unusable value');
+        if (solvedExpression === Infinity)
+          throw new TclError('expression result is infinity');
+
         return solvedExpression;
       },
     };
@@ -124,7 +184,7 @@ export class Interpreter {
         return helpers.sendHelp('wargs');
     }
 
-    if(options.arguments.textOnly || options.arguments.simpleOnly){
+    if (options.arguments.textOnly || options.arguments.simpleOnly) {
       // Check if arguments are correct if simpleonly
       for (let arg of args) {
         if (!(arg instanceof TclSimple)) return helpers.sendHelp('wtype');
@@ -716,7 +776,11 @@ export class Interpreter {
 
     read(true);
 
-    let interpreter = new Interpreter(this.tcl, outbuf.expression, this.scope);
+    let interpreter = new Interpreter(
+      this.tcl,
+      outbuf.expression,
+      new Scope(this.scope),
+    );
     outbuf.value = await interpreter.run();
 
     // And return the solved variable with extra info

@@ -1,0 +1,10 @@
+x is 1
+x is 2
+x is 3
+x is 4
+exited first loop with X equal to 5
+
+x is 1
+x is 2
+x is 3
+exited second loop with X equal to 8

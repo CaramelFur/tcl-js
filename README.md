@@ -85,6 +85,9 @@ These commands should be fully working according to the tcl wiki
 - unset
 - if
 - switch
+- while
+- break
+- continue
 
 ### Partially working commands
 
@@ -108,3 +111,5 @@ These are not commands but just general parts of the interpreter, if they are li
 - advanced variables
 - asynchronous
 - expression variables
+- looping
+- exiting recursive loops

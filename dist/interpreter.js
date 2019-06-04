@@ -39,14 +39,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./parser", "./types", "./tclerror"], factory);
+        define(["require", "exports", "./parser", "./scope", "./types", "./tclerror", "./mathParser"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var parser_1 = require("./parser");
+    var scope_1 = require("./scope");
     var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
+    var mathParser_1 = require("./mathParser");
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
             this.lastValue = new types_1.TclSimple('');
@@ -57,7 +59,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         }
         Interpreter.prototype.run = function () {
             return __awaiter(this, void 0, void 0, function () {
-                var _i, _a, command, _b;
+                var _i, _a, command, _b, checkLoop;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -70,6 +72,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             return [4, this.processCommand(command)];
                         case 2:
                             _b.lastValue = _c.sent();
+                            checkLoop = this.scope.getSetting('loop');
+                            if (checkLoop && typeof checkLoop !== 'boolean') {
+                                if (checkLoop.break || checkLoop.continue)
+                                    return [3, 4];
+                            }
                             _c.label = 3;
                         case 3:
                             _i++;
@@ -78,6 +85,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     }
                 });
             });
+        };
+        Interpreter.prototype.reset = function (scope) {
+            if (scope)
+                this.scope = scope;
+            this.lastValue = new types_1.TclSimple('');
         };
         Interpreter.prototype.processCommand = function (command) {
             return __awaiter(this, void 0, void 0, function () {
@@ -113,18 +125,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                     throw new tclerror_1.TclError(message + "\n    while reading: \"" + command.source + "\"\n    at line #" + command.sourceLocation + "\n");
                                 },
                                 solveExpression: function (expression) { return __awaiter(_this, void 0, void 0, function () {
-                                    var solvedExpression;
+                                    var processedExpression, parser, solvedExpression;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
                                             case 0: return [4, this.deepProcess(expression)];
                                             case 1:
-                                                solvedExpression = _a.sent();
-                                                if (typeof solvedExpression !== 'string') {
-                                                    if (solvedExpression instanceof types_1.TclSimple)
-                                                        solvedExpression = solvedExpression.getValue();
+                                                processedExpression = _a.sent();
+                                                if (typeof processedExpression !== 'string') {
+                                                    if (processedExpression instanceof types_1.TclSimple)
+                                                        processedExpression = processedExpression.getValue();
                                                     else
                                                         throw new tclerror_1.TclError('expression resolved to unusable value');
                                                 }
+                                                if (processedExpression === 'yes')
+                                                    processedExpression = 'true';
+                                                if (processedExpression === 'no')
+                                                    processedExpression = 'false';
+                                                parser = new mathParser_1.Parser();
+                                                solvedExpression = parser.parse(processedExpression).evaluate();
+                                                if (typeof solvedExpression === 'string')
+                                                    solvedExpression = parseFloat(solvedExpression);
+                                                if (typeof solvedExpression === 'boolean')
+                                                    solvedExpression = solvedExpression ? 1 : 0;
+                                                if (typeof solvedExpression !== 'number')
+                                                    throw new tclerror_1.TclError('expression resolved to unusable value');
+                                                if (solvedExpression === Infinity)
+                                                    throw new tclerror_1.TclError('expression result is infinity');
                                                 return [2, solvedExpression];
                                         }
                                     });
@@ -471,7 +497,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             if (depth !== 0)
                                 throw new tclerror_1.TclError('incorrect amount of square brackets');
                             read(true);
-                            interpreter = new Interpreter(this.tcl, outbuf.expression, this.scope);
+                            interpreter = new Interpreter(this.tcl, outbuf.expression, new scope_1.Scope(this.scope));
                             _a = outbuf;
                             return [4, interpreter.run()];
                         case 1:

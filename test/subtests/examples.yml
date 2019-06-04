@@ -96,3 +96,11 @@
   stdout:
     type: file
     value: 'results/switch_advanced.txt'
+- name: 'While loop'
+  input:
+    type: file
+    value: 'scripts/while.tcl'
+  stdout:
+    type: file
+    value: 'results/while.txt'
+

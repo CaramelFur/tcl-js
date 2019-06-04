@@ -924,6 +924,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="_scope_.scope.html#procedures" class="tsd-kind-icon">procedures</a>
 				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="_scope_.scope.html#settings" class="tsd-kind-icon">settings</a>
+				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_scope_.scope.html#define" class="tsd-kind-icon">define</a>
 				</li>
@@ -934,15 +937,27 @@ img { max-width: 100%; }
 					<a href="_scope_.scope.html#disableproc" class="tsd-kind-icon">disable<wbr>Proc</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_scope_.scope.html#getsetting" class="tsd-kind-icon">get<wbr>Setting</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_scope_.scope.html#resolve" class="tsd-kind-icon">resolve</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_scope_.scope.html#resolveproc" class="tsd-kind-icon">resolve<wbr>Proc</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_scope_.scope.html#setsetting" class="tsd-kind-icon">set<wbr>Setting</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_scope_.scope.html#setsubsetting" class="tsd-kind-icon">set<wbr>Sub<wbr>Setting</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="_scope_.scope.html#undefine" class="tsd-kind-icon">undefine</a>
 				</li>
 			</ul>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+			<a href="../modules/_scope_.html#settingobj" class="tsd-kind-icon">setting<wbr>Obj</a>
 		</li>
 	</ul>
 </nav>
@@ -986,6 +1001,7 @@ img { max-width: 100%; }
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_scope_.scope.html#members" class="tsd-kind-icon">members</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_scope_.scope.html#parent" class="tsd-kind-icon">parent</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_scope_.scope.html#procedures" class="tsd-kind-icon">procedures</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_scope_.scope.html#settings" class="tsd-kind-icon">settings</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
@@ -994,8 +1010,11 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#define" class="tsd-kind-icon">define</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#defineproc" class="tsd-kind-icon">define<wbr>Proc</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#disableproc" class="tsd-kind-icon">disable<wbr>Proc</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#getsetting" class="tsd-kind-icon">get<wbr>Setting</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#resolve" class="tsd-kind-icon">resolve</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#resolveproc" class="tsd-kind-icon">resolve<wbr>Proc</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#setsetting" class="tsd-kind-icon">set<wbr>Setting</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#setsubsetting" class="tsd-kind-icon">set<wbr>Sub<wbr>Setting</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_scope_.scope.html#undefine" class="tsd-kind-icon">undefine</a></li>
 						</ul>
 					</section>
@@ -1014,7 +1033,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L23">scope.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L32">scope.ts:32</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1049,7 +1068,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">members<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_types_.tclvariableholder.html" class="tsd-signature-type">TclVariableHolder</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L22">scope.ts:22</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L28">scope.ts:28</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1059,7 +1078,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="_scope_.scope.html" class="tsd-signature-type">Scope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L19">scope.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L25">scope.ts:25</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1069,9 +1088,27 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">procedures<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_types_.tclprocholder.html" class="tsd-signature-type">TclProcHolder</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L23">scope.ts:23</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L29">scope.ts:29</a></li>
 					</ul>
 				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="settings" class="tsd-anchor"></a>
+				<h3>settings</h3>
+				<div class="tsd-signature tsd-kind-icon">settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L30">scope.ts:30</a></li>
+					</ul>
+				</aside>
+				<div class="tsd-type-declaration">
+					<h4>Type declaration</h4>
+					<ul class="tsd-parameters">
+						<li class="tsd-parameter-index-signature">
+							<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="../modules/_scope_.html#settingobj" class="tsd-signature-type">settingObj</a></h5>
+						</li>
+					</ul>
+				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
@@ -1086,7 +1123,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L67">scope.ts:67</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L76">scope.ts:76</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1131,7 +1168,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L145">scope.ts:145</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L160">scope.ts:160</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1176,7 +1213,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L159">scope.ts:159</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L179">scope.ts:179</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1203,6 +1240,42 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="getsetting" class="tsd-anchor"></a>
+				<h3>get<wbr>Setting</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Setting<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_scope_.html#settingobj" class="tsd-signature-type">settingObj</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L273">scope.ts:273</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Get a scoped setting</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Scope</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="../modules/_scope_.html#settingobj" class="tsd-signature-type">settingObj</a>
+							<span class="tsd-signature-symbol"> | </span>
+							<span class="tsd-signature-type">null</span>
+						</h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 				<a name="resolve" class="tsd-anchor"></a>
 				<h3>resolve</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1212,7 +1285,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L103">scope.ts:103</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L118">scope.ts:118</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1254,7 +1327,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L175">scope.ts:175</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L196">scope.ts:196</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -1287,6 +1360,99 @@ img { max-width: 100%; }
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="setsetting" class="tsd-anchor"></a>
+				<h3>set<wbr>Setting</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Setting<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L216">scope.ts:216</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Set a scoped setting</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Scope</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The name of the setting to set</p>
+								</div>
+							</li>
+							<li>
+								<h5>value: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The value to put there, use null to remove setting</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="setsubsetting" class="tsd-anchor"></a>
+				<h3>set<wbr>Sub<wbr>Setting</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Sub<wbr>Setting<span class="tsd-signature-symbol">(</span>setting<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, subsetting<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L230">scope.ts:230</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Set a sub setting, this will replace the main setting with an object</p>
+							</div>
+							<dl class="tsd-comment-tags">
+								<dt>memberof</dt>
+								<dd><p>Scope</p>
+								</dd>
+							</dl>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>setting: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The main setting to put the subsetting in</p>
+								</div>
+							</li>
+							<li>
+								<h5>subsetting: <span class="tsd-signature-type">string</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The name of the subsetting</p>
+								</div>
+							</li>
+							<li>
+								<h5>value: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The value to put there, use null to remove setting</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<ul>
+							<li>If it succeeded</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 				<a name="undefine" class="tsd-anchor"></a>
 				<h3>undefine</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1296,7 +1462,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/14df7ba/src/scope.ts#L80">scope.ts:80</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/be73476/src/scope.ts#L94">scope.ts:94</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">

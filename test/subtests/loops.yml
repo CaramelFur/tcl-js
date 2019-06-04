@@ -1,0 +1,3 @@
+While: 'subtests/loops/while.yml'
+
+Controllers: 'subtests/loops/controllers.yml'

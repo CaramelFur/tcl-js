@@ -2,7 +2,6 @@ import { Interpreter } from '../interpreter';
 import { TclSimple } from '../types';
 import { Scope } from '../scope';
 import { TclError } from '../tclerror';
-import { Parser } from '../mathParser';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
 const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
@@ -143,20 +142,9 @@ export function Load(scope: Scope) {
     async (interpreter, args, command, helpers) => {
       let expression = args.join(' ');
 
-      let solvedExpression = await helpers.solveExpression(expression);
-
-      let parser = new Parser();
-      // Try to solve the expression and return the result
-      let result = parser.parse(solvedExpression).evaluate();
-
-      //Check if the result is usable
-      if (typeof result === 'boolean') result = result ? 1 : 0;
-      if (typeof result !== 'number')
-        throw new TclError('expression result is not a number');
-      if (result === Infinity)
-        throw new TclError('expression result is infinity');
-
-      return new TclSimple(`${result}`);
+      let result = await helpers.solveExpression(expression);
+      
+      return new TclSimple(result.toString());
     },
     {
       arguments: {
@@ -182,7 +170,7 @@ export function Load(scope: Scope) {
     async (interpreter, args, command, helpers) => {
       let code = args.join(' ');
 
-      // Interpret the tcl code with a subscope
+      // Interpret the tcl code
       let newInterpreter = new Interpreter(
         interpreter.tcl,
         code,

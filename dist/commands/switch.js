@@ -39,13 +39,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "minimatch", "../types", "../interpreter", "../tclerror", "../lexer"], factory);
+        define(["require", "exports", "minimatch", "../types", "../scope", "../interpreter", "../tclerror", "../lexer"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var minimatch = require("minimatch");
     var types_1 = require("../types");
+    var scope_1 = require("../scope");
     var interpreter_1 = require("../interpreter");
     var tclerror_1 = require("../tclerror");
     var lexer_1 = require("../lexer");
@@ -211,7 +212,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     if (!runCode)
                         return [2, new types_1.TclSimple('')];
                 }
-                newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, runCode, interpreter.scope);
+                newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, runCode, new scope_1.Scope(interpreter.scope));
                 return [2, newInterpreter.run()];
             });
         }); }, {

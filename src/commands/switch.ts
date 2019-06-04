@@ -234,7 +234,7 @@ export function Load(scope: Scope) {
       let newInterpreter = new Interpreter(
         interpreter.tcl,
         runCode,
-        interpreter.scope,
+        new Scope(interpreter.scope),
       );
 
       // Return the result

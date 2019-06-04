@@ -39,12 +39,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../types", "../is", "../interpreter"], factory);
+        define(["require", "exports", "../types", "../scope", "../is", "../interpreter"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var types_1 = require("../types");
+    var scope_1 = require("../scope");
     var Is = require("../is");
     var interpreter_1 = require("../interpreter");
     function Load(scope) {
@@ -67,8 +68,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             code = args.shift();
                         if (!code)
                             return [2, helpers.sendHelp('wargs')];
-                        if (Is.True(solved)) {
-                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, interpreter.scope);
+                        if (Is.True(solved.toString())) {
+                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
                             return [2, newInterpreter.run()];
                         }
                         nextop = args.shift();
@@ -76,7 +77,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             code_1 = args.shift();
                             if (!code_1)
                                 return [2, helpers.sendHelp('wargs')];
-                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code_1, interpreter.scope);
+                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code_1, new scope_1.Scope(interpreter.scope));
                             return [2, newInterpreter.run()];
                         }
                         else if (nextop === 'elseif') {

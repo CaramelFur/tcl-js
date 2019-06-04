@@ -42,14 +42,14 @@ export function Load(scope: Scope) {
         if (!code) return helpers.sendHelp('wargs');
 
         // check if the expression resulted in true
-        if (Is.True(solved)) {
+        if (Is.True(solved.toString())) {
           // If so run the code and return the result
 
           // Interpret the procedures tcl code with the new scope
           let newInterpreter = new Interpreter(
             interpreter.tcl,
             code,
-            interpreter.scope,
+            new Scope(interpreter.scope),
           );
 
           // Return the result
@@ -70,7 +70,7 @@ export function Load(scope: Scope) {
           let newInterpreter = new Interpreter(
             interpreter.tcl,
             code,
-            interpreter.scope,
+            new Scope(interpreter.scope),
           );
 
           // Return the result

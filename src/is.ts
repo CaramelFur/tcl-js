@@ -11,7 +11,15 @@ const CloseBrace = (c: string) =>
 const Brace = (c: string) => OpenBrace(c) || CloseBrace(c);
 const Number = (c: string) => !isNaN(parseFloat(c));
 
-const True = (input: string) => input === 'yes' || input === 'true' || (Number(input) && `${parseFloat(input)}` === input ? parseFloat(input) !== 0 : false);
+const True = (input: string) => {
+  if (input === 'yes') return true;
+  if (input === 'true') return true;
+
+  if (Number(input) && parseFloat(input).toString() === input) {
+    if (parseFloat(input) !== 0) return true;
+  }
+  return false;
+};
 
 /*const BareWord = (c: string) =>
   (c >= 'A' && c <= 'Z') ||

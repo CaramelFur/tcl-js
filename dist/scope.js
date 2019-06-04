@@ -18,6 +18,7 @@
             this.parent = null;
             this.members = {};
             this.procedures = {};
+            this.settings = {};
             if (parent)
                 this.parent = parent;
             else {
@@ -32,7 +33,12 @@
             }
         }
         Scope.prototype.define = function (name, value) {
-            this.members[name] = value;
+            if (this.parent !== null) {
+                this.parent.define(name, value);
+            }
+            else {
+                this.members[name] = value;
+            }
             return this;
         };
         Scope.prototype.undefine = function (name, nocomplain) {
@@ -56,7 +62,12 @@
             return null;
         };
         Scope.prototype.defineProc = function (name, callback, options) {
-            this.procedures[name] = new types_1.TclProc(name, callback, options);
+            if (this.parent !== null) {
+                this.parent.defineProc(name, callback, options);
+            }
+            else {
+                this.procedures[name] = new types_1.TclProc(name, callback, options);
+            }
         };
         Scope.prototype.disableProc = function (name) {
             if (Object.prototype.hasOwnProperty.call(this.procedures, name)) {
@@ -74,6 +85,38 @@
                 return this.parent.resolveProc(name);
             }
             return null;
+        };
+        Scope.prototype.setSetting = function (name, value) {
+            if (value !== null)
+                this.settings[name] = value;
+            else
+                delete this.settings[name];
+        };
+        Scope.prototype.setSubSetting = function (setting, subsetting, value) {
+            if (this.settings[setting] !== undefined) {
+                if (typeof this.settings[setting] === 'boolean')
+                    this.settings[setting] = {};
+                if (value === null) {
+                    delete this.settings[setting][subsetting];
+                }
+                else {
+                    this.settings[setting][subsetting] = value;
+                }
+                return true;
+            }
+            else if (this.parent !== null) {
+                return this.parent.setSubSetting(setting, subsetting, value);
+            }
+            else
+                return false;
+        };
+        Scope.prototype.getSetting = function (name) {
+            if (this.settings[name] !== undefined)
+                return this.settings[name];
+            else if (this.parent !== null)
+                return this.parent.getSetting(name);
+            else
+                return null;
         };
         return Scope;
     }());

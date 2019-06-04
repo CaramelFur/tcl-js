@@ -682,7 +682,7 @@ export interface TclProcOptionsEmpty {
  */
 export interface TclProcHelpers {
   sendHelp: (helpType: string) => never;
-  solveExpression: (expression: string) => Promise<string>;
+  solveExpression: (expression: string) => Promise<number>;
 }
 
 /**

@@ -18,12 +18,12 @@ export class Tcl {
 
   /**
    * Initialize a full tcl interpreter, and disable any unwanted tcl commands
-   * 
+   *
    * @param {Array<string>} [disableCommands] - An array of commands you do not want to use
    * @memberof Tcl
    */
   public constructor(disableCommands?: Array<string>) {
-    if(disableCommands) this.disabledCommands = disableCommands;
+    if (disableCommands) this.disabledCommands = disableCommands;
     this.globalScope = new Scope(undefined, this.disabledCommands);
   }
 
@@ -35,7 +35,7 @@ export class Tcl {
    * @memberof Tcl
    */
   public async run(input: string): Promise<TclVariable> {
-    let interpreter = new Interpreter(this, input, this.globalScope);
+    let interpreter = new Interpreter(this, input, new Scope(this.globalScope));
     return interpreter.run();
   }
 
@@ -49,11 +49,11 @@ export class Tcl {
   public async runFile(location: string): Promise<TclVariable> {
     let buffer: string = await new Promise((resolve, reject) => {
       fs.readFile(location, { encoding: 'utf-8' }, (err, data) => {
-        if(err) reject(new TclError(err.message));
+        if (err) reject(new TclError(err.message));
         resolve(data);
       });
     });
-    
+
     return this.run(buffer);
   }
 }

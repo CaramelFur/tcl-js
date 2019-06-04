@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../interpreter", "../types", "../scope", "../tclerror", "../mathParser"], factory);
+        define(["require", "exports", "../interpreter", "../types", "../scope"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -47,8 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var interpreter_1 = require("../interpreter");
     var types_1 = require("../types");
     var scope_1 = require("../scope");
-    var tclerror_1 = require("../tclerror");
-    var mathParser_1 = require("../mathParser");
     var variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
     function Load(scope) {
         var _this = this;
@@ -118,23 +116,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             },
         });
         scope.defineProc('expr', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var expression, solvedExpression, parser, result;
+            var expression, result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         expression = args.join(' ');
                         return [4, helpers.solveExpression(expression)];
                     case 1:
-                        solvedExpression = _a.sent();
-                        parser = new mathParser_1.Parser();
-                        result = parser.parse(solvedExpression).evaluate();
-                        if (typeof result === 'boolean')
-                            result = result ? 1 : 0;
-                        if (typeof result !== 'number')
-                            throw new tclerror_1.TclError('expression result is not a number');
-                        if (result === Infinity)
-                            throw new tclerror_1.TclError('expression result is infinity');
-                        return [2, new types_1.TclSimple("" + result)];
+                        result = _a.sent();
+                        return [2, new types_1.TclSimple(result.toString())];
                 }
             });
         }); }, {

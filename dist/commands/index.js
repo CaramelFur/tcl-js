@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./puts", "./basic", "./list", "./proc", "./if", "./switch"], factory);
+        define(["require", "exports", "./puts", "./basic", "./list", "./proc", "./if", "./switch", "./loops"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -15,7 +15,16 @@
     var proc_1 = require("./proc");
     var if_1 = require("./if");
     var switch_1 = require("./switch");
-    var LoadFunctions = [puts_1.Load, basic_1.Load, list_1.Load, proc_1.Load, if_1.Load, switch_1.Load];
+    var loops_1 = require("./loops");
+    var LoadFunctions = [
+        puts_1.Load,
+        basic_1.Load,
+        list_1.Load,
+        proc_1.Load,
+        if_1.Load,
+        switch_1.Load,
+        loops_1.Load,
+    ];
     exports.LoadFunctions = LoadFunctions;
 });
 //# sourceMappingURL=index.js.map
