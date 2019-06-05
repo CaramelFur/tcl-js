@@ -47,9 +47,9 @@ export function Load(scope: Scope) {
 
           // Interpret the procedures tcl code with the new scope
           let newInterpreter = new Interpreter(
-            interpreter.tcl,
+            interpreter.getTcl(),
             code,
-            new Scope(interpreter.scope),
+            new Scope(interpreter.getScope()),
           );
 
           // Return the result
@@ -68,9 +68,9 @@ export function Load(scope: Scope) {
 
           // Interpret the procedures tcl code with the new scope
           let newInterpreter = new Interpreter(
-            interpreter.tcl,
+            interpreter.getTcl(),
             code,
-            new Scope(interpreter.scope),
+            new Scope(interpreter.getScope()),
           );
 
           // Return the result

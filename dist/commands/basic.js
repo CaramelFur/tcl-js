@@ -102,7 +102,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             }
             for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
                 var arg = args_1[_i];
-                interpreter.scope.undefine(arg, nocomplain);
+                interpreter.getScope().undefine(arg, nocomplain);
             }
             return new types_1.TclSimple('');
         }, {
@@ -143,7 +143,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 switch (_a.label) {
                     case 0:
                         code = args.join(' ');
-                        newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
+                        newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, new scope_1.Scope(interpreter.getScope()));
                         return [4, newInterpreter.run()];
                     case 1: return [2, _a.sent()];
                 }

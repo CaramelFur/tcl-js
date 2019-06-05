@@ -101,5 +101,7 @@ Functionality:
 
 Errors: 'subtests/errors.yml'
 
+Other Tests: 'subtests/main.js'
+
 #Execute examples from ./scripts
 Examples: 'subtests/examples.yml'

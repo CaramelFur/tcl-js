@@ -212,7 +212,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     if (!runCode)
                         return [2, new types_1.TclSimple('')];
                 }
-                newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, runCode, new scope_1.Scope(interpreter.scope));
+                newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), runCode, new scope_1.Scope(interpreter.getScope()));
                 return [2, newInterpreter.run()];
             });
         }); }, {

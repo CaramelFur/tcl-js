@@ -69,7 +69,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         if (!code)
                             return [2, helpers.sendHelp('wargs')];
                         if (Is.True(solved.toString())) {
-                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, new scope_1.Scope(interpreter.scope));
+                            newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, new scope_1.Scope(interpreter.getScope()));
                             return [2, newInterpreter.run()];
                         }
                         nextop = args.shift();
@@ -77,7 +77,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             code_1 = args.shift();
                             if (!code_1)
                                 return [2, helpers.sendHelp('wargs')];
-                            newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code_1, new scope_1.Scope(interpreter.scope));
+                            newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code_1, new scope_1.Scope(interpreter.getScope()));
                             return [2, newInterpreter.run()];
                         }
                         else if (nextop === 'elseif') {

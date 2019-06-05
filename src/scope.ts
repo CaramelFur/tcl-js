@@ -22,12 +22,12 @@ type settingObj =
  * @class Scope
  */
 export class Scope {
-  parent: Scope | null = null;
+  private parent: Scope | null = null;
 
   // Initialize two holders for variables and for procedures
-  members: TclVariableHolder = {};
-  procedures: TclProcHolder = {};
-  settings: {
+  private members: TclVariableHolder = {};
+  private procedures: TclProcHolder = {};
+  private settings: {
     [index: string]: settingObj;
   } = {};
 

@@ -2,7 +2,12 @@ import { Scope } from './scope';
 import { IO } from './io';
 import * as fs from 'fs';
 import { Interpreter } from './interpreter';
-import { TclVariable } from './types';
+import {
+  TclVariable,
+  TclProcFunction,
+  TclProcOptionsEmpty,
+  TclSimple,
+} from './types';
 import { TclError } from './tclerror';
 
 /**
@@ -12,9 +17,9 @@ import { TclError } from './tclerror';
  * @class Tcl
  */
 export class Tcl {
-  globalScope: Scope;
-  io: IO = new IO();
-  disabledCommands: Array<string> = [];
+  private globalScope: Scope;
+  private io: IO = new IO();
+  private disabledCommands: Array<string> = [];
 
   /**
    * Initialize a full tcl interpreter, and disable any unwanted tcl commands
@@ -55,5 +60,73 @@ export class Tcl {
     });
 
     return this.run(buffer);
+  }
+
+  /**
+   * Add an easy javascript function to tcl
+   *
+   * @param {string} name - The name of the function/command
+   * @param {(...args: string[]) => string} procedure - The executed javascript function
+   * @returns
+   * @memberof Tcl
+   */
+  public addSimpleProcedure(
+    name: string,
+    procedure: (...args: string[]) => string,
+  ) {
+    return this.globalScope.defineProc(
+      name,
+      async (interpreter, inArgs, command, helpers) => {
+        let out: string;
+
+        // Convert the arguments to strings
+        inArgs = <TclSimple[]>inArgs;
+        let args: Array<string> = inArgs.map((arg) => arg.getValue());
+
+        out = procedure(...args);
+
+        if (!out) out = '';
+
+        return new TclSimple(out);
+      },
+      { arguments: { simpleOnly: true } },
+    );
+  }
+
+  /**
+   * Add an advanced javascript function to tcl
+   *
+   * @param {string} name - The name of the function/command
+   * @param {TclProcFunction} procedure - The executed javascript function
+   * @param {(TclProcOptionsEmpty | undefined)} settings - Extra information about the function
+   * @returns
+   * @memberof Tcl
+   */
+  public addAdvancedProcedure(
+    name: string,
+    procedure: TclProcFunction,
+    settings: TclProcOptionsEmpty | undefined,
+  ) {
+    return this.globalScope.defineProc(name, procedure, settings);
+  }
+
+  /**
+   * Function to get all disabled commands
+   *
+   * @type {Array<string>}
+   * @memberof Tcl
+   */
+  public getDisabledCommands(): Array<string> {
+    return this.disabledCommands;
+  }
+
+  /**
+   * Function to get the IO class
+   *
+   * @type {IO}
+   * @memberof Tcl
+   */
+  public getIO(): IO {
+    return this.io;
   }
 }

@@ -1,7 +1,6 @@
 import { Interpreter } from '../interpreter';
 import { TclSimple } from '../types';
 import { Scope } from '../scope';
-import { TclError } from '../tclerror';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
 const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
@@ -113,7 +112,7 @@ export function Load(scope: Scope) {
 
       // Loop over every argument and unset it
       for (let arg of args) {
-        interpreter.scope.undefine(arg, nocomplain);
+        interpreter.getScope().undefine(arg, nocomplain);
       }
 
       return new TclSimple('');
@@ -172,9 +171,9 @@ export function Load(scope: Scope) {
 
       // Interpret the tcl code
       let newInterpreter = new Interpreter(
-        interpreter.tcl,
+        interpreter.getTcl(),
         code,
-        new Scope(interpreter.scope),
+        new Scope(interpreter.getScope()),
       );
 
       // Return the result

@@ -24,16 +24,16 @@
                 parsedArgs = parsedArgs;
                 if (parsedArgs.length !== commandArgs.getLength())
                     throw new tclerror_1.TclError("wrong # args on procedure \"" + command + "\"");
-                var newScope = new scope_1.Scope(undefined, interpreter.tcl.disabledCommands);
+                var newScope = new scope_1.Scope(undefined, interpreter.getTcl().getDisabledCommands());
                 for (var i = 0; i < parsedArgs.length; i++) {
                     var argName = commandArgs.getSubValue(i).getValue();
                     var argValue = parsedArgs[i];
                     newScope.define(argName, argValue);
                 }
-                var newInterpreter = new interpreter_1.Interpreter(parsedInterpreter.tcl, tclCode, newScope);
+                var newInterpreter = new interpreter_1.Interpreter(parsedInterpreter.getTcl(), tclCode, newScope);
                 return newInterpreter.run();
             };
-            interpreter.scope.defineProc(command, commandFunction);
+            interpreter.getScope().defineProc(command, commandFunction);
             return new types_1.TclSimple('');
         }, {
             arguments: {

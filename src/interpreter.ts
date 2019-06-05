@@ -23,9 +23,9 @@ import { Parser as MathParser } from './mathParser';
 export class Interpreter {
   private program: Program;
 
-  scope: Scope;
-  lastValue: TclVariable = new TclSimple('');
-  tcl: Tcl;
+  private scope: Scope;
+  private lastValue: TclVariable = new TclSimple('');
+  private tcl: Tcl;
 
   /**
    * Creates an instance of Interpreter.
@@ -63,6 +63,26 @@ export class Interpreter {
   }
 
   /**
+   * Getter for the scope
+   *
+   * @returns {Scope}
+   * @memberof Interpreter
+   */
+  public getScope(): Scope {
+    return this.scope;
+  }
+
+  /**
+   * Getter for the parent Tcl
+   *
+   * @returns {Tcl}
+   * @memberof Interpreter
+   */
+  public getTcl(): Tcl {
+    return this.tcl;
+  }
+
+  /**
    * This will reset the state of the interpreter, but keep the processed code
    *
    * @param {Scope} scope
@@ -72,29 +92,6 @@ export class Interpreter {
     if (scope) this.scope = scope;
     this.lastValue = new TclSimple('');
   }
-
-  /**
-   * Stops the interpreter from executing code
-   *
-   * @memberof Interpreter
-   */
-  /*public setState(type: string) {
-    if (type === 'break') this.state.hitBreak = true;
-    else if (type === 'continue') this.state.hitContinue = true;
-    else throw new TclError('unrecognized state: ' + type);
-  }*/
-
-  /**
-   * Gets the state of the interpreter
-   *
-   * @returns {string}
-   * @memberof Interpreter
-   */
-  /*public getState(): string {
-    if (this.state.hitBreak) return 'break';
-    else if (this.state.hitContinue) return 'continue';
-    else return '';
-  }*/
 
   /**
    * Internal function to process commands

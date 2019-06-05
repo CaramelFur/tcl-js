@@ -97,7 +97,7 @@ Only part of these commands are finished and may not work as expected
 
 ### Other working parts
 
-These are not commands but just general parts of the interpreter, if they are listed they work
+These are not commands but just general parts of the program, if they are listed they work
 
 - lexer
 - parser
@@ -113,3 +113,4 @@ These are not commands but just general parts of the interpreter, if they are li
 - expression variables
 - looping
 - exiting recursive loops
+- external javascript functions

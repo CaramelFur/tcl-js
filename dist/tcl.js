@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./scope", "./io", "fs", "./interpreter", "./tclerror"], factory);
+        define(["require", "exports", "./scope", "./io", "fs", "./interpreter", "./types", "./tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -48,6 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var io_1 = require("./io");
     var fs = require("fs");
     var interpreter_1 = require("./interpreter");
+    var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
     var Tcl = (function () {
         function Tcl(disableCommands) {
@@ -84,6 +85,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                     }
                 });
             });
+        };
+        Tcl.prototype.addSimpleProcedure = function (name, procedure) {
+            var _this = this;
+            return this.globalScope.defineProc(name, function (interpreter, inArgs, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
+                var out, args;
+                return __generator(this, function (_a) {
+                    inArgs = inArgs;
+                    args = inArgs.map(function (arg) { return arg.getValue(); });
+                    out = procedure.apply(void 0, args);
+                    if (!out)
+                        out = '';
+                    return [2, new types_1.TclSimple(out)];
+                });
+            }); }, { arguments: { simpleOnly: true } });
+        };
+        Tcl.prototype.addAdvancedProcedure = function (name, procedure, settings) {
+            return this.globalScope.defineProc(name, procedure, settings);
+        };
+        Tcl.prototype.getDisabledCommands = function () {
+            return this.disabledCommands;
+        };
+        Tcl.prototype.getIO = function () {
+            return this.io;
         };
         return Tcl;
     }());

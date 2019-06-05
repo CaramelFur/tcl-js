@@ -60,9 +60,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         output = new types_1.TclSimple('');
                         expression = args[0];
                         code = args[1];
-                        newScope = new scope_1.Scope(interpreter.scope);
+                        newScope = new scope_1.Scope(interpreter.getScope());
                         newScope.setSetting('loop', true);
-                        newInterpreter = new interpreter_1.Interpreter(interpreter.tcl, code, newScope);
+                        newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, newScope);
                         _c.label = 1;
                     case 1:
                         _b = (_a = Is).True;
@@ -90,9 +90,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         });
         scope.defineProc('break', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                if (!interpreter.scope.getSetting('loop'))
+                if (!interpreter.getScope().getSetting('loop'))
                     throw new tclerror_1.TclError('executed break outside of loop');
-                interpreter.scope.setSubSetting('loop', 'break', true);
+                interpreter.getScope().setSubSetting('loop', 'break', true);
                 return [2, new types_1.TclSimple('')];
             });
         }); }, {
@@ -103,9 +103,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         });
         scope.defineProc('continue', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                if (!interpreter.scope.getSetting('loop'))
+                if (!interpreter.getScope().getSetting('loop'))
                     throw new tclerror_1.TclError('executed continue outside of loop');
-                interpreter.scope.setSubSetting('loop', 'continue', true);
+                interpreter.getScope().setSubSetting('loop', 'continue', true);
                 return [2, new types_1.TclSimple('')];
             });
         }); }, {

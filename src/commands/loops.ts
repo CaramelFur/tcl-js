@@ -27,13 +27,13 @@ export function Load(scope: Scope) {
       let code = args[1];
 
       // Create a new scope
-      let newScope = new Scope(interpreter.scope);
+      let newScope = new Scope(interpreter.getScope());
 
       // Set the loop variable
       newScope.setSetting('loop', true);
 
       // Interpret the procedures tcl code with the new scope
-      let newInterpreter = new Interpreter(interpreter.tcl, code, newScope);
+      let newInterpreter = new Interpreter(interpreter.getTcl(), code, newScope);
 
       while (Is.True((await helpers.solveExpression(expression)).toString())) {
         // If so run the code and return the result
@@ -70,9 +70,9 @@ export function Load(scope: Scope) {
   scope.defineProc(
     'break',
     async (interpreter, args, command, helpers) => {
-      if (!interpreter.scope.getSetting('loop'))
+      if (!interpreter.getScope().getSetting('loop'))
         throw new TclError('executed break outside of loop');
-      interpreter.scope.setSubSetting('loop', 'break', true);
+      interpreter.getScope().setSubSetting('loop', 'break', true);
 
       return new TclSimple('');
     },
@@ -92,9 +92,9 @@ export function Load(scope: Scope) {
   scope.defineProc(
     'continue',
     async (interpreter, args, command, helpers) => {
-      if (!interpreter.scope.getSetting('loop'))
+      if (!interpreter.getScope().getSetting('loop'))
         throw new TclError('executed continue outside of loop');
-      interpreter.scope.setSubSetting('loop', 'continue', true);
+      interpreter.getScope().setSubSetting('loop', 'continue', true);
 
       return new TclSimple('');
     },

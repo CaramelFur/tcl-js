@@ -9,15 +9,15 @@ import { TclError } from './tclerror';
  */
 export class Lexer {
   // Initialize current read position
-  pos = 0;
+  private pos = 0;
   // Initialize word index counter
-  wordIdx = 0;
+  private wordIdx = 0;
   // Initialize the currently processing char and the to be processed input
-  currentChar: string;
-  input: string;
+  private currentChar: string;
+  private input: string;
   // Initialize current sentence, this is used for linking the source code with the runnable result
-  currentSentence: string = '';
-  currentLine: number = 0;
+  private currentSentence: string = '';
+  private currentLine: number = 0;
 
   /**
    * Creates an instance of Lexer.

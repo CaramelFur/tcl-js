@@ -46,7 +46,7 @@ export function Load(scope: Scope) {
       // right now.
 
       // Write the values to the console with the correct settings
-      interpreter.tcl.io.write(channelId, `${string}${nonewline ? '' : '\n'}`);
+      interpreter.getTcl().getIO().write(channelId, `${string}${nonewline ? '' : '\n'}`);
 
       return new TclSimple('');
     },

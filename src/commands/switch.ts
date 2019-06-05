@@ -1,7 +1,6 @@
 import * as minimatch from 'minimatch';
 import { TclSimple, TclList } from '../types';
 import { Scope } from '../scope';
-import * as Is from '../is';
 import { Interpreter } from '../interpreter';
 import { TclError } from '../tclerror';
 import { Lexer } from '../lexer';
@@ -232,9 +231,9 @@ export function Load(scope: Scope) {
 
       // Interpret the procedures tcl code with the new scope
       let newInterpreter = new Interpreter(
-        interpreter.tcl,
+        interpreter.getTcl(),
         runCode,
-        new Scope(interpreter.scope),
+        new Scope(interpreter.getScope()),
       );
 
       // Return the result

@@ -52,7 +52,7 @@ export function Load(scope: Scope) {
           throw new TclError(`wrong # args on procedure "${command}"`);
 
         // Open a new scope for the code to be ran in, this scope has no parent but the same disabled commands
-        let newScope = new Scope(undefined, interpreter.tcl.disabledCommands);
+        let newScope = new Scope(undefined, interpreter.getTcl().getDisabledCommands());
 
         // Put all the given arguments in the created scope
         for (let i = 0; i < parsedArgs.length; i++) {
@@ -64,7 +64,7 @@ export function Load(scope: Scope) {
 
         // Interpret the procedures tcl code with the new scope
         let newInterpreter = new Interpreter(
-          parsedInterpreter.tcl,
+          parsedInterpreter.getTcl(),
           tclCode,
           newScope,
         );
@@ -74,7 +74,7 @@ export function Load(scope: Scope) {
       };
 
       // Add the function to the scoped procedure list
-      interpreter.scope.defineProc(command, commandFunction);
+      interpreter.getScope().defineProc(command, commandFunction);
 
       return new TclSimple('');
     },

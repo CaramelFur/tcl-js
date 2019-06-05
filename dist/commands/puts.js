@@ -73,7 +73,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 else {
                     return [2, helpers.sendHelp('wargs')];
                 }
-                interpreter.tcl.io.write(channelId, "" + string + (nonewline ? '' : '\n'));
+                interpreter.getTcl().getIO().write(channelId, "" + string + (nonewline ? '' : '\n'));
                 return [2, new types_1.TclSimple('')];
             });
         }); }, {

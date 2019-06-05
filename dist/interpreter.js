@@ -86,6 +86,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 });
             });
         };
+        Interpreter.prototype.getScope = function () {
+            return this.scope;
+        };
+        Interpreter.prototype.getTcl = function () {
+            return this.tcl;
+        };
         Interpreter.prototype.reset = function (scope) {
             if (scope)
                 this.scope = scope;

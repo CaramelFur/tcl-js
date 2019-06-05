@@ -9,8 +9,8 @@ import { TclError } from './tclerror';
  * @class Parser
  */
 export class Parser {
-  lexer: Lexer;
-  program: Program = {
+  private lexer: Lexer;
+  private program: Program = {
     commands: [],
   };
 
