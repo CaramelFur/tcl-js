@@ -918,8 +918,8 @@ img { max-width: 100%; }
 			<blockquote>
 				<p>A native javascript tcl interpreter</p>
 			</blockquote>
-			<p><a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/v/tcl-js.svg?style=flat&color" alt="tcl-js"></a>
-				<a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/dm/tcl-js.svg" alt="tcl-js"></a>
+			<p><a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/v/tcl-js.svg?style=flat&color=blue" alt="tcl-js"></a>
+				<a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/dm/tcl-js.svg?color=blue" alt="tcl-js"></a>
 				<a href="https://travis-ci.org/rubikscraft/tcl-js"><img src="https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat" alt="Build Status"></a>
 				<a href="https://codecov.io/gh/rubikscraft/tcl-js"><img src="https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg" alt="codecov"></a>
 			<a href="https://packagephobia.now.sh/result?p=tcl-js"><img src="https://packagephobia.now.sh/badge?p=tcl-js&style=flat" alt="install size"></a></p>
@@ -957,13 +957,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 			<h3 id="deviations">Deviations</h3>
 			<ul>
 				<li>In the <code>expr</code> command:<ul>
-						<li>The <code>x ** y</code> (exponentiation) operator has been changed to <code>x ^ y</code></li>
-						<li>The <code>~x</code> (bitwise not) operator is now <code>bnot(x)</code></li>
-						<li>The <code>!x</code> (logical not) operator is now <code>not(x)</code> or <code>not x</code></li>
-						<li>The <code>x &lt;&lt; y</code> and <code>x &gt;&gt; y</code> (bitwise shift) operators are now <code>lshift(x, y)</code> and <code>rshift(x, y)</code></li>
-						<li>The <code>x &amp; y</code> and <code>x | y</code> (bitwise and/or) operators are now <code>band(x, y)</code> and <code>bor(x, y)</code></li>
-						<li>The <code>a1 &amp;&amp; a2 &amp;&amp; a3 &amp;&amp;...</code> and <code>a1 || a2 || a3 ||...</code> (logical and/or) operators are now <code>land(a1, a2, a3, ...)</code> and <code>lor(a1, a2, a3, ...)</code></li>
-						<li>The <code>eq</code>, <code>ne</code> and <code>ni</code> (string compare) operators are not implemented, please use <code>==</code>, <code>!=</code> and <code>not(x in y)</code> instead</li>
+						<li>The <code>in</code> operator is unavailable</li>
 						<li>Numbers with leading zeros are just interpreted as decimal and not octal</li>
 					</ul>
 				</li>
@@ -1030,7 +1024,6 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 							<li class="tsd-kind-external-module"><a href="modules/_io_.html" class="tsd-kind-icon">"io"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_is_.html" class="tsd-kind-icon">"is"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_lexer_.html" class="tsd-kind-icon">"lexer"</a></li>
-							<li class="tsd-kind-external-module"><a href="modules/_mathparser_.html" class="tsd-kind-icon">"math<wbr>Parser"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_parser_.html" class="tsd-kind-icon">"parser"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_scope_.html" class="tsd-kind-icon">"scope"</a></li>
 							<li class="tsd-kind-external-module"><a href="modules/_tcl_.html" class="tsd-kind-icon">"tcl"</a></li>

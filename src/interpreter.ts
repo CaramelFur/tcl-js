@@ -12,7 +12,7 @@ import {
   ProcArgs,
 } from './types';
 import { TclError } from './tclerror';
-import { Parser as MathParser } from './mathParser';
+import { Parser as MathParser } from './math/parser.js';
 
 /**
  * Executes a tcl program
@@ -141,9 +141,6 @@ export class Interpreter {
             processedExpression = processedExpression.getValue();
           else throw new TclError('expression resolved to unusable value');
         }
-
-        if (processedExpression === 'yes') processedExpression = 'true';
-        if (processedExpression === 'no') processedExpression = 'false';
 
         let parser = new MathParser();
         // Try to solve the expression and return the result

@@ -29,7 +29,7 @@ Basic Operations:
   - name: Exponentiation
     input:
       type: raw
-      value: 'expr 2 ^ 4'
+      value: 'expr 2 ** 4'
     output:
       type: raw
       value: '16'
@@ -49,6 +49,20 @@ Relational Operations:
       output:
         type: raw
         value: '1'
+    - name: Fail string
+      input:
+        type: raw
+        value: 'expr 2 eq 4'
+      output:
+        type: raw
+        value: '0'
+    - name: Success string
+      input:
+        type: raw
+        value: 'expr 4 eq 4'
+      output:
+        type: raw
+        value: '1'
   Not Equals:
     - name: Fail
       input:
@@ -61,6 +75,20 @@ Relational Operations:
       input:
         type: raw
         value: 'expr 4 != 4'
+      output:
+        type: raw
+        value: '0'
+    - name: Fail string
+      input:
+        type: raw
+        value: 'expr 2 ne 4'
+      output:
+        type: raw
+        value: '1'
+    - name: Success string
+      input:
+        type: raw
+        value: 'expr 4 ne 4'
       output:
         type: raw
         value: '0'
@@ -112,14 +140,14 @@ Integer Operations:
   - name: Bitwise NOT
     input:
       type: raw
-      value: 'expr bnot(4)'
+      value: 'expr ~4'
     output:
       type: raw
       value: '-5'
   - name: Logical NOT
     input:
       type: raw
-      value: 'expr not(1)'
+      value: 'expr !1'
     output:
       type: raw
       value: '0'
@@ -133,35 +161,35 @@ Integer Operations:
   - name: Left bit shift
     input:
       type: raw
-      value: 'expr lshift(2, 2)'
+      value: 'expr 2 << 2'
     output:
       type: raw
       value: '8'
   - name: Right bit shift
     input:
       type: raw
-      value: 'expr rshift(8, 2)'
+      value: 'expr 8 >> 2'
     output:
       type: raw
       value: '2'
   - name: Bitwise AND
     input:
       type: raw
-      value: 'expr band(28, 7)'
+      value: 'expr 28 & 7'
     output:
       type: raw
       value: '4'
   - name: Bitwise exlusive OR
     input:
       type: raw
-      value: 'expr bxor(28, 7)'
+      value: 'expr 28 ^ 7'
     output:
       type: raw
       value: '27'
   - name: Bitwise OR
     input:
       type: raw
-      value: 'expr bor(28, 7)'
+      value: 'expr 28 | 7'
     output:
       type: raw
       value: '31'
@@ -169,28 +197,28 @@ Logical Operations:
   - name: AND true
     input:
       type: raw
-      value: 'expr land(true, true)'
+      value: 'expr true && true'
     output:
       type: raw
       value: '1'
   - name: AND false
     input:
       type: raw
-      value: 'expr land(true, false)'
+      value: 'expr true && false'
     output:
       type: raw
       value: '0'
   - name: OR true
     input:
       type: raw
-      value: 'expr lor(true, false)'
+      value: 'expr true || false'
     output:
       type: raw
       value: '1'
   - name: OR false
     input:
       type: raw
-      value: 'expr lor(false, false)'
+      value: 'expr false || false'
     output:
       type: raw
       value: '0'

@@ -1,0 +1,1 @@
+{"version":3,"file":"contains.js","sourceRoot":"","sources":["../../src/math/contains.js"],"names":[],"mappings":";;;;;;;;;;;IAAA,SAAwB,QAAQ,CAAC,KAAK,EAAE,GAAG;QACzC,KAAK,IAAI,CAAC,GAAG,CAAC,EAAE,CAAC,GAAG,KAAK,CAAC,MAAM,EAAE,CAAC,EAAE,EAAE;YACrC,IAAI,KAAK,CAAC,CAAC,CAAC,KAAK,GAAG,EAAE;gBACpB,OAAO,IAAI,CAAC;aACb;SACF;QACD,OAAO,KAAK,CAAC;IACf,CAAC;IAPD,2BAOC"}

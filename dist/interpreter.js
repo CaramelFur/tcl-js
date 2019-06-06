@@ -39,7 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./parser", "./scope", "./types", "./tclerror", "./mathParser"], factory);
+        define(["require", "exports", "./parser", "./scope", "./types", "./tclerror", "./math/parser.js"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var scope_1 = require("./scope");
     var types_1 = require("./types");
     var tclerror_1 = require("./tclerror");
-    var mathParser_1 = require("./mathParser");
+    var parser_js_1 = require("./math/parser.js");
     var Interpreter = (function () {
         function Interpreter(tcl, input, scope) {
             this.lastValue = new types_1.TclSimple('');
@@ -143,11 +143,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                                     else
                                                         throw new tclerror_1.TclError('expression resolved to unusable value');
                                                 }
-                                                if (processedExpression === 'yes')
-                                                    processedExpression = 'true';
-                                                if (processedExpression === 'no')
-                                                    processedExpression = 'false';
-                                                parser = new mathParser_1.Parser();
+                                                parser = new parser_js_1.Parser();
                                                 solvedExpression = parser.parse(processedExpression).evaluate();
                                                 if (typeof solvedExpression === 'string')
                                                     solvedExpression = parseFloat(solvedExpression);

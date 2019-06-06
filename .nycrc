@@ -3,5 +3,6 @@
   "instument": true,
   "reporter": ["text-summary", "lcov", "json"],
   "temp-directory": "./coverage/.nyc_output",
-  "extension": ["ts"]
+  "extension": ["ts"],
+  "exclude": ["dist/math/", "test/"]
 }

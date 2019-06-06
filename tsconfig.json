@@ -10,6 +10,7 @@
     "removeComments": true,
     "outDir": "dist",
     "pretty": false,
+    "allowJs": true,
     "plugins": [
       {
         "name": "typescript-tslint-plugin",
@@ -21,6 +22,6 @@
       }
     ]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
   "exclude": ["node_modules"]
 }

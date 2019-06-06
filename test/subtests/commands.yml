@@ -50,7 +50,7 @@ Expr:
   - name: Simple math
     input:
       type: raw
-      value: 'expr (3 +6) * (5 % 3) / 7 - 3^2'
+      value: 'expr (3 +6) * (5 % 3) / 7 - 3**2'
     output:
       type: raw
       value: '-6.428571428571429'

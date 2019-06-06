@@ -2,8 +2,8 @@
 
 > A native javascript tcl interpreter
 
-[![tcl-js](https://img.shields.io/npm/v/tcl-js.svg?style=flat&color)](https://www.npmjs.com/package/tcl-js)
-[![tcl-js](https://img.shields.io/npm/dm/tcl-js.svg)](https://www.npmjs.com/package/tcl-js)
+[![tcl-js](https://img.shields.io/npm/v/tcl-js.svg?style=flat&color=blue)](https://www.npmjs.com/package/tcl-js)
+[![tcl-js](https://img.shields.io/npm/dm/tcl-js.svg?color=blue)](https://www.npmjs.com/package/tcl-js)
 [![Build Status](https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat)](https://travis-ci.org/rubikscraft/tcl-js)
 [![codecov](https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg)](https://codecov.io/gh/rubikscraft/tcl-js)
 [![install size](https://packagephobia.now.sh/badge?p=tcl-js&style=flat)](https://packagephobia.now.sh/result?p=tcl-js)
@@ -62,13 +62,7 @@ Down below is the current project status of tcl-js, here you can see what parts 
 ### Deviations
 
 - In the `expr` command:
-  - The `x ** y` (exponentiation) operator has been changed to `x ^ y`
-  - The `~x` (bitwise not) operator is now `bnot(x)`
-  - The `!x` (logical not) operator is now `not(x)` or `not x`
-  - The `x << y` and `x >> y` (bitwise shift) operators are now `lshift(x, y)` and `rshift(x, y)`
-  - The `x & y` and `x | y` (bitwise and/or) operators are now `band(x, y)` and `bor(x, y)`
-  - The `a1 && a2 && a3 &&...` and `a1 || a2 || a3 ||...` (logical and/or) operators are now `land(a1, a2, a3, ...)` and `lor(a1, a2, a3, ...)`
-  - The `eq`, `ne` and `ni` (string compare) operators are not implemented, please use `==`, `!=` and `not(x in y)` instead
+  - The `in` operator is unavailable
   - Numbers with leading zeros are just interpreted as decimal and not octal
 
 ### Currently working tcl commands
