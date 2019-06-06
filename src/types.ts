@@ -612,7 +612,7 @@ export interface TclProcHolder {
   [index: string]: TclProc;
 }
 
-export type ProcArgs = Array<TclVariable> | Array<string>;
+export type ProcArgs = TclVariable[] | string[];
 
 // Types of functions a proc can have
 export type TclProcFunction =

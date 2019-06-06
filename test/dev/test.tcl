@@ -1,3 +1,3 @@
-#tclsh 8.6
+set {*f}{greeting hello}
 
-expr false || false
+puts ${*}

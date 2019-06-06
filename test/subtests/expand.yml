@@ -1,0 +1,28 @@
+- name: 'Simple expand'
+  input:
+    type: raw
+    value: 'puts {*}hi'
+  stdout:
+    type: raw
+    value: "hi\n"
+- name: 'List expand'
+  input:
+    type: raw
+    value: 'puts {*}{stderr hi}'
+  stderr:
+    type: raw
+    value: 'hi'
+- name: 'Expand with space'
+  input:
+    type: raw
+    value: 'set {*} {stderr hi}; puts ${*}'
+  stdout:
+    type: raw
+    value: "stderr hi\n"
+- name: 'False expand'
+  input:
+    type: raw
+    value: 'set {*f}{stderr hi}'
+  output:
+    type: error
+    value: "extra characters after close-brace"

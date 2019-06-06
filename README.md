@@ -108,3 +108,4 @@ These are not commands but just general parts of the program, if they are listed
 - looping
 - exiting recursive loops
 - external javascript functions
+- argument expansion

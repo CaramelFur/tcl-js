@@ -47,10 +47,13 @@ export class Parser {
 
         // Add the argument to the last command in the command list
         this.program.commands[this.program.commands.length - 1].args.push({
-          value: toProcess.value,
-          hasVariable: toProcess.hasVariable,
-          hasSubExpr: toProcess.hasSubExpr,
-          stopBackslash: toProcess.stopBackslash,
+          ...{
+            value: toProcess.value,
+            hasVariable: toProcess.hasVariable,
+            hasSubExpr: toProcess.hasSubExpr,
+            stopBackslash: toProcess.stopBackslash,
+          },
+          ...(toProcess.expand ? { expand: true } : {}),
         });
 
         // Add the original tcl code
@@ -110,6 +113,7 @@ export interface ArgToken {
   hasVariable: boolean;
   hasSubExpr: boolean;
   stopBackslash: boolean;
+  expand?: boolean;
 }
 
 /*

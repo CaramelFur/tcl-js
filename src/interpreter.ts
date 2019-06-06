@@ -105,7 +105,17 @@ export class Interpreter {
     // Map the args from wordtokens to tclvariables
     let args: ProcArgs = [];
     for (let i = 0; i < command.args.length; i++) {
-      args[i] = await this.processArg(command.args[i]);
+      let processed = await this.processArg(command.args[i]);
+
+      if (command.args[i].expand) {
+        let list = (<TclSimple>processed).getList();
+        for(let j = 0; j < list.getLength(); j++){
+          let item = list.getSubValue(j);
+          (<TclVariable[]>args).push(item);
+        }
+      } else {
+        (<TclVariable[]>args).push(processed);
+      }
     }
 
     // Return the result of the associated function being called

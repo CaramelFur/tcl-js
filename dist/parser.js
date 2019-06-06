@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -30,12 +41,12 @@
                 else {
                     if (this.program.commands.length === 0)
                         throw new tclerror_1.TclError('encountered argument but no command exists');
-                    this.program.commands[this.program.commands.length - 1].args.push({
+                    this.program.commands[this.program.commands.length - 1].args.push(__assign({
                         value: toProcess.value,
                         hasVariable: toProcess.hasVariable,
                         hasSubExpr: toProcess.hasSubExpr,
                         stopBackslash: toProcess.stopBackslash,
-                    });
+                    }, (toProcess.expand ? { expand: true } : {})));
                     this.program.commands[this.program.commands.length - 1].source =
                         toProcess.source;
                 }

@@ -121,8 +121,16 @@
             }
             if (depth !== 0)
                 throw new tclerror_1.TclError('uneven amount of curly braces');
-            if (this.hasMoreChars())
-                throw new tclerror_1.TclError('extra characters after close-brace');
+            if (this.hasMoreChars()) {
+                if (out.value === '*') {
+                    var test = this.getNextToken();
+                    out = test;
+                    out.expand = true;
+                }
+                else {
+                    throw new tclerror_1.TclError('extra characters after close-brace');
+                }
+            }
             return out;
         };
         Lexer.prototype.nextQuoteWord = function () {
@@ -242,6 +250,7 @@
                 hasSubExpr: false,
                 stopBackslash: false,
                 index: this.wordIdx,
+                expand: false,
                 source: '',
                 sourceLocation: 0,
             };

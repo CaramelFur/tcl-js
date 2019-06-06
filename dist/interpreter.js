@@ -99,22 +99,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         Interpreter.prototype.processCommand = function (command) {
             return __awaiter(this, void 0, void 0, function () {
-                var args, i, _a, _b, proc, options, helpers, _i, args_1, arg;
+                var args, i, processed, list, j, item, proc, options, helpers, _i, args_1, arg;
                 var _this = this;
-                return __generator(this, function (_c) {
-                    switch (_c.label) {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
                         case 0:
                             args = [];
                             i = 0;
-                            _c.label = 1;
+                            _a.label = 1;
                         case 1:
                             if (!(i < command.args.length)) return [3, 4];
-                            _a = args;
-                            _b = i;
                             return [4, this.processArg(command.args[i])];
                         case 2:
-                            _a[_b] = _c.sent();
-                            _c.label = 3;
+                            processed = _a.sent();
+                            if (command.args[i].expand) {
+                                list = processed.getList();
+                                for (j = 0; j < list.getLength(); j++) {
+                                    item = list.getSubValue(j);
+                                    args.push(item);
+                                }
+                            }
+                            else {
+                                args.push(processed);
+                            }
+                            _a.label = 3;
                         case 3:
                             i++;
                             return [3, 1];

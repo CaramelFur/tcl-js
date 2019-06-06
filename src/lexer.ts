@@ -225,8 +225,20 @@ export class Lexer {
     if (depth !== 0) throw new TclError('uneven amount of curly braces');
 
     // Check for characters after closing brace
-    if (this.hasMoreChars())
-      throw new TclError('extra characters after close-brace');
+    if (this.hasMoreChars()) {
+      // If this part is {*} try to expand
+      if (out.value === '*') {
+        // Get the next token to expand
+        let test = this.getNextToken();
+        out = <WordToken>test;
+        out.expand = true;
+      }
+
+      // Otherwise throw an error
+      else {
+        throw new TclError('extra characters after close-brace');
+      }
+    }
 
     return out;
   }
@@ -443,6 +455,7 @@ export class Lexer {
       hasSubExpr: false,
       stopBackslash: false,
       index: this.wordIdx,
+      expand: false,
       source: '',
       sourceLocation: 0,
     };
@@ -460,6 +473,7 @@ export interface WordToken {
   index: number;
   hasVariable: boolean;
   hasSubExpr: boolean;
+  expand: boolean;
   stopBackslash: boolean;
   source: string;
   sourceLocation: number;

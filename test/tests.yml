@@ -94,6 +94,8 @@ Functionality:
         type: output
         value: 'there'
 
+  Argument Expansion: 'subtests/expand.yml'
+
   Types: 'subtests/types.js'
 
   Scope:
