@@ -109,7 +109,7 @@ export class Interpreter {
 
       if (command.args[i].expand) {
         let list = (<TclSimple>processed).getList();
-        for(let j = 0; j < list.getLength(); j++){
+        for (let j = 0; j < list.getLength(); j++) {
           let item = list.getSubValue(j);
           (<TclVariable[]>args).push(item);
         }

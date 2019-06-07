@@ -42,7 +42,7 @@ export function Load(scope: Scope) {
         if (!code) return helpers.sendHelp('wargs');
 
         // check if the expression resulted in true
-        if (Is.True(solved.toString())) {
+        if (solved) {
           // If so run the code and return the result
 
           // Interpret the procedures tcl code with the new scope

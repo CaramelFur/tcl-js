@@ -183,11 +183,32 @@ var __assign = (this && this.__assign) || function () {
             if (isInt === void 0) { isInt = false; }
             if (this.isNumber())
                 return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
+            else if (this.isBoolean())
+                return this.getBoolean() ? 1 : 0;
             else
                 return 0;
         };
         TclSimple.prototype.isNumber = function () {
             return Is.Number(this.value);
+        };
+        TclSimple.prototype.getBoolean = function () {
+            if (this.value === 'true' ||
+                this.value === 'on' ||
+                this.value === 'yes' ||
+                this.value === '1')
+                return true;
+            else if (this.value === 'false' ||
+                this.value === 'off' ||
+                this.value === 'no' ||
+                this.value === '0')
+                return false;
+            else if (this.value)
+                return true;
+            else
+                return false;
+        };
+        TclSimple.prototype.isBoolean = function () {
+            return Is.Boolean(this.value);
         };
         return TclSimple;
     }(TclVariable));
@@ -201,8 +222,11 @@ var __assign = (this && this.__assign) || function () {
             return _this;
         }
         TclObject.prototype.set = function (name, value) {
-            if (!value)
+            if (!value) {
+                if (Object.keys(this.value).indexOf(name) < 0)
+                    throw new tclerror_1.TclError('cannot delete object item, item does not exist');
                 delete this.value[name];
+            }
             else
                 this.value[name] = value;
             return value;
@@ -219,6 +243,9 @@ var __assign = (this && this.__assign) || function () {
             if (!this.value[name])
                 throw new tclerror_1.TclError("no value found at given key: " + name);
             return this.value[name];
+        };
+        TclObject.prototype.getKeys = function () {
+            return Object.keys(this.value);
         };
         TclObject.prototype.getSize = function () {
             return Object.keys(this.value).length;
@@ -251,11 +278,15 @@ var __assign = (this && this.__assign) || function () {
         TclArray.prototype.getValue = function () {
             throw new tclerror_1.TclError("can't read \"" + this.getName() + "\": variable is array");
         };
-        TclArray.prototype.getSubValue = function (index) {
+        TclArray.prototype.getSubValue = function (index, force) {
             if (index === undefined || index === null)
                 return new TclSimple(this.getValue(), this.getName());
-            if (!this.value[index])
-                throw new tclerror_1.TclError("no value found at given index: " + index);
+            if (!this.value[index]) {
+                if (force)
+                    return new TclVariable(undefined);
+                else
+                    throw new tclerror_1.TclError("no value found at given index: " + index);
+            }
             return this.value[index];
         };
         TclArray.prototype.getLength = function () {

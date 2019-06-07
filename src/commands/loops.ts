@@ -35,7 +35,7 @@ export function Load(scope: Scope) {
       // Interpret the procedures tcl code with the new scope
       let newInterpreter = new Interpreter(interpreter.getTcl(), code, newScope);
 
-      while (Is.True((await helpers.solveExpression(expression)).toString())) {
+      while (await helpers.solveExpression(expression)) {
         // If so run the code and return the result
         newInterpreter.reset();
 

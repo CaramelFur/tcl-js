@@ -10,15 +10,18 @@ const CloseBrace = (c: string) =>
   c === ']' || c === '}' || c === '"' || c === ')';
 const Brace = (c: string) => OpenBrace(c) || CloseBrace(c);
 const Number = (c: string) => !isNaN(parseFloat(c));
-
-const True = (input: string) => {
-  if (input === 'yes') return true;
-  if (input === 'true') return true;
-
-  if (Number(input) && parseFloat(input).toString() === input) {
-    if (parseFloat(input) !== 0) return true;
-  }
-  return false;
+const Boolean = (c: string) => {
+  c = c.toLowerCase();
+  return (
+    c === 'true' ||
+    c === 'false' ||
+    c === 'on' ||
+    c === 'off' ||
+    c === 'yes' ||
+    c === 'no' ||
+    c === '1' ||
+    c === '0'
+  );
 };
 
 /*const BareWord = (c: string) =>
@@ -38,7 +41,7 @@ export {
   OpenBrace,
   CloseBrace,
   Brace,
-  True,
+  Boolean,
   /*BareWord,
   Octal,
   Hex,*/

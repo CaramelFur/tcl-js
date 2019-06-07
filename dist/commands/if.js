@@ -39,14 +39,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../types", "../scope", "../is", "../interpreter"], factory);
+        define(["require", "exports", "../types", "../scope", "../interpreter"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var types_1 = require("../types");
     var scope_1 = require("../scope");
-    var Is = require("../is");
     var interpreter_1 = require("../interpreter");
     function Load(scope) {
         var _this = this;
@@ -68,7 +67,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                             code = args.shift();
                         if (!code)
                             return [2, helpers.sendHelp('wargs')];
-                        if (Is.True(solved.toString())) {
+                        if (solved) {
                             newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, new scope_1.Scope(interpreter.getScope()));
                             return [2, newInterpreter.run()];
                         }

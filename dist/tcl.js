@@ -103,6 +103,115 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         Tcl.prototype.addAdvancedProcedure = function (name, procedure, settings) {
             return this.globalScope.defineProc(name, procedure, settings);
         };
+        Tcl.prototype.setVariable = function (name, variable, force) {
+            if (!force) {
+                var test = this.globalScope.resolve(name);
+                if (test)
+                    throw new Error('Variable ' + name + ' has already been set!');
+            }
+            if (Array.isArray(variable)) {
+                var saveVar = new types_1.TclArray(undefined, name);
+                for (var i = 0; i < variable.length; i++) {
+                    var item = variable[i];
+                    var converted = void 0;
+                    if (typeof item === 'string' ||
+                        typeof item === 'number' ||
+                        typeof item === 'boolean') {
+                        converted = item.toString();
+                    }
+                    else {
+                        converted = item.toString();
+                    }
+                    var saveSimple = new types_1.TclSimple(converted);
+                    saveVar.set(i, saveSimple);
+                }
+                this.globalScope.define(name, saveVar);
+                return true;
+            }
+            else if (variable instanceof Object) {
+                var saveVar = new types_1.TclObject(undefined, name);
+                for (var _i = 0, _a = Object.keys(variable); _i < _a.length; _i++) {
+                    var key = _a[_i];
+                    var item = variable[key];
+                    var converted = void 0;
+                    if (typeof item === 'string' ||
+                        typeof item === 'number' ||
+                        typeof item === 'boolean') {
+                        converted = item.toString();
+                    }
+                    else {
+                        converted = item.toString();
+                    }
+                    var saveSimple = new types_1.TclSimple(converted);
+                    saveVar.set(key, saveSimple);
+                }
+                this.globalScope.define(name, saveVar);
+                return true;
+            }
+            else if (typeof variable === 'string' ||
+                typeof variable === 'number' ||
+                typeof variable === 'boolean') {
+                var out = variable.toString();
+                var saveVar = new types_1.TclSimple(out, name);
+                this.globalScope.define(name, saveVar);
+                return true;
+            }
+            else {
+                throw new Error('Unsupported variable type!');
+            }
+        };
+        Tcl.prototype.getVariable = function (name, force) {
+            var gotten = this.globalScope.resolve(name);
+            if (!gotten) {
+                if (!force)
+                    throw new Error('Could not find variable');
+                else
+                    return '';
+            }
+            if (gotten instanceof types_1.TclSimple) {
+                if (gotten.isNumber())
+                    return gotten.getNumber();
+                else if (gotten.isBoolean())
+                    return gotten.getBoolean();
+                else
+                    return gotten.getValue();
+            }
+            else if (gotten instanceof types_1.TclArray) {
+                var out = [];
+                var length_1 = gotten.getLength();
+                for (var i = 0; i < length_1; i++) {
+                    var item = gotten.getSubValue(i, true);
+                    if (item instanceof types_1.TclSimple && item.isNumber())
+                        out.push(item.getNumber());
+                    else if (item instanceof types_1.TclSimple && item.isBoolean())
+                        out.push(item.getBoolean());
+                    else
+                        out.push(item.getValue());
+                }
+                return out;
+            }
+            else if (gotten instanceof types_1.TclObject) {
+                var out = {};
+                var keys = gotten.getKeys();
+                for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+                    var key = keys_1[_i];
+                    var item = gotten.getSubValue(key);
+                    if (item instanceof types_1.TclSimple && item.isNumber())
+                        out[key] = item.getNumber();
+                    else if (item instanceof types_1.TclSimple && item.isBoolean())
+                        out[key] = item.getBoolean();
+                    else
+                        out[key] = item.getValue();
+                }
+                return out;
+            }
+            else {
+                if (!force)
+                    throw new Error('Could not convert variable to js equivalent');
+                else
+                    return '';
+            }
+        };
         Tcl.prototype.getDisabledCommands = function () {
             return this.disabledCommands;
         };

@@ -46,4 +46,42 @@ module.exports = () => {
       expect(e.message).to.equal('can\'t disable "nope": no such function');
     }
   });
+
+  it('Delete setting', async () => {
+    let scope = new Scope();
+    
+    scope.setSetting('test', true);
+
+    expect(scope.getSetting('test')).to.equal(true);
+
+    scope.setSetting('test', null);
+
+    expect(scope.getSetting('test')).to.equal(null);
+  });
+
+  it('Delete subsetting', async () => {
+    let scope = new Scope();
+    
+    scope.setSetting('test', true);
+
+    expect(scope.getSetting('test')).to.equal(true);
+
+    scope.setSubSetting('test', 'wow', true);
+
+    expect(scope.getSetting('test')).to.eql({wow: true});
+
+    scope.setSubSetting('test', 'wow', null);
+
+    expect(scope.getSetting('test')).to.eql({});
+  });
+
+  it('Unexpected subsetting', async () => {
+    let scope = new Scope();
+  
+    expect(scope.getSetting('test')).to.equal(null);
+
+    let out = scope.setSubSetting('test', 'wow', true);
+
+    expect(out).to.equal(false);
+  });
 };

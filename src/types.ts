@@ -398,6 +398,7 @@ export class TclSimple extends TclVariable {
   public getNumber(isInt: boolean = false): number {
     if (this.isNumber())
       return isInt ? parseInt(this.value, 10) : parseFloat(this.value);
+    else if (this.isBoolean()) return this.getBoolean() ? 1 : 0;
     else return 0;
   }
 
@@ -409,6 +410,41 @@ export class TclSimple extends TclVariable {
    */
   public isNumber(): boolean {
     return Is.Number(this.value);
+  }
+
+  /**
+   * Convert this TclSimple to a boolean
+   *
+   * @returns {boolean}
+   * @memberof TclSimple
+   */
+  public getBoolean(): boolean {
+    if (
+      this.value === 'true' ||
+      this.value === 'on' ||
+      this.value === 'yes' ||
+      this.value === '1'
+    )
+      return true;
+    else if (
+      this.value === 'false' ||
+      this.value === 'off' ||
+      this.value === 'no' ||
+      this.value === '0'
+    )
+      return false;
+    else if (this.value) return true;
+    else return false;
+  }
+
+  /**
+   * Check if this TclSimple can be converted to a boolean
+   *
+   * @returns {boolean}
+   * @memberof TclSimple
+   */
+  public isBoolean(): boolean {
+    return Is.Boolean(this.value);
   }
 }
 
@@ -442,7 +478,10 @@ export class TclObject extends TclVariable {
    */
   public set(name: string, value?: TclVariable): TclVariable | undefined {
     // If value is empty delete value from the internal object
-    if (!value) delete this.value[name];
+    if (!value) {
+      if(Object.keys(this.value).indexOf(name) < 0) throw new TclError('cannot delete object item, item does not exist');
+      delete this.value[name];
+    }
     // If there is data append it to the correct key
     else this.value[name] = value;
     return value;
@@ -485,6 +524,16 @@ export class TclObject extends TclVariable {
     if (!this.value[name])
       throw new TclError(`no value found at given key: ${name}`);
     return this.value[name];
+  }
+
+  /**
+   * Get all object keys that are present
+   *
+   * @returns {string[]}
+   * @memberof TclObject
+   */
+  public getKeys(): string[] {
+    return Object.keys(this.value);
   }
 
   /**
@@ -567,17 +616,20 @@ export class TclArray extends TclVariable {
    * Get the value at a specified index
    *
    * @param {number} index - The index you want the value from
+   * @param {boolean} [force] - If true, wont throw error on nonexistant index (please avoid using this)
    * @returns {TclVariable} - The found value
    * @memberof TclArray
    */
-  public getSubValue(index: number): TclVariable {
+  public getSubValue(index: number, force?: boolean): TclVariable {
     // If index is not correct return the value of this variable
     if (index === undefined || index === null)
       return new TclSimple(this.getValue(), this.getName());
 
     // Throw error if index does not exist
-    if (!this.value[index])
-      throw new TclError(`no value found at given index: ${index}`);
+    if (!this.value[index]) {
+      if (force) return new TclVariable(undefined);
+      else throw new TclError(`no value found at given index: ${index}`);
+    }
     return this.value[index];
   }
 

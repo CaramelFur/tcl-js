@@ -27,17 +27,17 @@
     exports.Brace = Brace;
     var Number = function (c) { return !isNaN(parseFloat(c)); };
     exports.Number = Number;
-    var True = function (input) {
-        if (input === 'yes')
-            return true;
-        if (input === 'true')
-            return true;
-        if (Number(input) && parseFloat(input).toString() === input) {
-            if (parseFloat(input) !== 0)
-                return true;
-        }
-        return false;
+    var Boolean = function (c) {
+        c = c.toLowerCase();
+        return (c === 'true' ||
+            c === 'false' ||
+            c === 'on' ||
+            c === 'off' ||
+            c === 'yes' ||
+            c === 'no' ||
+            c === '1' ||
+            c === '0');
     };
-    exports.True = True;
+    exports.Boolean = Boolean;
 });
 //# sourceMappingURL=is.js.map

@@ -66,6 +66,12 @@
     value: 'if {true}'
   output:
     type: error
+- name: 'Error on missing args with then'
+  input:
+    type: raw
+    value: 'if {true} then'
+  output:
+    type: error
 - name: 'Error on missing args with else'
   input:
     type: raw

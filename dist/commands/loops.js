@@ -39,22 +39,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../types", "../scope", "../is", "../interpreter", "../tclerror"], factory);
+        define(["require", "exports", "../types", "../scope", "../interpreter", "../tclerror"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var types_1 = require("../types");
     var scope_1 = require("../scope");
-    var Is = require("../is");
     var interpreter_1 = require("../interpreter");
     var tclerror_1 = require("../tclerror");
     function Load(scope) {
         var _this = this;
         scope.defineProc('while', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var output, expression, code, newScope, newInterpreter, _a, _b, checkLoop;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var output, expression, code, newScope, newInterpreter, checkLoop;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         args = args;
                         output = new types_1.TclSimple('');
@@ -63,16 +62,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         newScope = new scope_1.Scope(interpreter.getScope());
                         newScope.setSetting('loop', true);
                         newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, newScope);
-                        _c.label = 1;
-                    case 1:
-                        _b = (_a = Is).True;
-                        return [4, helpers.solveExpression(expression)];
+                        _a.label = 1;
+                    case 1: return [4, helpers.solveExpression(expression)];
                     case 2:
-                        if (!_b.apply(_a, [(_c.sent()).toString()])) return [3, 4];
+                        if (!_a.sent()) return [3, 4];
                         newInterpreter.reset();
                         return [4, newInterpreter.run()];
                     case 3:
-                        output = _c.sent();
+                        output = _a.sent();
                         checkLoop = newScope.getSetting('loop');
                         if (checkLoop && typeof checkLoop !== 'boolean' && checkLoop.break)
                             return [3, 4];

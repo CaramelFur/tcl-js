@@ -1,11 +1,23 @@
 import { Tcl } from '../../src/tcl';
 
-let tcl = new Tcl();
+async function main() {
+  let tcl = new Tcl();
 
-tcl
-  .runFile('./test/dev/test.tcl')
-  .then(console.log)
-  .catch(console.error); /**/
+  tcl.setVariable('test', {hello: 'world', there: 'gay'});
+
+  let out = await tcl.runFile('./test/dev/test.tcl');
+  console.log(out);
+
+  console.log(tcl.getVariable('vstring'));
+  console.log(tcl.getVariable('vnumber'));
+  console.log(tcl.getVariable('vboolean'));
+
+  console.log(tcl.getVariable('varr'));
+
+  console.log(tcl.getVariable('vobj'));
+}
+
+main().catch(console.error);
 
 /*tcl
   //.run('puts hi\\nhi')
