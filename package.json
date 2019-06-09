@@ -1,6 +1,6 @@
 {
   "name": "tcl-js",
-  "version": "2.8.4",
+  "version": "2.9.0",
   "description": "tcl-js is a tcl intepreter written completely in Typescript. It is meant to replicate the tcl-sh interpreter as closely as possible.",
   "main": "dist/tcl.js",
   "scripts": {

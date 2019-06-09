@@ -7,7 +7,7 @@
     value: "hi\n"
   output:
     type: raw
-    value: '1'
+    value: ''
 - name: 'Long while'
   input:
     type: raw
@@ -17,7 +17,7 @@
     value: "hi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\n"
   output:
     type: raw
-    value: '10'
+    value: ''
 - name: 'Empty while'
   input:
     type: raw

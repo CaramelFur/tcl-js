@@ -1,9 +1,9 @@
 import { Interpreter } from '../interpreter';
-import { TclSimple } from '../types';
+import { TclSimple, TclProcHelpers } from '../types';
 import { Scope } from '../scope';
 
 // A regex to convert a variable name to its base name with appended object keys or array indexes
-const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
+export const variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
 
 /**
  * Function to load the procs into the scope
@@ -24,45 +24,12 @@ export function Load(scope: Scope) {
     (interpreter, args, command, helpers) => {
       const [varName, tclValue] = args;
 
-      // Interface for return object
-      interface solveVarReturn {
-        name: string;
-        key: string | number | null;
-      }
-
-      /**
-       * Function to destruct a variable into name/key combinations
-       *
-       * @param {string} input - The raw variable
-       * @returns {solveVarReturn} - The solved result
-       */
-      function solveVar(input: string): solveVarReturn {
-        // Execute the regex
-        let result = variableRegex.exec(input);
-        // Check if succeed
-        if (!result || !result.groups) return helpers.sendHelp('wvarname');
-
-        // Remap the name and key accordingly
-        let name = result.groups.name;
-        let key = result.groups.object
-          ? result.groups.object
-          : result.groups.array
-          ? parseInt(result.groups.array, 10)
-          : null;
-
-        // Return
-        return {
-          name,
-          key,
-        };
-      }
-
       // If there are 2 arguments, set the variable
       if (args.length === 2) {
         if (!(tclValue instanceof TclSimple) || !(varName instanceof TclSimple))
           return helpers.sendHelp('wtype');
 
-        let solved = solveVar(varName.getValue());
+        let solved = solveVar(varName.getValue(), helpers);
         interpreter.setVariable(solved.name, solved.key, tclValue);
         return tclValue;
       }
@@ -70,7 +37,7 @@ export function Load(scope: Scope) {
       else if (args.length === 1) {
         if (!(varName instanceof TclSimple)) return helpers.sendHelp('wtype');
 
-        let solved = solveVar(varName.getValue());
+        let solved = solveVar(varName.getValue(), helpers);
         return interpreter.getVariable(solved.name, solved.key);
       }
 
@@ -112,7 +79,8 @@ export function Load(scope: Scope) {
 
       // Loop over every argument and unset it
       for (let arg of args) {
-        interpreter.getScope().undefine(arg, nocomplain);
+        let solved = solveVar(arg, helpers);
+        interpreter.deleteVariable(solved.name, solved.key, nocomplain);
       }
 
       return new TclSimple('');
@@ -142,7 +110,7 @@ export function Load(scope: Scope) {
       let expression = args.join(' ');
 
       let result = await helpers.solveExpression(expression);
-      
+
       return new TclSimple(result.toString());
     },
     {
@@ -245,4 +213,46 @@ export function Load(scope: Scope) {
       },
     },
   );
+}
+
+/**
+ * Interface for return object
+ *
+ * @export
+ * @interface solveVarReturn
+ */
+export interface solveVarReturn {
+  name: string;
+  key: string | number | null;
+}
+
+/**
+ * Function to destruct a variable into name/key combinations
+ *
+ * @export
+ * @param {string} input - The raw variable
+ * @returns {solveVarReturn} - The solved result
+ */
+export function solveVar(
+  input: string,
+  helpers: TclProcHelpers,
+): solveVarReturn {
+  // Execute the regex
+  let result = variableRegex.exec(input);
+  // Check if succeed
+  if (!result || !result.groups) return helpers.sendHelp('wvarname');
+
+  // Remap the name and key accordingly
+  let name = result.groups.name;
+  let key = result.groups.object
+    ? result.groups.object
+    : result.groups.array
+    ? parseInt(result.groups.array, 10)
+    : null;
+
+  // Return
+  return {
+    name,
+    key,
+  };
 }

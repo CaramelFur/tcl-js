@@ -51,12 +51,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function Load(scope) {
         var _this = this;
         scope.defineProc('while', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
-            var output, expression, code, newScope, newInterpreter, checkLoop;
+            var expression, code, newScope, newInterpreter, checkLoop;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         args = args;
-                        output = new types_1.TclSimple('');
                         expression = args[0];
                         code = args[1];
                         newScope = new scope_1.Scope(interpreter.getScope());
@@ -69,13 +68,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                         newInterpreter.reset();
                         return [4, newInterpreter.run()];
                     case 3:
-                        output = _a.sent();
+                        _a.sent();
                         checkLoop = newScope.getSetting('loop');
                         if (checkLoop && typeof checkLoop !== 'boolean' && checkLoop.break)
                             return [3, 4];
                         newScope.setSetting('loop', true);
                         return [3, 1];
-                    case 4: return [2, output];
+                    case 4: return [2, new types_1.TclSimple('')];
                 }
             });
         }); }, {
@@ -83,6 +82,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                 pattern: "while test body",
                 textOnly: true,
                 amount: 2,
+            },
+        });
+        scope.defineProc('for', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {
+            var start, test, next, code, newScope, startInterpreter, newInterpreter, nextInterpreter, checkLoop;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        args = args;
+                        start = args[0], test = args[1], next = args[2], code = args[3];
+                        newScope = new scope_1.Scope(interpreter.getScope());
+                        startInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), start, newScope);
+                        return [4, startInterpreter.run()];
+                    case 1:
+                        _a.sent();
+                        newScope.setSetting('loop', true);
+                        newInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), code, newScope);
+                        nextInterpreter = new interpreter_1.Interpreter(interpreter.getTcl(), next, newScope);
+                        _a.label = 2;
+                    case 2: return [4, helpers.solveExpression(test)];
+                    case 3:
+                        if (!_a.sent()) return [3, 6];
+                        newInterpreter.reset();
+                        return [4, newInterpreter.run()];
+                    case 4:
+                        _a.sent();
+                        checkLoop = newScope.getSetting('loop');
+                        if (checkLoop && typeof checkLoop !== 'boolean' && checkLoop.break)
+                            return [3, 6];
+                        newScope.setSetting('loop', true);
+                        nextInterpreter.reset();
+                        return [4, nextInterpreter.run()];
+                    case 5:
+                        _a.sent();
+                        return [3, 2];
+                    case 6: return [2, new types_1.TclSimple('')];
+                }
+            });
+        }); }, {
+            arguments: {
+                pattern: "for start test next body",
+                textOnly: true,
+                amount: 4,
             },
         });
         scope.defineProc('break', function (interpreter, args, command, helpers) { return __awaiter(_this, void 0, void 0, function () {

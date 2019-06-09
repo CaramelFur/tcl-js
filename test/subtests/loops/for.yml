@@ -1,0 +1,41 @@
+- name: 'Simple for'
+  input:
+    type: raw
+    value: 'for {set i 0} {$i < 1} {incr i} {puts hi}'
+  stdout:
+    type: raw
+    value: "hi\n"
+  output:
+    type: raw
+    value: ''
+- name: 'Long for'
+  input:
+    type: raw
+    value: 'for {set i 0} {$i < 10} {incr i} {puts hi}'
+  stdout:
+    type: raw
+    value: "hi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\nhi\n"
+  output:
+    type: raw
+    value: ''
+- name: 'Empty for'
+  input:
+    type: raw
+    value: 'for {set i 0} {$i < 0} {incr i} {puts hi}'
+  stdout:
+    type: raw
+    value: ''
+  output:
+    type: raw
+    value: ''
+- name: 'Break for'
+  input:
+    type: raw
+    value: 'for {set i 0} {$i < 10} {incr i} {puts hi; if {$i == 3} break}'
+  stdout:
+    type: raw
+    value: "hi\nhi\nhi\nhi\n"
+  output:
+    type: raw
+    value: ''
+

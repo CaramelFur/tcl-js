@@ -47,37 +47,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var interpreter_1 = require("../interpreter");
     var types_1 = require("../types");
     var scope_1 = require("../scope");
-    var variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
+    exports.variableRegex = /(?<fullname>(?<name>[^(\n]+)(\(((?<array>[0-9]+)|(?<object>[^\)]+))\))?)/;
     function Load(scope) {
         var _this = this;
         scope.defineProc('set', function (interpreter, args, command, helpers) {
             var varName = args[0], tclValue = args[1];
-            function solveVar(input) {
-                var result = variableRegex.exec(input);
-                if (!result || !result.groups)
-                    return helpers.sendHelp('wvarname');
-                var name = result.groups.name;
-                var key = result.groups.object
-                    ? result.groups.object
-                    : result.groups.array
-                        ? parseInt(result.groups.array, 10)
-                        : null;
-                return {
-                    name: name,
-                    key: key,
-                };
-            }
             if (args.length === 2) {
                 if (!(tclValue instanceof types_1.TclSimple) || !(varName instanceof types_1.TclSimple))
                     return helpers.sendHelp('wtype');
-                var solved = solveVar(varName.getValue());
+                var solved = solveVar(varName.getValue(), helpers);
                 interpreter.setVariable(solved.name, solved.key, tclValue);
                 return tclValue;
             }
             else if (args.length === 1) {
                 if (!(varName instanceof types_1.TclSimple))
                     return helpers.sendHelp('wtype');
-                var solved = solveVar(varName.getValue());
+                var solved = solveVar(varName.getValue(), helpers);
                 return interpreter.getVariable(solved.name, solved.key);
             }
             return helpers.sendHelp('wargs');
@@ -102,7 +87,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             }
             for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
                 var arg = args_1[_i];
-                interpreter.getScope().undefine(arg, nocomplain);
+                var solved = solveVar(arg, helpers);
+                interpreter.deleteVariable(solved.name, solved.key, nocomplain);
             }
             return new types_1.TclSimple('');
         }, {
@@ -202,5 +188,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         });
     }
     exports.Load = Load;
+    function solveVar(input, helpers) {
+        var result = exports.variableRegex.exec(input);
+        if (!result || !result.groups)
+            return helpers.sendHelp('wvarname');
+        var name = result.groups.name;
+        var key = result.groups.object
+            ? result.groups.object
+            : result.groups.array
+                ? parseInt(result.groups.array, 10)
+                : null;
+        return {
+            name: name,
+            key: key,
+        };
+    }
+    exports.solveVar = solveVar;
 });
 //# sourceMappingURL=basic.js.map

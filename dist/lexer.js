@@ -229,7 +229,7 @@
                             output += this.read();
                         }
                     }
-                    if (this.pos >= this.input.length)
+                    if (this.pos > this.input.length)
                         throw new tclerror_1.TclError('missing )');
                     return output;
                 }

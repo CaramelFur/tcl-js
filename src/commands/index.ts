@@ -5,6 +5,7 @@ import { Load as proc } from './proc';
 import { Load as iff } from './if';
 import { Load as switchh } from './switch';
 import { Load as whilee } from './loops';
+import { Load as operations } from './operations';
 import { Scope } from '../scope';
 
 // Import all loadfunctions and add them to the array
@@ -16,6 +17,7 @@ let LoadFunctions: Array<(scope: Scope) => void> = [
   iff,
   switchh,
   whilee,
+  operations,
 ];
 
 export { LoadFunctions };

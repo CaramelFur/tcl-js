@@ -87,18 +87,15 @@ export class Scope {
    * Delete a variable from the scope
    *
    * @param {string} name - Name of the variable to be deleted
-   * @param {boolean} [nocomplain] - If true, will throw error if variable does not exist
-   * @returns {TclVariable} - The value of the deleted variable
+   * @returns {TclVariable | undefined} - The value of the deleted variable, undefined if it didnt exist
    * @memberof Scope
    */
-  public undefine(name: string, nocomplain?: boolean): TclVariable {
+  public undefine(name: string): TclVariable | undefined {
     // Check if variable exists
     if (!Object.prototype.hasOwnProperty.call(this.members, name)) {
       // If there is a parent, run their undefine function
-      if (this.parent) return this.parent.undefine(name, nocomplain);
-      // If not the variable does not exist, depending on the nocomplain it will throw an error
-      else if (!nocomplain)
-        throw new TclError(`can't unset "${name}": no such variable`);
+      if (this.parent) return this.parent.undefine(name);
+      else return undefined;
     }
 
     // Delete the variable and return its value
@@ -243,8 +240,8 @@ export class Scope {
         delete (<{ [index: string]: boolean }>this.settings[setting])[
           subsetting
         ];
-      } 
-      
+      }
+
       // Otherwise set the subsetting to the correct variable
       else {
         (<{ [index: string]: boolean }>this.settings[setting])[
@@ -252,13 +249,13 @@ export class Scope {
         ] = value;
       }
       return true;
-    } 
+    }
 
     // If not test in the parent
     else if (this.parent !== null) {
       return this.parent.setSubSetting(setting, subsetting, value);
     }
-    
+
     // If there is no parent return false
     else return false;
   }

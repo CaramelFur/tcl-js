@@ -41,12 +41,12 @@
             }
             return this;
         };
-        Scope.prototype.undefine = function (name, nocomplain) {
+        Scope.prototype.undefine = function (name) {
             if (!Object.prototype.hasOwnProperty.call(this.members, name)) {
                 if (this.parent)
-                    return this.parent.undefine(name, nocomplain);
-                else if (!nocomplain)
-                    throw new tclerror_1.TclError("can't unset \"" + name + "\": no such variable");
+                    return this.parent.undefine(name);
+                else
+                    return undefined;
             }
             var returnValue = this.members[name];
             delete this.members[name];

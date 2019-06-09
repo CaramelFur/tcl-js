@@ -1,3 +1,4 @@
 While: 'subtests/loops/while.yml'
+For: 'subtests/loops/for.yml'
 
 Controllers: 'subtests/loops/controllers.yml'

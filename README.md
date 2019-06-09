@@ -67,21 +67,23 @@ Down below is the current project status of tcl-js, here you can see what parts 
 
 ### Currently working tcl commands
 
-These commands should be fully working according to the tcl wiki
+These commands should be fully working as documented in the tcl wiki
 
+- break
+- continue
 - eval
 - expr
+- for
+- if
+- incr
 - lindex
 - list
 - proc
 - puts
 - set
-- unset
-- if
 - switch
+- unset
 - while
-- break
-- continue
 
 ### Partially working commands
 

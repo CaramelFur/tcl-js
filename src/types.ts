@@ -369,12 +369,12 @@ export class TclList extends TclVariable {
 export class TclSimple extends TclVariable {
   /**
    *Creates an instance of TclSimple.
-   * @param {string} value - The initial value
+   * @param {(string | boolean | number)} value - The initial value
    * @param {string} [name] - Variable name
    * @memberof TclSimple
    */
-  constructor(value: string, name?: string) {
-    super(`${value}`, name);
+  constructor(value: string | boolean | number, name?: string) {
+    super(value.toString(), name);
   }
 
   /**
@@ -583,7 +583,7 @@ export class TclArray extends TclVariable {
         throw new TclError('cannot delete array item, item does not exist');
 
       // Remove the item from the array
-      this.value.splice(index, 1);
+      delete this.value[index];
     } else {
       // If we dont want to delete we just set the value
       this.value[index] = value;

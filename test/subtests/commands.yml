@@ -68,6 +68,13 @@ Expr:
     output:
       type: raw
       value: '3'
+  - name: String expressions
+    input:
+      type: raw
+      value: "expr {true ? 'hello': 'no'}"
+    output:
+      type: error
+      value: 'expression resolved to unusable value'
 
 # Test the functionality of variables
 'Set and Unset':
@@ -148,6 +155,22 @@ Expr:
     output:
       type: error
 
+  - name: 'Unset object key from nonexistent object'
+    input:
+      type: raw
+      value: 'unset -nocomplain var(test)'
+    output:
+      type: error
+      value: 'cant'' unset "var": variable isn''t object'
+
+  - name: 'Unset array index from nonexistent array'
+    input:
+      type: raw
+      value: 'unset -nocomplain var(2)'
+    output:
+      type: error
+      value: 'cant'' unset "var": variable isn''t array'
+
 List:
   - name: 'Simple'
     input:
@@ -227,6 +250,50 @@ Wait:
       value: 'wait five'
     output:
       type: error
+
+Incr:
+  - name: 'Basic increment'
+    input:
+      type: raw
+      value: 'incr i'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Basic increment with increment specified'
+    input:
+      type: raw
+      value: 'incr i 3'
+    output:
+      type: raw
+      value: '3'
+  - name: 'Basic increment with wrong increment specified'
+    input:
+      type: raw
+      value: 'incr i wow'
+    output:
+      type: error
+      value: 'expected integer but got "wow"'
+  - name: 'Basic increment on existing variable'
+    input:
+      type: raw
+      value: 'set i 3; incr i'
+    output:
+      type: raw
+      value: '4'
+  - name: 'Basic increment on existing variable with increment set'
+    input:
+      type: raw
+      value: 'set i 3; incr i 3'
+    output:
+      type: raw
+      value: '6'
+  - name: 'Basic increment on wrong existing variable'
+    input:
+      type: raw
+      value: 'set i wow; incr i'
+    output:
+      type: error
+      value: 'expected integer but got "wow"'
 
 Info:
   - name: 'Simple'

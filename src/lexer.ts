@@ -418,7 +418,7 @@ export class Lexer {
         }
 
         // Check if we did escape because of the )
-        if (this.pos >= this.input.length) throw new TclError('missing )');
+        if (this.pos > this.input.length) throw new TclError('missing )');
 
         // A closing brace
         return output;

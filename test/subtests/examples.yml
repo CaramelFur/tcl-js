@@ -103,4 +103,13 @@
   stdout:
     type: file
     value: 'results/while.txt'
-
+- name: 'For loop'
+  input:
+    type: file
+    value: 'scripts/for.tcl'
+  stdout:
+    type: file
+    value: 'results/for.txt'
+  output:
+    type: raw
+    value: '2'

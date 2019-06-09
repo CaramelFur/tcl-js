@@ -21,8 +21,6 @@ export function Load(scope: Scope) {
     async (interpreter, args, command, helpers) => {
       args = <string[]>args;
 
-      let output: TclVariable = new TclSimple('');
-
       let expression = args[0];
       let code = args[1];
 
@@ -39,8 +37,8 @@ export function Load(scope: Scope) {
         // If so run the code and return the result
         newInterpreter.reset();
 
-        // Return the result
-        output = await newInterpreter.run();
+        // Run the code
+        await newInterpreter.run();
 
         // Check if we should break
         let checkLoop = newScope.getSetting('loop');
@@ -51,13 +49,72 @@ export function Load(scope: Scope) {
         newScope.setSetting('loop', true);
       }
 
-      return output;
+      return new TclSimple('');
     },
     {
       arguments: {
         pattern: `while test body`,
         textOnly: true,
         amount: 2,
+      },
+    },
+  );
+
+  /**
+   * for start test next body
+   *
+   * @see https://wiki.tcl-lang.org/page/for
+   */
+  scope.defineProc(
+    'for',
+    async (interpreter, args, command, helpers) => {
+      args = <string[]>args;
+
+      let [start, test, next, code] = args;
+
+      // Create a new scope
+      let newScope = new Scope(interpreter.getScope());
+
+      // Run the 'start' argument
+      let startInterpreter = new Interpreter(interpreter.getTcl(), start, newScope);
+      await startInterpreter.run();
+
+      // Set the loop variable
+      newScope.setSetting('loop', true);
+
+      // Interpret the procedures tcl code with the new scope
+      let newInterpreter = new Interpreter(interpreter.getTcl(), code, newScope);
+      let nextInterpreter = new Interpreter(interpreter.getTcl(), next, newScope);
+
+      while (await helpers.solveExpression(test)) {
+        // If so run the code and return the result
+        newInterpreter.reset();
+
+        // Run the code
+        await newInterpreter.run();
+
+        // Check if we should break
+        let checkLoop = newScope.getSetting('loop');
+        if (checkLoop && typeof checkLoop !== 'boolean' && checkLoop.break)
+          break;
+        
+        // Reset the scope loop settings
+        newScope.setSetting('loop', true);
+
+        // Reset the interpreter for the 'next' argument
+        nextInterpreter.reset();
+
+        // Execute the 'next' argument
+        await nextInterpreter.run();
+      }
+
+      return new TclSimple('');
+    },
+    {
+      arguments: {
+        pattern: `for start test next body`,
+        textOnly: true,
+        amount: 4,
       },
     },
   );

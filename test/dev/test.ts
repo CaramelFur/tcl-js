@@ -7,14 +7,6 @@ async function main() {
 
   let out = await tcl.runFile('./test/dev/test.tcl');
   console.log(out);
-
-  console.log(tcl.getVariable('vstring'));
-  console.log(tcl.getVariable('vnumber'));
-  console.log(tcl.getVariable('vboolean'));
-
-  console.log(tcl.getVariable('varr'));
-
-  console.log(tcl.getVariable('vobj'));
 }
 
 main().catch(console.error);

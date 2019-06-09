@@ -157,7 +157,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
                                                     solvedExpression = parseFloat(solvedExpression);
                                                 if (typeof solvedExpression === 'boolean')
                                                     solvedExpression = solvedExpression ? 1 : 0;
-                                                if (typeof solvedExpression !== 'number')
+                                                if (typeof solvedExpression !== 'number' || isNaN(solvedExpression))
                                                     throw new tclerror_1.TclError('expression resolved to unusable value');
                                                 if (solvedExpression === Infinity)
                                                     throw new tclerror_1.TclError('expression result is infinity');
@@ -454,6 +454,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
             }
             output.setName(name);
             this.scope.define(name, output);
+            return;
+        };
+        Interpreter.prototype.deleteVariable = function (variableName, variableKey, noComplain) {
+            var name = variableName;
+            var objectKey = typeof variableKey === 'string' ? variableKey : null;
+            var arrayIndex = typeof variableKey === 'number' ? variableKey : null;
+            var existingValue = this.scope.resolve(name);
+            if (existingValue === null && !noComplain)
+                throw new tclerror_1.TclError("can't unset \"" + variableName + "\": no such variable");
+            if (objectKey !== null) {
+                if (!(existingValue instanceof types_1.TclObject))
+                    throw new tclerror_1.TclError("cant' unset \"" + variableName + "\": variable isn't object");
+                existingValue.set(objectKey, undefined);
+                return;
+            }
+            else if (arrayIndex !== null) {
+                if (!(existingValue instanceof types_1.TclArray))
+                    throw new tclerror_1.TclError("cant' unset \"" + variableName + "\": variable isn't array");
+                existingValue.set(arrayIndex, undefined);
+                return;
+            }
+            this.scope.undefine(name);
             return;
         };
         Interpreter.prototype.resolveFirstSquareBracket = function (input, position) {

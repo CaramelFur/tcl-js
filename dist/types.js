@@ -173,7 +173,7 @@ var __assign = (this && this.__assign) || function () {
     var TclSimple = (function (_super) {
         __extends(TclSimple, _super);
         function TclSimple(value, name) {
-            return _super.call(this, "" + value, name) || this;
+            return _super.call(this, value.toString(), name) || this;
         }
         TclSimple.prototype.getList = function () {
             var list = new TclList(this.value, this.getName());
@@ -265,7 +265,7 @@ var __assign = (this && this.__assign) || function () {
             if (!value) {
                 if (!this.value[index])
                     throw new tclerror_1.TclError('cannot delete array item, item does not exist');
-                this.value.splice(index, 1);
+                delete this.value[index];
             }
             else {
                 this.value[index] = value;

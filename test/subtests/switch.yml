@@ -34,6 +34,13 @@ Normal:
     output:
       type: raw
       value: '1'
+  - name: 'Glob with nocase'
+    input:
+      type: raw
+      value: 'switch -nocase -glob HELlo {{hel*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
   - name: 'Regex'
     input:
       type: raw
@@ -52,6 +59,13 @@ Normal:
     input:
       type: raw
       value: 'switch -regexp -indexvar hi hello {{.*} {expr 1}}'
+    output:
+      type: raw
+      value: '1'
+  - name: 'Regex with nocase'
+    input:
+      type: raw
+      value: 'switch -nocase -regexp HeLLo {{hello} {expr 1}}'
     output:
       type: raw
       value: '1'
@@ -83,6 +97,21 @@ Normal:
     output:
       type: raw
       value: ''
+  - name: 'With default and global'
+    input:
+      type: raw
+      value: 'switch -glob nope {hello {expr 1} default {expr 3}}'
+    output:
+      type: raw
+      value: '3'
+  - name: 'With default and regex'
+    input:
+      type: raw
+      value: 'switch -regexp nope {hello {expr 1} default {expr 3}}'
+    output:
+      type: raw
+      value: '3'
+
 Errors:
   - name: 'Double set'
     input:

@@ -161,7 +161,7 @@ export class Interpreter {
           solvedExpression = parseFloat(solvedExpression);
         if (typeof solvedExpression === 'boolean')
           solvedExpression = solvedExpression ? 1 : 0;
-        if (typeof solvedExpression !== 'number')
+        if (typeof solvedExpression !== 'number' || isNaN(solvedExpression))
           throw new TclError('expression resolved to unusable value');
         if (solvedExpression === Infinity)
           throw new TclError('expression result is infinity');
@@ -653,6 +653,61 @@ export class Interpreter {
 
     // Set the scope correctly
     this.scope.define(name, output);
+    return;
+  }
+
+  /**
+   * Delete a variable
+   *
+   * @param {string} variableName - The name of the variable
+   * @param {(string | number | null)} variableKey - If to delete an index or key
+   * @param {boolean} noComplain - Whereter or not to complain about non existing variables
+   * @returns
+   * @memberof Interpreter
+   */
+  public deleteVariable(
+    variableName: string,
+    variableKey: string | number | null,
+    noComplain: boolean,
+  ) {
+    // Set the correct keys
+    let name = variableName;
+    let objectKey = typeof variableKey === 'string' ? variableKey : null;
+    let arrayIndex = typeof variableKey === 'number' ? variableKey : null;
+
+    // Read if the value is already present in the scope
+    let existingValue: TclVariable | null = this.scope.resolve(name);
+
+    // Check if a value is there
+    if (existingValue === null && !noComplain)
+      throw new TclError(`can't unset "${variableName}": no such variable`);
+
+    // Check if an object key was parsed
+    if (objectKey !== null) {
+      // If a value is already present, check if it is indeed an object
+      if (!(existingValue instanceof TclObject))
+        throw new TclError(
+          `cant' unset "${variableName}": variable isn't object`,
+        );
+
+      // Update the object with the value and return
+      existingValue.set(objectKey, undefined);
+      return;
+    }
+    // Check an array index was parsed
+    else if (arrayIndex !== null) {
+      // If a value is already present, check if it is indeed an array
+      if (!(existingValue instanceof TclArray))
+        throw new TclError(
+          `cant' unset "${variableName}": variable isn't array`,
+        );
+
+      // Update the array with the value and return
+      existingValue.set(arrayIndex, undefined);
+      return;
+    }
+
+    this.scope.undefine(name);
     return;
   }
 

@@ -146,6 +146,27 @@ Array:
       value: 'set var HelloWorld; set var(3) Hi;'
     output:
       type: error
+  - name: 'Unset array'
+    input:
+      type: raw
+      value: 'set var(1) HelloWorld; unset var; puts $var'
+    output:
+      type: error
+      value: 'can''t read "var": no such variable'
+  - name: 'Unset array index'
+    input:
+      type: raw
+      value: 'set var(1) one; set var(2) two; unset var(1); puts $var(2)'
+    stdout:
+      type: raw
+      value: "two\n"
+  - name: 'Unset array index error'
+    input:
+      type: raw
+      value: 'set var(1) one; set var(2) two; unset var(1); puts $var(1)'
+    output:
+      type: error
+      value: 'no value found at given index: 1'
 Object:
   - name: 'Simple'
     input:
@@ -259,6 +280,27 @@ Object:
       value: 'set var HelloWorld; set var(hello) Hi;'
     output:
       type: error
+  - name: 'Unset object'
+    input:
+      type: raw
+      value: 'set var(one) HelloWorld; unset var; puts $var'
+    output:
+      type: error
+      value: 'can''t read "var": no such variable'
+  - name: 'Unset object key'
+    input:
+      type: raw
+      value: 'set var(one) one; set var(two) two; unset var(one); puts $var(two)'
+    stdout:
+      type: raw
+      value: "two\n"
+  - name: 'Unset object key error'
+    input:
+      type: raw
+      value: 'set var(one) one; set var(two) two; unset var(one); puts $var(one)'
+    output:
+      type: error
+      value: 'no value found at given key: one'
 Brace Variables:
   - name: 'Simple'
     input:

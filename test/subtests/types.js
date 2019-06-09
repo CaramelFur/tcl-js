@@ -156,7 +156,7 @@ module.exports = () => {
   });
 
   it('Unset array index', async () => {
-    let test = new Types.TclArray();
+    let test = new Types.TclArray([]);
     test.set(1, new Types.TclSimple('wow'));
 
     let out = test.getSubValue(1);
