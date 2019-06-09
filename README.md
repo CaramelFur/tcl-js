@@ -10,17 +10,19 @@
 
 ## About
 
-tcl-js is an interpreter for TCL written in typescript, it tries to replicate the tcl-sh interpreter as closely as possible, any deviations that are made will be listed below. It is not built for speed, but for ease of use and modularity. Everything has therefore as much documentation as possible, so anyone with some coding knowledge can figure out what is going on.
+tcl-js is an interpreter for TCL written in typescript, it tries to replicate the tcl-sh interpreter as closely as possible. If there are any deviations from the original interpeter, they will be listed below. This interpreter is not built for speed or efficiency, but for security, ease of use and modularity. This also means that every part of the interpreter will be documented as precisely as possible.
 
 ### Why
 
-Yes I know there are already packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because when you link the binary interpreter directly into node, you add a lot of vulnerabilities. When you open this interpreter up to your users, they have access to execute dangerous commands on your server via the tcl-sh compiler. With tcl-js you can easily disable commands and be sure that users can't mess with anything except maybe the program itself.
+I am aware that there already exist packages for NodeJS that link the tcl-sh interpreter directly into node. The reason this project was started was because of security concerns about this method. Because, if you directly give users access to a system level interpreter, you grant them the ability to execute possible dangerous commands. An example might be deleting all files the nodejs process has permissions over.
+With tcl-js you can easily disable unwanted commands and be absolutely sure that they are never executed. It is also a lot easier to insert already existing javascript functions into the interpreter for your specific needs.
 
 ### Disclaimer
 
-This project is still a work in progress, it is therefore not recommended to use this in production yet. While it is unlikely the api may change in the future, so beware.
+This project is still a work in progress.
+While it is unlikely, the api or the way certain things are handled might change in the future.
 
-Because this project is still not finished any new PRs or found issues being added would be highly aprreciated.
+If you would like to make this project hit a producion fase earlier, you are welcome to submit a pull request.
 
 ## Getting started
 
@@ -37,14 +39,18 @@ Then use it in your project by importing the Tcl component.
 const { Tcl } = require('tcl-js');
 
 // Create a new interpreter
-// Every interpreter keeps it scope until destroyed
+// Every interpreter will keep its scope until it is destroyed
 let tcl = new Tcl();
 
-// The interpreter works async, so an async function is used
+// The interpreter works asynchronous, so an async function is used
+// Using promises will also work here
 async function main() {
   // Print "Hello World!" to the terminal
   await tcl.run('set w "World!"');
   await tcl.run('puts "Hello $w"');
+
+  // Use this to run a file:
+  // await tcl.runFile('~/tcl/demo.tcl');
 }
 
 // Call the async function
@@ -53,11 +59,11 @@ main().catch(console.error);
 
 ## Documentation
 
-You can find the documentation [here](https://htmlpreview.github.io/?https://github.com/rubikscraft/tcl-js/blob/master/docs/index.html)
+You can find all the documentation [here](https://htmlpreview.github.io/?https://raw.githubusercontent.com/rubikscraft/tcl-js/master/docs/classes/_tcl_.tcl.html).
 
 ## Status
 
-Down below is the current project status of tcl-js, here you can see what parts are already implemented and working, and what deviations have been made from the original tcl-sh interpreter.
+Down below is the current project status of tcl-js, here you can see what parts are already implemented and working. Any deviations that have been made from the original tcl-sh interpreter will also be listed here.
 
 ### Deviations
 
@@ -67,7 +73,7 @@ Down below is the current project status of tcl-js, here you can see what parts 
 
 ### Currently working tcl commands
 
-These commands should be fully working as documented in the tcl wiki
+These commands should be fully working as documented in the tcl wiki.
 
 - break
 - continue
@@ -87,13 +93,13 @@ These commands should be fully working as documented in the tcl wiki
 
 ### Partially working commands
 
-Only part of these commands are finished and may not work as expected
+Only part of these commands are finished and they may not work as expected.
 
 - info
 
 ### Other working parts
 
-These are not commands but just general parts of the program, if they are listed they work
+These are not commands but just general parts of the program. If they are listed here, they work.
 
 - lexer
 - parser
