@@ -54,7 +54,7 @@ TokenStream.prototype.isString = function () {
   var startPos = this.pos;
   var quote = this.expression.charAt(startPos);
 
-  if (quote === '\'' || quote === '"') {
+  if (quote === '"') {
     var index = this.expression.indexOf(quote, startPos + 1);
     while (index >= 0 && this.pos < this.expression.length) {
       this.pos = index + 1;

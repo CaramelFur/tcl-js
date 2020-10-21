@@ -1,0 +1,4 @@
+This directory has been cloned from https://github.com/silentmatt/expr-eval
+And is therefore mostly made by Matthew Crumley.
+
+It has been modified to fit the projects needs by Rubikscraft

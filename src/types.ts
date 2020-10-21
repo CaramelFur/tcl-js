@@ -58,10 +58,10 @@ export class TclVariable {
    * @returns {*}
    * @memberof TclVariable
    */
-  /*
+  
   public getRawValue(): any {
     return this.value;
-  }*/
+  }
 
   /**
    * This function returns the name of the variable, as long as it has one
@@ -182,6 +182,43 @@ export class TclList extends TclVariable {
       return returnVar;
     }
 
+    function parseQuote(): string {
+      // Initialize a string to keep the return value
+      let returnVar = '';
+
+      let opened = false;
+
+      // Keep reading the string as long as we have input
+      while (idx < input.length) {
+        // Increase or decrease the depth depending on the brackets
+        if (char === '"') {
+          if (opened) {
+            opened = false;
+            read();
+            break;
+          } else {
+            opened = true;
+            read();
+            continue;
+          }
+        }
+
+        // Add the next character to the output
+        returnVar += read();
+      }
+
+      // If the quote was never closed
+      if (opened) throw new TclError('unmatched open quote in list');
+
+      // Check if the character following the } is a whitespace
+      if (!Is.WordSeparator(char) && char !== '')
+        throw new TclError(
+          'list element in quotes followed by character instead of space',
+        );
+
+      return returnVar;
+    }
+
     // Initialize a counter for keeping track of the current list index
     let i = 0;
 
@@ -200,7 +237,9 @@ export class TclList extends TclVariable {
         tempWord += parseBrace();
       }
       // Just add the characters to the output if not
-      else {
+      else if (char === '"') {
+        tempWord += parseQuote();
+      } else {
         while (!Is.WordSeparator(char) && idx < input.length) {
           tempWord += read();
         }
@@ -479,7 +518,8 @@ export class TclObject extends TclVariable {
   public set(name: string, value?: TclVariable): TclVariable | undefined {
     // If value is empty delete value from the internal object
     if (!value) {
-      if(Object.keys(this.value).indexOf(name) < 0) throw new TclError('cannot delete object item, item does not exist');
+      if (Object.keys(this.value).indexOf(name) < 0)
+        throw new TclError('cannot delete object item, item does not exist');
       delete this.value[name];
     }
     // If there is data append it to the correct key

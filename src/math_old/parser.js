@@ -96,11 +96,16 @@ export function Parser(options) {
 
 Parser.prototype.parse = function(expr) {
   var instr = [];
-  var parserState = new ParserState(this, new TokenStream(this, expr), {
+  var tokenStream = new TokenStream(this, expr);
+
+  var parserState = new ParserState(this, tokenStream, {
     allowMemberAccess: this.options.allowMemberAccess,
   });
 
   parserState.parseExpression(instr);
+
+  console.log(instr)
+
   parserState.expect(TEOF, 'EOF');
 
   return new Expression(instr, this);

@@ -6,6 +6,6 @@ import * as util from 'util';
 
 
 let parser = new Parser({operators:{in:true}});
-let result = parser.parse('"hi" in hello,hi,hello');
+let result = parser.parse('"hi" fn [hello,hi,hello]');
 result = result.evaluate();
 console.log(result);

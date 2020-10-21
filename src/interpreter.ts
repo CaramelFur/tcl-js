@@ -141,20 +141,9 @@ export class Interpreter {
         );
       },
       solveExpression: async (expression) => {
-        // Process the subexpressions and variables
-        let processedExpression = await this.deepProcess(expression);
-
-        // Check if it did not result in a string
-        if (typeof processedExpression !== 'string') {
-          // If so convert if possible, otherwise throw error
-          if (processedExpression instanceof TclSimple)
-            processedExpression = processedExpression.getValue();
-          else throw new TclError('expression resolved to unusable value');
-        }
-
         let parser = new MathParser();
         // Try to solve the expression and return the result
-        let solvedExpression = parser.parse(processedExpression).evaluate();
+        let solvedExpression = parser.parse(expression).evaluate();
 
         //Check if the result is usable
         if (typeof solvedExpression === 'string')
