@@ -68,6 +68,4 @@ temp/
 
 report.*.json
 
-**/generated/*
-
-!.gitkeep
+**/generated/*.ts

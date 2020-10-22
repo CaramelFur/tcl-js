@@ -49,6 +49,91 @@
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
+		<div class="tsd-panel tsd-typography">
+			<a href="#tcl-js" id="tcl-js" style="color: inherit; text-decoration: none;">
+				<h1>tcl-js</h1>
+			</a>
+			<blockquote>
+				<p>A native javascript tcl interpreter</p>
+			</blockquote>
+			<p><a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/v/tcl-js.svg?style=flat&color=blue" alt="tcl-js"></a>
+				<a href="https://www.npmjs.com/package/tcl-js"><img src="https://img.shields.io/npm/dm/tcl-js.svg?color=blue" alt="tcl-js"></a>
+				<a href="https://travis-ci.org/rubikscraft/tcl-js"><img src="https://travis-ci.org/rubikscraft/tcl-js.svg?branch=master&style=flat" alt="Build Status"></a>
+				<a href="https://codecov.io/gh/rubikscraft/tcl-js"><img src="https://codecov.io/gh/rubikscraft/tcl-js/branch/master/graph/badge.svg" alt="codecov"></a>
+			<a href="https://packagephobia.now.sh/result?p=tcl-js"><img src="https://packagephobia.now.sh/badge?p=tcl-js&style=flat" alt="install size"></a></p>
+			<a href="#this-is-the-rewrite-branch-this-is-not-functional-yet" id="this-is-the-rewrite-branch-this-is-not-functional-yet" style="color: inherit; text-decoration: none;">
+				<h2>This is the rewrite branch, this is not functional yet</h2>
+			</a>
+			<a href="#about" id="about" style="color: inherit; text-decoration: none;">
+				<h2>About</h2>
+			</a>
+			<p>tcl-js is an interpreter for TCL written in typescript, it tries to replicate the tcl-sh interpreter as closely as possible. If there are any deviations from the original interpeter, they will be listed below. This interpreter is not built for speed or efficiency, but for security, ease of use and modularity. This also means that every part of the interpreter will be documented as accurately as possible.</p>
+			<a href="#why" id="why" style="color: inherit; text-decoration: none;">
+				<h3>Why</h3>
+			</a>
+			<p>I&#39;m aware that there are already packages for NodeJS that link the tcl-sh interpreter directly into NodeJs. The reason this project was started was because of security concerns about this method. Because, if you directly give users access to a system level interpreter, you grant them the ability to execute possibly dangerous commands. An example might be deleting all files it has access to.
+			With tcl-js you can easily disable unwanted commands and be absolutely sure that they are never executed. It&#39;s also a lot easier to insert already existing javascript functions into the interpreter for your specific needs.</p>
+			<a href="#disclaimer" id="disclaimer" style="color: inherit; text-decoration: none;">
+				<h3>Disclaimer</h3>
+			</a>
+			<p>This project is still a work in progress.</p>
+			<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+				<h2>Getting started</h2>
+			</a>
+			<p>Install tcl-js to your project with</p>
+			<pre><code class="language-bash">npm install --save tcl-js</code></pre>
+			<p>or</p>
+			<pre><code class="language-bash">yarn add tcl-js</code></pre>
+			<p>Then use it in your project by importing the Tcl component.</p>
+			<pre><code class="language-js"><span class="hljs-comment">// Import the interpreter</span>
+<span class="hljs-keyword">const</span> { Tcl } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tcl-js&#x27;</span>);
+
+<span class="hljs-comment">// Create a new interpreter</span>
+<span class="hljs-comment">// Every interpreter will keep its scope until it is destroyed</span>
+<span class="hljs-keyword">let</span> tcl = <span class="hljs-keyword">new</span> Tcl();
+
+<span class="hljs-comment">// The interpreter works asynchronous, so an async function is used</span>
+<span class="hljs-comment">// Using promises will also work here</span>
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// Print &quot;Hello World!&quot; to the terminal</span>
+  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">&#x27;set w &quot;World!&quot;&#x27;</span>);
+  <span class="hljs-keyword">await</span> tcl.run(<span class="hljs-string">&#x27;puts &quot;Hello $w&quot;&#x27;</span>);
+
+  <span class="hljs-comment">// Use this to run a file:</span>
+  <span class="hljs-comment">// await tcl.runFile(&#x27;~/tcl/demo.tcl&#x27;);</span>
+}
+
+<span class="hljs-comment">// Call the async function</span>
+main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
+			<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+				<h2>Documentation</h2>
+			</a>
+			<p>You can find all the documentation <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/rubikscraft/tcl-js/master/docs/classes/_tcl_.tcl.html">here</a>.</p>
+			<a href="#status" id="status" style="color: inherit; text-decoration: none;">
+				<h2>Status</h2>
+			</a>
+			<p>Down below is the current project status of tcl-js, here you can see what parts are already implemented and working. Any deviations that have been made from the original tcl-sh interpreter will also be listed here.</p>
+			<a href="#deviations" id="deviations" style="color: inherit; text-decoration: none;">
+				<h3>Deviations</h3>
+			</a>
+			<p>Currently none</p>
+			<a href="#currently-working-tcl-commands" id="currently-working-tcl-commands" style="color: inherit; text-decoration: none;">
+				<h3>Currently working tcl commands</h3>
+			</a>
+			<p>Currently none</p>
+			<a href="#partially-working-commands" id="partially-working-commands" style="color: inherit; text-decoration: none;">
+				<h3>Partially working commands</h3>
+			</a>
+			<p>Currently none</p>
+			<a href="#other-working-parts" id="other-working-parts" style="color: inherit; text-decoration: none;">
+				<h3>Other working parts</h3>
+			</a>
+			<p>These are not commands but just general parts of the program. If they are listed here, they work.</p>
+			<ul>
+				<li>lexer</li>
+				<li>parser</li>
+			</ul>
+		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
@@ -56,6 +141,10 @@
 					<section class="tsd-index-section ">
 						<h3>Modules</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-module"><a href="modules/_interpreter_scope_.html" class="tsd-kind-icon">&quot;interpreter/scope&quot;</a></li>
+							<li class="tsd-kind-module"><a href="modules/_parser_tcltoken_.html" class="tsd-kind-icon">&quot;parser/<wbr>Tcl<wbr>Token&quot;</a></li>
+							<li class="tsd-kind-module"><a href="modules/_parser_generated_parser_.html" class="tsd-kind-icon">&quot;parser/generated/parser&quot;</a></li>
+							<li class="tsd-kind-module"><a href="modules/_parser_index_.html" class="tsd-kind-icon">&quot;parser/index&quot;</a></li>
 							<li class="tsd-kind-module"><a href="modules/_tcl_.html" class="tsd-kind-icon">&quot;tcl&quot;</a></li>
 						</ul>
 					</section>
@@ -66,6 +155,20 @@
 			<div class="container">
 				<h2>Legend</h2>
 				<div class="tsd-legend-group">
+					<ul class="tsd-legend">
+						<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+						<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+						<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+					</ul>
+					<ul class="tsd-legend">
+						<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+					</ul>
+					<ul class="tsd-legend">
+						<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+					</ul>
+					<ul class="tsd-legend">
+						<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+					</ul>
 				</div>
 			</div>
 		</footer>

@@ -9,7 +9,7 @@
     TclWord,
     TclWordPart,
     TclVariable,
-  } = require('./TclToken.ts');
+  } = require('../TclToken.ts');
 }
 
 script = list:statementlist? { return list ? list : new TclScript([]); }
@@ -19,14 +19,14 @@ statementlist
   / commentlist
 
 commandlist
-  = firstcommand:command? _ commandSeperator _ otherstatments:statementlist {
-      return otherstatments.prepend(firstcommand);
+  = firstcommand:command? _ commandSeperator _ otherstatements:statementlist {
+      return otherstatements.prepend(firstcommand);
     }
   / firstcommand:command { return new TclScript([firstcommand]); }
 
 commentlist
-  = cmnt:comment newLineChar _ otherstatments:statementlist {
-      return otherstatments.append(cmnt);
+  = cmnt:comment newLineChar _ otherstatements:statementlist {
+      return otherstatements.prepend(cmnt);
     }
   / cmnt:comment { return new TclScript([cmnt]); }
 

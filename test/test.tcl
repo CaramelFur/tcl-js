@@ -13,9 +13,11 @@ proc example {first {second "aa"} args} {
     }
 }
 
+# Test commeht here
+
 set count1 [example ONE]
 set count2 [example ONE TWO]
 set count3 [example ONE TWO THREE ]
 set {*}count4 [example ONE TWO THREE FOUR]
 
-puts "The example was called with $count1, $count2, $count3, and $count4 Arguments"
+puts "The example was called with $count1, $count2, $count3, and $count4 Arguments" ;# and here

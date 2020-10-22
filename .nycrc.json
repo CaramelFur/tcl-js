@@ -6,5 +6,5 @@
   "report-dir": "./coverage/",
   "extension": [".js", ".jsx", ".ts", ".tsx"],
   "extends": "@istanbuljs/nyc-config-typescript",
-  "exclude": ["test/"]
+  "exclude": ["test/", "**/generated"]
 }
