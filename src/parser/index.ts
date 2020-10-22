@@ -1,5 +1,5 @@
 import { TclComment, TclScript } from './TclToken';
-import * as Parser from './generated/parser';
+import * as Parser from '../pegjs/parsers/script';
 
 /**
  * Options you can give to the parser

@@ -51,7 +51,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "fs", "util", "./parser/"], factory);
+        define(["require", "exports", "fs", "util", "./interpreter/TclScope", "./parser/", "fs", "./TclError", "./interpreter/variables/TclVariable", "./interpreter/TclInterpreter"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -59,7 +59,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     exports.Tcl = void 0;
     var fs_1 = require("fs");
     var util = require("util");
+    var TclScope_1 = require("./interpreter/TclScope");
     var parser_1 = require("./parser/");
+    var fs = require("fs");
+    var TclError_1 = require("./TclError");
+    var TclVariable_1 = require("./interpreter/variables/TclVariable");
+    var TclInterpreter_1 = require("./interpreter/TclInterpreter");
     var tclFile = fs_1.readFileSync('test/test.tcl', 'utf-8');
     var parsed = parser_1.parse(tclFile);
     console.log(util.inspect(parsed, false, Infinity, true));
@@ -69,11 +74,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     var Tcl = (function () {
         function Tcl(options) {
             this.options = options || {};
+            this.globalScope = new TclScope_1.TclScope();
+            this.interpreter = new TclInterpreter_1.TclInterpreter(this.options);
         }
         Tcl.prototype.run = function (code) {
-            return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-                return [2];
-            }); });
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2, new TclVariable_1.TclVariable()];
+                });
+            });
+        };
+        Tcl.prototype.runFile = function (location) {
+            return __awaiter(this, void 0, void 0, function () {
+                var buffer;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4, new Promise(function (resolve, reject) {
+                                fs.readFile(location, { encoding: 'utf-8' }, function (err, data) {
+                                    if (err)
+                                        reject(new TclError_1.TclError(err.message));
+                                    resolve(data);
+                                });
+                            })];
+                        case 1:
+                            buffer = _a.sent();
+                            return [2, this.run(buffer)];
+                    }
+                });
+            });
         };
         Tcl.prototype.getOptions = function () {
             return __assign({}, this.options);

@@ -17,4 +17,4 @@
     }());
     exports.TclScope = TclScope;
 });
-//# sourceMappingURL=scope.js.map
+//# sourceMappingURL=TclScope.js.map

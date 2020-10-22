@@ -1,46 +1,9 @@
-{
-  const {
-    //TclWordPartTypes,
-    TclWordTypes,
-
-    TclScript,
-    TclCommand,
-    TclComment,
-    TclWord,
-    //TclWordPart,
-    //TclVariable,
-  } = require('../TclToken.ts');
-}
-
-script = list:statementlist { return list }
-
-statementlist
-  = commandlist
-  / commentlist
-
-commandlist
-  = firstcommand:command _ commandSeperator _ otherstatements:statementlist {
-      return otherstatements.prepend(firstcommand);
+words
+  = firstword:word __ otherwords:words {
+      otherwords.unshift(firstword)
+      return otherwords;
     }
-  / firstcommand:command { return new TclScript([firstcommand]); }
-
-commentlist
-  = cmnt:comment newLineChar _ otherstatements:statementlist {
-      return otherstatements.prepend(cmnt);
-    }
-  / cmnt:comment { return new TclScript([cmnt]); }
-
-comment = pound chars:nonNewLineChar* { return new TclComment(chars.join('')); }
-
-command = !pound words:commandwords? { return words || new TclCommand([]); }
-
-commandwords
-  = firstword:word __ otherwords:commandwords {
-      return otherwords.prepend(firstword);
-    }
-  / firstword:word { return new TclCommand([firstword]); }
-
-// Words ========================
+  / firstword:word { return [firstword] }
 
 word
   = nonexpansionWord
@@ -121,52 +84,3 @@ variableWordPart
 variableChar
   = [a-zA-Z0-9_]
   / namespaceSeparator
-
-// ===========================
-// Basic structures
-
-escape = "\\"
-
-pound = "#"
-
-dollarSign = "$"
-
-quote = "\""
-
-braceOpen = "{"
-
-braceClose = "}"
-
-bracketOpen = "["
-
-bracketClose = "]"
-
-parenthesisOpen = "("
-
-parenthesisClose = ")"
-
-expansionSymbol = "{*}"
-
-namespaceSeparator = "::"
-
-semicolon = ";"
-
-commandSeperator = (newLineChar / semicolon)+
-
-// optional whitespace
-_ = whiteSpaceChar*
-
-// mandatory whitespace
-__ = whiteSpaceChar+
-
-whiteSpaceChar = [ \t\v\f\r]
-
-nonWhiteSpaceChar = !whiteSpaceChar c:any { return c; }
-
-newLineChar = "\n"
-
-nonNewLineChar = !newLineChar c:any { return c; }
-
-any
-  = !escape c:. { return c; }
-  / escape c:. { return '\\' + c; }

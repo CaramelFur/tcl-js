@@ -122,7 +122,7 @@ var __extends = (this && this.__extends) || (function () {
         var peg$FAILED = {};
         var peg$startRuleFunctions = { script: peg$parsescript };
         var peg$startRuleFunction = peg$parsescript;
-        var peg$c0 = function (list) { return list ? list : new TclScript([]); };
+        var peg$c0 = function (list) { return list; };
         var peg$c1 = function (firstcommand, otherstatements) {
             return otherstatements.prepend(firstcommand);
         };
@@ -132,11 +132,12 @@ var __extends = (this && this.__extends) || (function () {
         };
         var peg$c4 = function (cmnt) { return new TclScript([cmnt]); };
         var peg$c5 = function (chars) { return new TclComment(chars.join('')); };
-        var peg$c6 = function (words) { return words; };
+        var peg$c6 = function (words) { return new TclCommand(words || []); };
         var peg$c7 = function (firstword, otherwords) {
-            return otherwords.prepend(firstword);
+            otherwords.unshift(firstword);
+            return otherwords;
         };
-        var peg$c8 = function (firstword) { return new TclCommand([firstword]); };
+        var peg$c8 = function (firstword) { return [firstword]; };
         var peg$c9 = function (parts) {
             return new TclWord(parts.join(''));
         };
@@ -150,7 +151,7 @@ var __extends = (this && this.__extends) || (function () {
             return chars.join('');
         };
         var peg$c15 = function (chars) {
-            return new TclWord([new TclWordPart(chars.slice(1, -1))], TclWordTypes.brace);
+            return new TclWord(chars.slice(1, -1), TclWordTypes.brace);
         };
         var peg$c16 = function (open, c) { return c; };
         var peg$c17 = function (open, contents, close) { return open + contents.join('') + close; };
@@ -192,10 +193,10 @@ var __extends = (this && this.__extends) || (function () {
         var peg$c51 = peg$literalExpectation("::", false);
         var peg$c52 = ";";
         var peg$c53 = peg$literalExpectation(";", false);
-        var peg$c54 = /^[ \t]/;
-        var peg$c55 = peg$classExpectation([" ", "\t"], false, false);
-        var peg$c56 = /^[\n\r]/;
-        var peg$c57 = peg$classExpectation(["\n", "\r"], false, false);
+        var peg$c54 = /^[ \t\x0B\f\r]/;
+        var peg$c55 = peg$classExpectation([" ", "\t", "\x0B", "\f", "\r"], false, false);
+        var peg$c56 = "\n";
+        var peg$c57 = peg$literalExpectation("\n", false);
         var peg$c58 = peg$anyExpectation();
         var peg$c59 = function (c) { return '\\' + c; };
         var peg$currPos = 0;
@@ -310,9 +311,6 @@ var __extends = (this && this.__extends) || (function () {
             var s0, s1;
             s0 = peg$currPos;
             s1 = peg$parsestatementlist();
-            if (s1 === peg$FAILED) {
-                s1 = null;
-            }
             if (s1 !== peg$FAILED) {
                 peg$savedPos = s0;
                 s1 = peg$c0(s1);
@@ -332,9 +330,6 @@ var __extends = (this && this.__extends) || (function () {
             var s0, s1, s2, s3, s4, s5;
             s0 = peg$currPos;
             s1 = peg$parsecommand();
-            if (s1 === peg$FAILED) {
-                s1 = null;
-            }
             if (s1 !== peg$FAILED) {
                 s2 = peg$parse_();
                 if (s2 !== peg$FAILED) {
@@ -470,7 +465,10 @@ var __extends = (this && this.__extends) || (function () {
                 s1 = peg$FAILED;
             }
             if (s1 !== peg$FAILED) {
-                s2 = peg$parsecommandwords();
+                s2 = peg$parsewords();
+                if (s2 === peg$FAILED) {
+                    s2 = null;
+                }
                 if (s2 !== peg$FAILED) {
                     peg$savedPos = s0;
                     s1 = peg$c6(s2);
@@ -487,14 +485,14 @@ var __extends = (this && this.__extends) || (function () {
             }
             return s0;
         }
-        function peg$parsecommandwords() {
+        function peg$parsewords() {
             var s0, s1, s2, s3;
             s0 = peg$currPos;
             s1 = peg$parseword();
             if (s1 !== peg$FAILED) {
                 s2 = peg$parse__();
                 if (s2 !== peg$FAILED) {
-                    s3 = peg$parsecommandwords();
+                    s3 = peg$parsewords();
                     if (s3 !== peg$FAILED) {
                         peg$savedPos = s0;
                         s1 = peg$c7(s1, s3);
@@ -527,14 +525,19 @@ var __extends = (this && this.__extends) || (function () {
         }
         function peg$parseword() {
             var s0;
+            s0 = peg$parsenonexpansionWord();
+            if (s0 === peg$FAILED) {
+                s0 = peg$parseexpansionWord();
+            }
+            return s0;
+        }
+        function peg$parsenonexpansionWord() {
+            var s0;
             s0 = peg$parsesimpleWord();
             if (s0 === peg$FAILED) {
                 s0 = peg$parsequotedWord();
                 if (s0 === peg$FAILED) {
                     s0 = peg$parsebracedWord();
-                    if (s0 === peg$FAILED) {
-                        s0 = peg$parseexpansionWord();
-                    }
                 }
             }
             return s0;
@@ -1129,7 +1132,7 @@ var __extends = (this && this.__extends) || (function () {
             s0 = peg$currPos;
             s1 = peg$parseexpansionSymbol();
             if (s1 !== peg$FAILED) {
-                s2 = peg$parseword();
+                s2 = peg$parsenonexpansionWord();
                 if (s2 !== peg$FAILED) {
                     peg$savedPos = s0;
                     s1 = peg$c18(s2);
@@ -1796,8 +1799,8 @@ var __extends = (this && this.__extends) || (function () {
         }
         function peg$parsenewLineChar() {
             var s0;
-            if (peg$c56.test(input.charAt(peg$currPos))) {
-                s0 = input.charAt(peg$currPos);
+            if (input.charCodeAt(peg$currPos) === 10) {
+                s0 = peg$c56;
                 peg$currPos++;
             }
             else {
@@ -1910,7 +1913,7 @@ var __extends = (this && this.__extends) || (function () {
             }
             return s0;
         }
-        var _a = require('../TclToken.ts'), TclWordPartTypes = _a.TclWordPartTypes, TclWordTypes = _a.TclWordTypes, TclScript = _a.TclScript, TclCommand = _a.TclCommand, TclComment = _a.TclComment, TclWord = _a.TclWord, TclWordPart = _a.TclWordPart, TclVariable = _a.TclVariable;
+        var _a = require('../TclToken.ts'), TclWordTypes = _a.TclWordTypes, TclScript = _a.TclScript, TclCommand = _a.TclCommand, TclComment = _a.TclComment, TclWord = _a.TclWord;
         peg$result = peg$startRuleFunction();
         if (peg$result !== peg$FAILED && peg$currPos === input.length) {
             return peg$result;
@@ -1926,4 +1929,4 @@ var __extends = (this && this.__extends) || (function () {
     }
     exports.parse = peg$parse;
 });
-//# sourceMappingURL=parser.js.map
+//# sourceMappingURL=script.js.map

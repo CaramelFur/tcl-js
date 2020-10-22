@@ -4,17 +4,17 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./TclToken", "./generated/parser"], factory);
+        define(["require", "exports", "./TclToken", "../pegjs/parsers/script"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.parse = void 0;
     var TclToken_1 = require("./TclToken");
-    var Parser = require("./generated/parser");
+    var Parser = require("../pegjs/parsers/script");
     function parse(tcl, options) {
         if (options === void 0) { options = { keepComments: false }; }
-        var endlineEscapedTclString = tcl.replace(/\\\n[ \t]*/g, ' ');
+        var endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n*/g, '$1 ');
         var parsed = Parser.parse(endlineEscapedTclString);
         if (!options.keepComments) {
             for (var i = 0; i < parsed.commands.length; i++) {

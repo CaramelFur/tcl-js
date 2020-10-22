@@ -193,6 +193,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@invisible/pegjs-import@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@invisible/pegjs-import/-/pegjs-import-1.1.1.tgz#1c5feb6fd768604cadd63efc9dfb999e8b0a0c7f"
+  integrity sha512-TiUoDxO08miDb6EQaWQeuBtkPPAsOpw55HBCbBN+EtIXy7URT1fwWNt/5k/k0pI+U58FnnGSj361oRSPATuSmw==
+  dependencies:
+    pegjs "^0.10.0"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
