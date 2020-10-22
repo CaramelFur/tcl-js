@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "umd",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "jsx": "react",
+    "strict": true,
+    "alwaysStrict": true,
+    "removeComments": true,
+    "outDir": "dist",
+    "pretty": false,
+    "allowJs": true,
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin",
+        "alwaysShowRuleFailuresAsWarnings": false,
+        "ignoreDefinitionFiles": true,
+        "configFile": "./tslint.json",
+        "suppressWhileTypeErrorsPresent": false,
+        "mockTypeScriptVersion": false
+      }
+    ]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
+  "exclude": ["node_modules"]
+}

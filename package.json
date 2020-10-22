@@ -1,0 +1,61 @@
+{
+  "name": "tcl-js",
+  "version": "3.0.0",
+  "description": "tcl-js is a tcl intepreter written completely in Typescript. It is meant to replicate the tcl-sh interpreter as closely as possible.",
+  "main": "dist/tcl.js",
+  "scripts": {
+    "run": "npm run pegjs && ts-node ./src/tcl.ts",
+
+    "generate-pegjs": "pegjs --plugin ./node_modules/ts-pegjs/src/tspegjs.js -o ./src/parser/generated/parser.ts ./src/parser/parser.pegjs",
+    "make-prettier": "prettier --write ./src/**/* ./test/**/*",
+    
+    
+    "nyc": "nyc mocha",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov --disable=gcov",
+    
+    "start": "echo Error: There is nothing to start && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubikscraft/tcl-js.git"
+  },
+  "license": "BSD-2-Clause",
+  "keywords": [
+    "tcl",
+    "javascript",
+    "interpreter",
+    "language",
+    "parser",
+    "typescript",
+    "script",
+    "lexer"
+  ],
+  "author": "Rubikscraft <renzodepenzo@live.nl> (https://rubikscraft.nl)",
+  "bugs": {
+    "url": "https://github.com/rubikscraft/tcl-js/issues"
+  },
+  "homepage": "https://github.com/rubikscraft/tcl-js#readme",
+  "devDependencies": {
+    "@types/mathjs": "^6.0.6",
+    "@types/node": "^14.14.0",
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "chai": "^4.2.0",
+    "codecov": "^3.8.0",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "js-yaml": "^3.14.0",
+    "mocha": "^8.2.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.2",
+    "prettier-plugin-pegjs": "^0.3.1",
+    "ts-node": "^9.0.0",
+    "ts-pegjs": "^0.2.7",
+    "typedoc": "^0.19.2",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@types/pegjs": "^0.10.2",
+    "pegjs": "^0.10.0"
+  }
+}

@@ -1,0 +1,7 @@
+{
+ "hideGenerator": true,
+ "name": "tcl-js",
+ "theme": "minimal",
+ "out": "./docs/",
+ "tsconfig": "./tsconfig.json" 
+}
