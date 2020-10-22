@@ -1,0 +1,10 @@
+{
+  "sourceMap": true,
+  "instument": true,
+  "reporter": ["text-summary", "lcov", "json"],
+  "temp-directory": "./coverage/.nyc_output",
+  "report-dir": "./coverage/",
+  "extension": [".js", ".jsx", ".ts", ".tsx"],
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "exclude": ["test/"]
+}
