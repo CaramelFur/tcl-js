@@ -24,7 +24,7 @@ export function parse(
   options: ParseOptions = { keepComments: false },
 ): TclScript {
   // We need to escape newlines before we start parsing, because weird tcl behaviour
-  const endlineEscapedTclString = tcl.replace(/\\\n[ \t]*/g, ' ');
+  const endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n*/g, '$1 ');
 
   // Actually parse it with the generated parser
   const parsed: TclScript = Parser.parse(endlineEscapedTclString);

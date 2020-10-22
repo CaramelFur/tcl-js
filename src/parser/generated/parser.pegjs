@@ -43,10 +43,13 @@ commandwords
 // Words ========================
 
 word
+  = nonexpansionWord
+  / expansionWord
+
+nonexpansionWord
   = simpleWord
   / quotedWord
   / bracedWord
-  / expansionWord
 
 // Simpleword
 simpleWord
@@ -89,7 +92,7 @@ rawBracedWord
     contents:(!braceOpen !braceClose c:any { return c; } / rawBracedWord)*
     close:braceClose { return open + contents.join('') + close; }
 
-expansionWord = expansionSymbol w:word { return w.setExpand(true); }
+expansionWord = expansionSymbol w:nonexpansionWord { return w.setExpand(true); }
 
 // Wordparts
 bracketWordPart = part:rawBracketWordPart { return part; }
@@ -156,11 +159,11 @@ _ = whiteSpaceChar*
 // mandatory whitespace
 __ = whiteSpaceChar+
 
-whiteSpaceChar = [ \t]
+whiteSpaceChar = [ \t\v\f\r]
 
 nonWhiteSpaceChar = !whiteSpaceChar c:any { return c; }
 
-newLineChar = [\n\r]
+newLineChar = "\n"
 
 nonNewLineChar = !newLineChar c:any { return c; }
 
