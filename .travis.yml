@@ -1,3 +1,5 @@
 language: node_js
+dist: xenial
+os: linux
 node_js:
-  - "11"
+  - "node"

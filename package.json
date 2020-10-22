@@ -5,14 +5,14 @@
   "main": "dist/tcl.js",
   "scripts": {
     "run": "npm run pegjs && ts-node ./src/tcl.ts",
+    "test": "echo no tests yet!",
 
     "generate-pegjs": "pegjs --plugin ./node_modules/ts-pegjs/src/tspegjs.js -o ./src/parser/generated/parser.ts ./src/parser/parser.pegjs",
     "make-prettier": "prettier --write ./src/**/* ./test/**/*",
     
-    
     "nyc": "nyc mocha",
     "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov --disable=gcov",
-    
+
     "start": "echo Error: There is nothing to start && exit 1"
   },
   "repository": {
