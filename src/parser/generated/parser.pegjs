@@ -1,25 +1,25 @@
 {
   const {
-    TclWordPartTypes,
+    //TclWordPartTypes,
     TclWordTypes,
 
     TclScript,
     TclCommand,
     TclComment,
     TclWord,
-    TclWordPart,
-    TclVariable,
+    //TclWordPart,
+    //TclVariable,
   } = require('../TclToken.ts');
 }
 
-script = list:statementlist? { return list ? list : new TclScript([]); }
+script = list:statementlist { return list }
 
 statementlist
   = commandlist
   / commentlist
 
 commandlist
-  = firstcommand:command? _ commandSeperator _ otherstatements:statementlist {
+  = firstcommand:command _ commandSeperator _ otherstatements:statementlist {
       return otherstatements.prepend(firstcommand);
     }
   / firstcommand:command { return new TclScript([firstcommand]); }
@@ -32,7 +32,7 @@ commentlist
 
 comment = pound chars:nonNewLineChar* { return new TclComment(chars.join('')); }
 
-command = !pound words:commandwords { return words; }
+command = !pound words:commandwords? { return words || new TclCommand([]); }
 
 commandwords
   = firstword:word __ otherwords:commandwords {
@@ -79,7 +79,7 @@ quotedWordPart
 bracedWord
   = !expansionSymbol chars:rawBracedWord {
       return new TclWord(
-        [new TclWordPart(chars.slice(1, -1))],
+        chars.slice(1, -1),
         TclWordTypes.brace,
       );
     }
