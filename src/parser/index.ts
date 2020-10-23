@@ -50,6 +50,7 @@ export function ParseTcl(
 }
 
 export type ParsedWord = Array<AnyWordPart>;
+
 export function ParseWord(word: string): ParsedWord {
   return WordParser.parse(word);
 }

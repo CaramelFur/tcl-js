@@ -1,9 +1,10 @@
-import { ParseTcl, ParseWord } from '../parser';
-import { TclCommand, TclComment, TclWord } from '../parser/TclToken';
+import { ParseTcl } from '../parser';
+import { TclCommand, TclComment } from '../parser/TclToken';
 import { TclOptions } from '../Tcl';
 import { TclScope } from './TclScope';
 import { TclVariable } from './variables/TclVariable';
 import * as util from 'util';
+import SubstituteWord from './Substitutor';
 
 export class TclInterpreter {
   private options: TclOptions;
@@ -30,15 +31,8 @@ export class TclInterpreter {
   }
 
   private runCommand(command: TclCommand): TclVariable {
-    const words = command.words.map(this.substituteWord);
+    const words = command.words.map(SubstituteWord);
 
     return new TclVariable();
-  }
-
-  private substituteWord(word: TclWord): TclVariable {
-    let parsed = ParseWord(word.value);
-    console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
-
-    return new TclVariable(word.value);
   }
 }

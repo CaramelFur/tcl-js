@@ -143,7 +143,7 @@ var __extends = (this && this.__extends) || (function () {
             return new EscapePart(char);
         };
         var peg$c14 = function (one, two, three) {
-            return new new EscapePart((one || '') + (two || '') + three, EscapePartType.octal)();
+            return new EscapePart((one || '') + (two || '') + three, EscapePartType.octal);
         };
         var peg$c15 = function (high, low) {
             return new EscapePart(high ? high + low : low, EscapePartType.hex);
@@ -1162,7 +1162,7 @@ var __extends = (this && this.__extends) || (function () {
         function peg$parselargeUnicodeEscape() {
             var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
             s0 = peg$currPos;
-            s1 = peg$parsesixteenBitHex();
+            s1 = peg$parsethirtytwoBitHex();
             if (s1 !== peg$FAILED) {
                 s2 = peg$parsehexChar();
                 if (s2 === peg$FAILED) {

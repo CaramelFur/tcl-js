@@ -77,10 +77,10 @@ normalEscape
 
 octalEscape
   = one:octalChar? two:octalChar? three:octalChar {
-      return new new EscapePart(
+      return new EscapePart(
         (one || '') + (two || '') + three,
         EscapePartType.octal,
-      )();
+      );
     }
 
 hexEscape
@@ -97,7 +97,7 @@ unicodeEscape
     }
 
 largeUnicodeEscape
-  = sixteenBitHex
+  = thirtytwoBitHex
     one:hexChar?
     two:hexChar?
     three:hexChar?

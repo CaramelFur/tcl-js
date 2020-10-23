@@ -4,7 +4,7 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "../parser", "../parser/TclToken", "./TclScope", "./variables/TclVariable", "util"], factory);
+        define(["require", "exports", "../parser", "../parser/TclToken", "./TclScope", "./variables/TclVariable", "util", "./Substitutor"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -15,6 +15,7 @@
     var TclScope_1 = require("./TclScope");
     var TclVariable_1 = require("./variables/TclVariable");
     var util = require("util");
+    var Substitutor_1 = require("./Substitutor");
     var TclInterpreter = (function () {
         function TclInterpreter(options, scope) {
             this.options = options;
@@ -33,13 +34,8 @@
             return lastValue;
         };
         TclInterpreter.prototype.runCommand = function (command) {
-            var words = command.words.map(this.substituteWord);
+            var words = command.words.map(Substitutor_1.default);
             return new TclVariable_1.TclVariable();
-        };
-        TclInterpreter.prototype.substituteWord = function (word) {
-            var parsed = parser_1.ParseWord(word.value);
-            console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
-            return new TclVariable_1.TclVariable(word.value);
         };
         return TclInterpreter;
     }());
