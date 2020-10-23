@@ -6,5 +6,12 @@
   "report-dir": "./coverage/",
   "extension": [".js", ".jsx", ".ts", ".tsx"],
   "extends": "@istanbuljs/nyc-config-typescript",
-  "exclude": ["test/", "**/generated"]
+  "exclude": ["test/", "**/generated"],
+
+  "check-coverage": true,
+
+  "branches": 95,
+  "lines": 95,
+  "functions": 95,
+  "statements": 95
 }

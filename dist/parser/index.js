@@ -4,18 +4,19 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./TclToken", "../pegjs/parsers/script"], factory);
+        define(["require", "exports", "./TclToken", "../pegjs/parsers/script", "../pegjs/parsers/word"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.parse = void 0;
+    exports.ParseWord = exports.ParseTcl = void 0;
     var TclToken_1 = require("./TclToken");
-    var Parser = require("../pegjs/parsers/script");
-    function parse(tcl, options) {
+    var TclParser = require("../pegjs/parsers/script");
+    var WordParser = require("../pegjs/parsers/word");
+    function ParseTcl(tcl, options) {
         if (options === void 0) { options = { keepComments: false }; }
-        var endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n*/g, '$1 ');
-        var parsed = Parser.parse(endlineEscapedTclString);
+        var endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n/g, '$1 ');
+        var parsed = TclParser.parse(endlineEscapedTclString);
         if (!options.keepComments) {
             for (var i = 0; i < parsed.commands.length; i++) {
                 if (parsed.commands[i] instanceof TclToken_1.TclComment) {
@@ -25,6 +26,10 @@
         }
         return parsed;
     }
-    exports.parse = parse;
+    exports.ParseTcl = ParseTcl;
+    function ParseWord(word) {
+        return WordParser.parse(word);
+    }
+    exports.ParseWord = ParseWord;
 });
 //# sourceMappingURL=index.js.map

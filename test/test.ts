@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+import Tcl from '../src/Tcl';
+const tcl = new Tcl();
 
-describe('Test describe', () => {
-  it('Test it', () => {
-    const result = 'test';
-    expect(result).to.equal('test');
-  });
-});
+async function main() {
+  tcl.runFile('./test/test.tcl');
+}
+
+main().catch(console.error);

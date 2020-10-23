@@ -4,14 +4,14 @@
   "description": "tcl-js is a tcl intepreter written completely in Typescript. It's meant to replicate the tcl-sh interpreter as closely as possible.",
   "main": "dist/tcl.js",
   "scripts": {
-    "run": "yarn run generate-pegjs && ts-node ./src/tcl.ts",
+    "run": "yarn run generate-pegjs && ts-node ./test/test.ts",
     "test": "yarn run run-tests && yarn run report-coverage",
     "build": "yarn run make-prettier && yarn run generate-pegjs && yarn run compile-typescript && yarn run generate-docs",
     "generate-pegjs": "ts-node ./src/pegjs/generate-pegjs.ts",
-    "make-prettier": "prettier -u --loglevel warn --write ./src/**/*.* ./test/**/*.*",
+    "make-prettier": "prettier --write ./src/ ./test/ | tr -d '\\033'",
     "compile-typescript": "rm -r dist && tsc",
     "generate-docs": "typedoc --options ./typedoc.json ./src/",
-    "run-tests": "nyc mocha -r ts-node/register test/*.ts",
+    "run-tests": "nyc mocha -r ts-node/register test/index.ts",
     "report-coverage": "mkdir -p ./coverage/ && nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov --disable=gcov",
     "start": "echo Error: There is nothing to start && exit 1"
   },

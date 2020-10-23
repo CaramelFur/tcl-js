@@ -52,9 +52,6 @@
 					<a href="_tcl_.tcl.html#constructor" class="tsd-kind-icon">constructor</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a href="_tcl_.tcl.html#globalscope" class="tsd-kind-icon">global<wbr>Scope</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="_tcl_.tcl.html#interpreter" class="tsd-kind-icon">interpreter</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
@@ -73,15 +70,6 @@
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
 			<a href="../interfaces/_tcl_.tcloptions.html" class="tsd-kind-icon">Tcl<wbr>Options</a>
-		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
-			<a href="../modules/_tcl_.html#parsed" class="tsd-kind-icon">parsed</a>
-		</li>
-		<li class=" tsd-kind-variable tsd-parent-kind-module tsd-is-not-exported">
-			<a href="../modules/_tcl_.html#tclfile" class="tsd-kind-icon">tcl<wbr>File</a>
-		</li>
-		<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-not-exported">
-			<a href="../modules/_tcl_.html#e" class="tsd-kind-icon">e</a>
 		</li>
 	</ul>
 </nav>
@@ -119,7 +107,6 @@
 					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcl_.tcl.html#globalscope" class="tsd-kind-icon">global<wbr>Scope</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcl_.tcl.html#interpreter" class="tsd-kind-icon">interpreter</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_tcl_.tcl.html#options" class="tsd-kind-icon">options</a></li>
 						</ul>
@@ -147,7 +134,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L53">src/tcl.ts:53</a></li>
+								<li>Defined in src/Tcl.ts:42</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -163,7 +150,7 @@
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a></h5>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a><span class="tsd-signature-symbol"> = {disableCommands: [],persistGlobals: true,}</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_tcl_.tcl.html" class="tsd-signature-type">Tcl</a></h4>
@@ -174,22 +161,12 @@
 		<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-				<a name="globalscope" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagPrivate">Private</span> global<wbr>Scope</h3>
-				<div class="tsd-signature tsd-kind-icon">global<wbr>Scope<span class="tsd-signature-symbol">:</span> <a href="_interpreter_tclscope_.tclscope.html" class="tsd-signature-type">TclScope</a></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L52">src/tcl.ts:52</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 				<a name="interpreter" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> interpreter</h3>
 				<div class="tsd-signature tsd-kind-icon">interpreter<span class="tsd-signature-symbol">:</span> <a href="_interpreter_tclinterpreter_.tclinterpreter.html" class="tsd-signature-type">TclInterpreter</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L53">src/tcl.ts:53</a></li>
+						<li>Defined in src/Tcl.ts:42</li>
 					</ul>
 				</aside>
 			</section>
@@ -199,7 +176,7 @@
 				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L51">src/tcl.ts:51</a></li>
+						<li>Defined in src/Tcl.ts:41</li>
 					</ul>
 				</aside>
 			</section>
@@ -216,7 +193,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L88">src/tcl.ts:88</a></li>
+								<li>Defined in src/Tcl.ts:84</li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -243,7 +220,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L67">src/tcl.ts:67</a></li>
+								<li>Defined in src/Tcl.ts:63</li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -266,7 +243,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/tcl.ts#L71">src/tcl.ts:71</a></li>
+								<li>Defined in src/Tcl.ts:67</li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

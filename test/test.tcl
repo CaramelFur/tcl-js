@@ -1,1 +1,1 @@
-x"y x{y
+simple with$variable or[wi th]substitution and\$backs${fan cy}la$damn(o\nh[here there]deep$very(deep\ [variable]))sh and\nnewline

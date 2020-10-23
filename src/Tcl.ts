@@ -1,21 +1,11 @@
 import { readFileSync } from 'fs';
 import * as util from 'util';
 import { TclScope } from './interpreter/TclScope';
-import { parse } from './parser/';
+import { ParseTcl } from './parser';
 import * as fs from 'fs';
 import { TclError } from './TclError';
 import { TclVariable } from './interpreter/variables/TclVariable';
 import { TclInterpreter } from './interpreter/TclInterpreter';
-
-const tclFile = readFileSync('test/test.tcl', 'utf-8');
-
-let parsed = parse(tclFile);
-
-console.log(util.inspect(parsed, false, Infinity, true));
-const e = () => {
-  console.log('hello');
-};
-//
 
 /**
  * All possible options for the Tcl class
@@ -47,25 +37,31 @@ export interface TclOptions {
  * @export
  * @class Tcl
  */
-export class Tcl {
+export default class Tcl {
   private options: TclOptions;
-  private globalScope: TclScope;
   private interpreter: TclInterpreter;
 
   /**
    * Creates an instance of Tcl
    *
-   * @param {TclOptions} options
+   * @param {TclOptions} [options={
+   *     disableCommands: [],
+   *     persistGlobals: true,
+   *   }]
    * @memberof Tcl
    */
-  public constructor(options?: TclOptions) {
+  public constructor(
+    options: TclOptions = {
+      disableCommands: [],
+      persistGlobals: true,
+    },
+  ) {
     this.options = options || {};
-    this.globalScope = new TclScope();
     this.interpreter = new TclInterpreter(this.options);
   }
 
   public async run(code: string): Promise<TclVariable> {
-    return new TclVariable();
+    return this.interpreter.run(code);
   }
 
   public async runFile(location: string) {

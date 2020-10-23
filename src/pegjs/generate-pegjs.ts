@@ -25,16 +25,23 @@ for (let parser of parsers) {
 
   const fullPegjsFile = appendImports(pegjsFile, pegjsFilePath);
 
-  const parserFile = pegjs.generate(fullPegjsFile, {
-    output: 'source',
-    format: 'commonjs',
-    plugins: [tspegjs],
-  });
+  let parserFile = '';
+  try {
+    parserFile = pegjs.generate(fullPegjsFile, {
+      output: 'source',
+      format: 'commonjs',
+      plugins: [tspegjs],
+    });
+  } catch (e) {
+    throw new Error('Error at: ' + pegjsFilePath + ' : ' + e.message);
+  }
 
   fs.writeFileSync(outputFilePath, parserFile);
 
   console.log('  Successfully generated', parser);
 }
+
+console.log('Successfully generated all parsers\n');
 
 function appendImports(
   pegjsFile: string,
@@ -42,7 +49,7 @@ function appendImports(
   depth = 1,
 ): string {
   const processedPegjsFile = pegjsFile.replace(
-    /^@import "(.*)"$/gm,
+    /^\/\/import "(.*)"$/gm,
     (match: string, importpath: string) => {
       const pegjsFileDirPath = path.dirname(pegjsFilePath);
       const importFilePath = path.join(

@@ -1,1 +1,2 @@
 **/pegjs/parsers/*.ts
+**/*.tcl

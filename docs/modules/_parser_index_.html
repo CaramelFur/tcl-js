@@ -46,10 +46,16 @@
 <nav class="tsd-navigation secondary">
 	<ul>
 		<li class=" tsd-kind-interface tsd-parent-kind-module">
-			<a href="../interfaces/_parser_index_.parseoptions.html" class="tsd-kind-icon">Parse<wbr>Options</a>
+			<a href="../interfaces/_parser_index_.tclparseoptions.html" class="tsd-kind-icon">Tcl<wbr>Parse<wbr>Options</a>
+		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+			<a href="_parser_index_.html#parsedword" class="tsd-kind-icon">Parsed<wbr>Word</a>
 		</li>
 		<li class=" tsd-kind-function tsd-parent-kind-module">
-			<a href="_parser_index_.html#parse" class="tsd-kind-icon">parse</a>
+			<a href="_parser_index_.html#parsetcl" class="tsd-kind-icon">Parse<wbr>Tcl</a>
+		</li>
+		<li class=" tsd-kind-function tsd-parent-kind-module">
+			<a href="_parser_index_.html#parseword" class="tsd-kind-icon">Parse<wbr>Word</a>
 		</li>
 	</ul>
 </nav>
@@ -62,31 +68,51 @@
 					<section class="tsd-index-section ">
 						<h3>Interfaces</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_parser_index_.parseoptions.html" class="tsd-kind-icon">Parse<wbr>Options</a></li>
+							<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/_parser_index_.tclparseoptions.html" class="tsd-kind-icon">Tcl<wbr>Parse<wbr>Options</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Type aliases</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="_parser_index_.html#parsedword" class="tsd-kind-icon">Parsed<wbr>Word</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-function tsd-parent-kind-module"><a href="_parser_index_.html#parse" class="tsd-kind-icon">parse</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="_parser_index_.html#parsetcl" class="tsd-kind-icon">Parse<wbr>Tcl</a></li>
+							<li class="tsd-kind-function tsd-parent-kind-module"><a href="_parser_index_.html#parseword" class="tsd-kind-icon">Parse<wbr>Word</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Type aliases</h2>
+			<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+				<a name="parsedword" class="tsd-anchor"></a>
+				<h3>Parsed<wbr>Word</h3>
+				<div class="tsd-signature tsd-kind-icon">Parsed<wbr>Word<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_pegjs_parsers_script_.iclassparts.html#array" class="tsd-signature-type">Array</a><span class="tsd-signature-symbol">&lt;</span><a href="_parser_wordtoken_.html#anywordpart" class="tsd-signature-type">AnyWordPart</a><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/parser/index.ts#L52">src/parser/index.ts:52</a></li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Functions</h2>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
-				<a name="parse" class="tsd-anchor"></a>
-				<h3>parse</h3>
+				<a name="parsetcl" class="tsd-anchor"></a>
+				<h3>Parse<wbr>Tcl</h3>
 				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-					<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>tcl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_parser_index_.parseoptions.html" class="tsd-signature-type">ParseOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_parser_tcltoken_.tclscript.html" class="tsd-signature-type">TclScript</a></li>
+					<li class="tsd-signature tsd-kind-icon">Parse<wbr>Tcl<span class="tsd-signature-symbol">(</span>tcl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_parser_index_.tclparseoptions.html" class="tsd-signature-type">TclParseOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/_parser_tcltoken_.tclscript.html" class="tsd-signature-type">TclScript</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/ffec3bb/src/parser/index.ts#L22">src/parser/index.ts:22</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/parser/index.ts#L30">src/parser/index.ts:30</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -104,10 +130,33 @@
 								<h5>tcl: <span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_parser_index_.parseoptions.html" class="tsd-signature-type">ParseOptions</a><span class="tsd-signature-symbol"> = { keepComments: false }</span></h5>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <a href="../interfaces/_parser_index_.tclparseoptions.html" class="tsd-signature-type">TclParseOptions</a><span class="tsd-signature-symbol"> = { keepComments: false }</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="../classes/_parser_tcltoken_.tclscript.html" class="tsd-signature-type">TclScript</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+				<a name="parseword" class="tsd-anchor"></a>
+				<h3>Parse<wbr>Word</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+					<li class="tsd-signature tsd-kind-icon">Parse<wbr>Word<span class="tsd-signature-symbol">(</span>word<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_parser_index_.html#parsedword" class="tsd-signature-type">ParsedWord</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/parser/index.ts#L53">src/parser/index.ts:53</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>word: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_parser_index_.html#parsedword" class="tsd-signature-type">ParsedWord</a></h4>
 					</li>
 				</ul>
 			</section>

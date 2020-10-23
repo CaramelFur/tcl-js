@@ -11,8 +11,12 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TclVariable = void 0;
     var TclVariable = (function () {
-        function TclVariable() {
+        function TclVariable(value) {
+            this.value = value || '';
         }
+        TclVariable.prototype.toString = function () {
+            return this.value;
+        };
         return TclVariable;
     }());
     exports.TclVariable = TclVariable;

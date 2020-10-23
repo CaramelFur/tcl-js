@@ -1,24 +1,23 @@
 words
   = firstword:word __ otherwords:words {
-      otherwords.unshift(firstword)
+      otherwords.unshift(firstword);
       return otherwords;
     }
-  / firstword:word { return [firstword] }
+  / firstword:word { return [firstword]; }
 
 word
   = nonexpansionWord
   / expansionWord
 
 nonexpansionWord
-  = simpleWord
+  = fullSimpleWord
   / quotedWord
   / bracedWord
 
 // Simpleword
-simpleWord
-  = !quote !braceOpen parts:simpleWordPart+ {
-      return new TclWord(parts.join(''));
-    }
+fullSimpleWord = !quote !braceOpen w:simpleWord { return w; }
+
+simpleWord = parts:simpleWordPart+ { return new TclWord(parts.join('')); }
 
 simpleWordPart
   = chars:(
@@ -44,10 +43,7 @@ quotedWordPart
 
 bracedWord
   = !expansionSymbol chars:rawBracedWord {
-      return new TclWord(
-        chars.slice(1, -1),
-        TclWordTypes.brace,
-      );
+      return new TclWord(chars.slice(1, -1), TclWordTypes.brace);
     }
 
 rawBracedWord
@@ -68,18 +64,32 @@ rawBracketWordPart
     )*
     bracketClose { return '[' + contents.join('') + ']'; }
 
+// My fucking god parsing variables is a fucking nightmare
+// I'd be a miracle if this doesn't have any inconsistencies with the official interpreter
+
 variableWordPart
   = dollarSign
     vname:(
-      chars:variableChar+ { return '$' + chars.join(''); }
+      chars:variableChar+ !parenthesisOpen { return '$' + chars.join(''); }
       / name:variableChar*
         parenthesisOpen
-        subname:(!parenthesisClose any)*
-        parenthesisClose { return '$' + name + '(' + subname + ')'; }
-      / braceOpen name:(!braceClose any)* braceClose {
+        subname:variableIndex
+        parenthesisClose { return '$' + name.join('') + '(' + subname + ')'; }
+      / braceOpen name:(!braceClose c:any { return c; })* braceClose {
           return '$' + '{' + name.join('') + '}';
         }
     ) { return vname; }
+
+variableIndex = parts:variableIndexPart+ { return parts.join(''); }
+
+variableIndexPart
+  = chars:(
+    !bracketOpen !dollarSign !whiteSpaceChar !parenthesisClose char:any {
+        return char;
+      }
+  )+ { return chars.join(''); }
+  / bracketWordPart
+  / variableWordPart
 
 variableChar
   = [a-zA-Z0-9_]

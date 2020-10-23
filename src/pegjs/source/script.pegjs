@@ -9,10 +9,10 @@
     TclWord,
     //TclWordPart,
     //TclVariable,
-  } = require('../TclToken.ts');
+  } = require('../../parser/TclToken.ts');
 }
 
-script = list:statementlist { return list }
+script = list:statementlist { return list; }
 
 statementlist
   = commandlist
@@ -36,6 +36,6 @@ command = !pound words:words? { return new TclCommand(words || []); }
 
 // Words ========================
 
-@import "../import/words"
+//import "../import/words"
 
-@import "../import/basics"
+//import "../import/basics"

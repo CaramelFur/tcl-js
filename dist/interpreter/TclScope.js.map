@@ -1,1 +1,1 @@
-{"version":3,"file":"TclScope.js","sourceRoot":"","sources":["../../src/interpreter/TclScope.ts"],"names":[],"mappings":";;;;;;;;;;;;IAAA;QAAA;QAAuB,CAAC;QAAD,eAAC;IAAD,CAAC,AAAxB,IAAwB;IAAX,4BAAQ"}
+{"version":3,"file":"TclScope.js","sourceRoot":"","sources":["../../src/interpreter/TclScope.ts"],"names":[],"mappings":";;;;;;;;;;;;IAAA;QACE,kBAAmB,eAA0B;QAAG,CAAC;QACnD,eAAC;IAAD,CAAC,AAFD,IAEC;IAFY,4BAAQ"}

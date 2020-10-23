@@ -1,1 +1,3 @@
-export class TclScope {}
+export class TclScope {
+  public constructor(disableCommands?: string[]) {}
+}

@@ -11,7 +11,7 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TclScope = void 0;
     var TclScope = (function () {
-        function TclScope() {
+        function TclScope(disableCommands) {
         }
         return TclScope;
     }());

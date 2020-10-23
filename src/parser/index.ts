@@ -1,13 +1,21 @@
 import { TclComment, TclScript } from './TclToken';
-import * as Parser from '../pegjs/parsers/script';
+import * as TclParser from '../pegjs/parsers/script';
+import * as WordParser from '../pegjs/parsers/word';
+import {
+  TextPart,
+  EscapePart,
+  CodePart,
+  VariablePart,
+  AnyWordPart,
+} from './WordToken';
 
 /**
  * Options you can give to the parser
  *
  * @export
- * @interface ParseOptions
+ * @interface TclParseOptions
  */
-export interface ParseOptions {
+export interface TclParseOptions {
   keepComments?: boolean;
 }
 
@@ -16,18 +24,18 @@ export interface ParseOptions {
  *
  * @export
  * @param {string} tcl
- * @param {ParseOptions} [options={ keepComments: false }]
+ * @param {TclParseOptions} [options={ keepComments: false }]
  * @returns {TclScript}
  */
-export function parse(
+export function ParseTcl(
   tcl: string,
-  options: ParseOptions = { keepComments: false },
+  options: TclParseOptions = { keepComments: false },
 ): TclScript {
   // We need to escape newlines before we start parsing, because weird tcl behaviour
-  const endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n*/g, '$1 ');
+  const endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n/g, '$1 ');
 
   // Actually parse it with the generated parser
-  const parsed: TclScript = Parser.parse(endlineEscapedTclString);
+  const parsed: TclScript = TclParser.parse(endlineEscapedTclString);
 
   // If keepComments isn't set we loop over all commands and filter out comment commands
   if (!options.keepComments) {
@@ -39,4 +47,9 @@ export function parse(
   }
 
   return parsed;
+}
+
+export type ParsedWord = Array<AnyWordPart>;
+export function ParseWord(word: string): ParsedWord {
+  return WordParser.parse(word);
 }

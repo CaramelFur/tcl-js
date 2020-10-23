@@ -51,36 +51,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "fs", "util", "./interpreter/TclScope", "./parser/", "fs", "./TclError", "./interpreter/variables/TclVariable", "./interpreter/TclInterpreter"], factory);
+        define(["require", "exports", "fs", "./TclError", "./interpreter/TclInterpreter"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Tcl = void 0;
-    var fs_1 = require("fs");
-    var util = require("util");
-    var TclScope_1 = require("./interpreter/TclScope");
-    var parser_1 = require("./parser/");
     var fs = require("fs");
     var TclError_1 = require("./TclError");
-    var TclVariable_1 = require("./interpreter/variables/TclVariable");
     var TclInterpreter_1 = require("./interpreter/TclInterpreter");
-    var tclFile = fs_1.readFileSync('test/test.tcl', 'utf-8');
-    var parsed = parser_1.parse(tclFile);
-    console.log(util.inspect(parsed, false, Infinity, true));
-    var e = function () {
-        console.log('hello');
-    };
     var Tcl = (function () {
         function Tcl(options) {
+            if (options === void 0) { options = {
+                disableCommands: [],
+                persistGlobals: true,
+            }; }
             this.options = options || {};
-            this.globalScope = new TclScope_1.TclScope();
             this.interpreter = new TclInterpreter_1.TclInterpreter(this.options);
         }
         Tcl.prototype.run = function (code) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2, new TclVariable_1.TclVariable()];
+                    return [2, this.interpreter.run(code)];
                 });
             });
         };
@@ -108,6 +99,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         return Tcl;
     }());
-    exports.Tcl = Tcl;
+    exports.default = Tcl;
 });
-//# sourceMappingURL=tcl.js.map
+//# sourceMappingURL=Tcl.js.map

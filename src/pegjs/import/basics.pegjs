@@ -40,6 +40,12 @@ newLineChar = "\n"
 
 nonNewLineChar = !newLineChar c:any { return c; }
 
+octalChar = [0-7]
+
+decimalChar = [0-9]
+
+hexChar = [0-9A-Fa-f]
+
 any
   = !escape c:. { return c; }
   / escape c:. { return '\\' + c; }

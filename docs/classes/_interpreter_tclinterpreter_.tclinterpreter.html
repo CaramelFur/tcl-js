@@ -54,6 +54,18 @@
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="_interpreter_tclinterpreter_.tclinterpreter.html#options" class="tsd-kind-icon">options</a>
 				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="_interpreter_tclinterpreter_.tclinterpreter.html#scope" class="tsd-kind-icon">scope</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_interpreter_tclinterpreter_.tclinterpreter.html#run" class="tsd-kind-icon">run</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_interpreter_tclinterpreter_.tclinterpreter.html#runcommand" class="tsd-kind-icon">run<wbr>Command</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="_interpreter_tclinterpreter_.tclinterpreter.html#substituteword" class="tsd-kind-icon">substitute<wbr>Word</a>
+				</li>
 			</ul>
 		</li>
 	</ul>
@@ -82,6 +94,15 @@
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_interpreter_tclinterpreter_.tclinterpreter.html#options" class="tsd-kind-icon">options</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_interpreter_tclinterpreter_.tclinterpreter.html#scope" class="tsd-kind-icon">scope</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section ">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_interpreter_tclinterpreter_.tclinterpreter.html#run" class="tsd-kind-icon">run</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_tclinterpreter_.tclinterpreter.html#runcommand" class="tsd-kind-icon">run<wbr>Command</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_interpreter_tclinterpreter_.tclinterpreter.html#substituteword" class="tsd-kind-icon">substitute<wbr>Word</a></li>
 						</ul>
 					</section>
 				</div>
@@ -93,19 +114,22 @@
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Interpreter<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_interpreter_tclinterpreter_.tclinterpreter.html" class="tsd-signature-type">TclInterpreter</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Interpreter<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a>, scope<span class="tsd-signature-symbol">?: </span><a href="_interpreter_tclscope_.tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_interpreter_tclinterpreter_.tclinterpreter.html" class="tsd-signature-type">TclInterpreter</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/TclInterpreter.ts:4</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L10">src/interpreter/TclInterpreter.ts:10</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>options: <a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> scope: <a href="_interpreter_tclscope_.tclscope.html" class="tsd-signature-type">TclScope</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="_interpreter_tclinterpreter_.tclinterpreter.html" class="tsd-signature-type">TclInterpreter</a></h4>
@@ -121,9 +145,91 @@
 				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_tcl_.tcloptions.html" class="tsd-signature-type">TclOptions</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in src/interpreter/TclInterpreter.ts:4</li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L9">src/interpreter/TclInterpreter.ts:9</a></li>
 					</ul>
 				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="scope" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> scope</h3>
+				<div class="tsd-signature tsd-kind-icon">scope<span class="tsd-signature-symbol">:</span> <a href="_interpreter_tclscope_.tclscope.html" class="tsd-signature-type">TclScope</a></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L10">src/interpreter/TclInterpreter.ts:10</a></li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="run" class="tsd-anchor"></a>
+				<h3>run</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">run<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L17">src/interpreter/TclInterpreter.ts:17</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>code: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="runcommand" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> run<wbr>Command</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">run<wbr>Command<span class="tsd-signature-symbol">(</span>command<span class="tsd-signature-symbol">: </span><a href="_parser_tcltoken_.tclcommand.html" class="tsd-signature-type">TclCommand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L32">src/interpreter/TclInterpreter.ts:32</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>command: <a href="_parser_tcltoken_.tclcommand.html" class="tsd-signature-type">TclCommand</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="substituteword" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> substitute<wbr>Word</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">substitute<wbr>Word<span class="tsd-signature-symbol">(</span>word<span class="tsd-signature-symbol">: </span><a href="_parser_tcltoken_.tclword.html" class="tsd-signature-type">TclWord</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/e7225e2/src/interpreter/TclInterpreter.ts#L38">src/interpreter/TclInterpreter.ts:38</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>word: <a href="_parser_tcltoken_.tclword.html" class="tsd-signature-type">TclWord</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="_interpreter_variables_tclvariable_.tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer>
@@ -138,15 +244,17 @@
 					<ul class="tsd-legend">
 						<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 						<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+						<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+					</ul>
+					<ul class="tsd-legend">
+						<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+						<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
 					</ul>
 					<ul class="tsd-legend">
 						<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 					</ul>
 					<ul class="tsd-legend">
 						<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-					</ul>
-					<ul class="tsd-legend">
-						<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
 					</ul>
 				</div>
 			</div>

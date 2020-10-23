@@ -1,0 +1,16 @@
+yarn run v1.22.10
+$ prettier --write ./src/
+src/interpreter/TclInterpreter.ts 181ms
+src/interpreter/TclScope.ts 3ms
+src/interpreter/variables/TclVariable.ts 4ms
+src/parser/index.ts 21ms
+src/parser/TclToken.ts 22ms
+src/parser/WordToken.ts 14ms
+src/pegjs/generate-pegjs.ts 30ms
+src/pegjs/import/basics.pegjs 37ms
+src/pegjs/import/words.pegjs 41ms
+src/pegjs/source/script.pegjs 19ms
+src/pegjs/source/word.pegjs 42ms
+src/Tcl.ts 21ms
+src/TclError.ts 6ms
+Done in 0.78s.

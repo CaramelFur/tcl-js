@@ -27,17 +27,24 @@
         var pegjsFilePath = path.join(parsersPath, parser);
         var pegjsFile = fs.readFileSync(pegjsFilePath, 'utf-8');
         var fullPegjsFile = appendImports(pegjsFile, pegjsFilePath);
-        var parserFile = pegjs.generate(fullPegjsFile, {
-            output: 'source',
-            format: 'commonjs',
-            plugins: [tspegjs],
-        });
+        var parserFile = '';
+        try {
+            parserFile = pegjs.generate(fullPegjsFile, {
+                output: 'source',
+                format: 'commonjs',
+                plugins: [tspegjs],
+            });
+        }
+        catch (e) {
+            throw new Error('Error at: ' + pegjsFilePath + ' : ' + e.message);
+        }
         fs.writeFileSync(outputFilePath, parserFile);
         console.log('  Successfully generated', parser);
     }
+    console.log('Successfully generated all parsers\n');
     function appendImports(pegjsFile, pegjsFilePath, depth) {
         if (depth === void 0) { depth = 1; }
-        var processedPegjsFile = pegjsFile.replace(/^@import "(.*)"$/gm, function (match, importpath) {
+        var processedPegjsFile = pegjsFile.replace(/^\/\/import "(.*)"$/gm, function (match, importpath) {
             var pegjsFileDirPath = path.dirname(pegjsFilePath);
             var importFilePath = path.join(pegjsFileDirPath, importpath + '.' + pegjsExtension);
             var importFileName = path.basename(importFilePath);
