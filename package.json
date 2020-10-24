@@ -5,7 +5,7 @@
   "main": "dist/tcl.js",
   "scripts": {
     "run": "yarn run generate-pegjs && ts-node ./test/test.ts",
-    "test": "yarn run run-tests && yarn run report-coverage",
+    "test": "yarn run build && yarn run run-tests && yarn run report-coverage",
     "build": "yarn run make-prettier && yarn run generate-pegjs && yarn run compile-typescript && yarn run generate-docs",
     "generate-pegjs": "ts-node ./src/pegjs/generate-pegjs.ts",
     "make-prettier": "prettier --write ./src/ ./test/ | tr -d '\\033'",
