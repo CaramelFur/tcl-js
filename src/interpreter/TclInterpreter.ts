@@ -4,7 +4,7 @@ import { TclOptions } from '../Tcl';
 import { TclScope } from './TclScope';
 import { TclVariable } from './variables/TclVariable';
 import * as util from 'util';
-import SubstituteWord from './Substitutor';
+import { SubstituteWord } from './Substitutor';
 
 export class TclInterpreter {
   private options: TclOptions;

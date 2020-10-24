@@ -1,7 +1,3 @@
-import { readFileSync } from 'fs';
-import * as util from 'util';
-import { TclScope } from './interpreter/TclScope';
-import { ParseTcl } from './parser';
 import * as fs from 'fs';
 import { TclError } from './TclError';
 import { TclVariable } from './interpreter/variables/TclVariable';
@@ -37,7 +33,7 @@ export interface TclOptions {
  * @export
  * @class Tcl
  */
-export default class Tcl {
+export class Tcl {
   private options: TclOptions;
   private interpreter: TclInterpreter;
 

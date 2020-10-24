@@ -10,7 +10,7 @@
     "generate-pegjs": "ts-node ./src/pegjs/generate-pegjs.ts",
     "make-prettier": "prettier --write ./src/ ./test/ | tr -d '\\033'",
     "compile-typescript": "rm -r dist && tsc",
-    "generate-docs": "typedoc --options ./typedoc.json ./src/",
+    "generate-docs": "rm -r ./docs && typedoc --options ./typedoc.json ./src/",
     "run-tests": "nyc mocha -r ts-node/register test/index.ts",
     "report-coverage": "mkdir -p ./coverage/ && nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov --disable=gcov",
     "start": "echo Error: There is nothing to start && exit 1"

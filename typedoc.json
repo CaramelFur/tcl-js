@@ -1,7 +1,12 @@
 {
- "hideGenerator": true,
- "name": "tcl-js",
- "theme": "minimal",
- "out": "./docs/",
- "tsconfig": "./tsconfig.json" 
+  "hideGenerator": true,
+  "name": "tcl-js",
+  "theme": "minimal",
+  "mode": "file",
+  "out": "./docs/",
+  "tsconfig": "./tsconfig.json",
+  "inputFiles": ["./src"],
+  "exclude": ["./src/pegjs/**/*"],
+  "includeVersion": true,
+  "categorizeByGroup": false
 }

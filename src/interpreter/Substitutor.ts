@@ -11,7 +11,7 @@ import {
 import { TclError } from '../TclError';
 import { TclVariable } from './variables/TclVariable';
 
-export default function SubstituteWord(word: TclWord): TclVariable {
+export function SubstituteWord(word: TclWord): TclVariable {
   const parsed = ParseWord(word.value);
   //console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
 

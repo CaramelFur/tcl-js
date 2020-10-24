@@ -5,7 +5,15 @@ export class TclVariable {
     this.value = value || '';
   }
 
-  public toString() {
+  public toString(): string {
     return this.value;
+  }
+
+  public toStringList(): string[] {
+    return [];
+  }
+
+  public toVarList(): TclVariable[] {
+    return [];
   }
 }
