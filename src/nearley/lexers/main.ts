@@ -1,19 +1,11 @@
 import * as moo from 'moo';
+import { createPop, createPush, escapeRegex, wsregex } from './base';
 
 export const lexer = (() => {
-  const wsregex = /[ \t\v\f\r]/;
 
-  const escapeRegex = /\\.|[^\\]|\\/;
+  const pop = createPop(() => lexer);
 
-  const pop = (amount: number) => (value: string) => {
-    for (let i = 0; i < amount; i++) lexer.popState();
-    return value;
-  };
-
-  const push = (...pushes: string[]) => (value: string) => {
-    for (let i = 0; i < pushes.length; i++) lexer.pushState(pushes[i]);
-    return value;
-  };
+  const push = createPush(() => lexer);
 
   return moo.states(
     {
