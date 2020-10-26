@@ -1,2 +1,2 @@
-**/pegjs/parsers/*.ts
+src/nearley/parsers/*.ts
 **/*.tcl

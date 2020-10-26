@@ -4,23 +4,19 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "util", "../parser", "../parser/WordToken", "../TclError", "./variables/TclVariable"], factory);
+        define(["require", "exports", "../parser/WordToken", "../TclError", "./variables/TclVariable"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var util = require("util");
-    var parser_1 = require("../parser");
+    exports.SubstituteWord = void 0;
     var WordToken_1 = require("../parser/WordToken");
     var TclError_1 = require("../TclError");
     var TclVariable_1 = require("./variables/TclVariable");
     function SubstituteWord(word) {
-        var parsed = parser_1.ParseWord(word.value);
-        var substituted = parsed.map(substitutePart);
-        console.log(word.value, ':', util.inspect(substituted.join(''), false, Infinity, true));
         return new TclVariable_1.TclVariable(word.value);
     }
-    exports.default = SubstituteWord;
+    exports.SubstituteWord = SubstituteWord;
     function substitutePart(part) {
         if (part instanceof WordToken_1.TextPart) {
             return part.value;

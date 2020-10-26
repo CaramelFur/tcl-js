@@ -17,6 +17,12 @@
         TclVariable.prototype.toString = function () {
             return this.value;
         };
+        TclVariable.prototype.toStringList = function () {
+            return [];
+        };
+        TclVariable.prototype.toVarList = function () {
+            return [];
+        };
         return TclVariable;
     }());
     exports.TclVariable = TclVariable;

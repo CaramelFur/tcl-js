@@ -68,4 +68,4 @@ temp/
 
 report.*.json
 
-**/pegjs/parsers/*.ts
+src/nearley/parsers/*.ts

@@ -22,7 +22,7 @@ export class TclInterpreter {
 
     let lastValue = new TclVariable();
 
-    for (let command of astTree.commands) {
+    for (const command of astTree.commands) {
       if (command instanceof TclComment) continue;
       lastValue = this.runCommand(command);
     }

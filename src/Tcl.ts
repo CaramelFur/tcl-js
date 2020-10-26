@@ -60,8 +60,8 @@ export class Tcl {
     return this.interpreter.run(code);
   }
 
-  public async runFile(location: string) {
-    let buffer: string = await new Promise((resolve, reject) => {
+  public async runFile(location: string): Promise<TclVariable> {
+    const buffer: string = await new Promise((resolve, reject) => {
       fs.readFile(location, { encoding: 'utf-8' }, (err, data) => {
         if (err) reject(new TclError(err.message));
         resolve(data);

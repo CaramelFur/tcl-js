@@ -1,13 +1,7 @@
-import { TclComment, TclScript } from './TclToken';
-import * as TclParser from '../pegjs/parsers/script';
-import * as WordParser from '../pegjs/parsers/word';
-import {
-  TextPart,
-  EscapePart,
-  CodePart,
-  VariablePart,
-  AnyWordPart,
-} from './WordToken';
+import { TclCommand, TclComment, TclScript } from './TclToken';
+import TclParser from '../nearley/parsers/script';
+
+import { AnyWordPart } from './WordToken';
 
 /**
  * Options you can give to the parser
@@ -17,6 +11,7 @@ import {
  */
 export interface TclParseOptions {
   keepComments?: boolean;
+  keepNops?: boolean;
 }
 
 /**
@@ -29,28 +24,31 @@ export interface TclParseOptions {
  */
 export function ParseTcl(
   tcl: string,
-  options: TclParseOptions = { keepComments: false },
+  options: TclParseOptions = { keepComments: false, keepNops: false },
 ): TclScript {
   // We need to escape newlines before we start parsing, because weird tcl behaviour
   const endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n/g, '$1 ');
 
   // Actually parse it with the generated parser
-  const parsed: TclScript = TclParser.parse(endlineEscapedTclString);
+  const parsed: TclScript = TclParser(endlineEscapedTclString);
 
   // If keepComments isn't set we loop over all commands and filter out comment commands
-  if (!options.keepComments) {
+  if (!options.keepComments || !options.keepNops)
     for (let i = 0; i < parsed.commands.length; i++) {
-      if (parsed.commands[i] instanceof TclComment) {
+      if (!options.keepComments && parsed.commands[i] instanceof TclComment) {
         parsed.commands.splice(i, 1);
+        continue;
+      }
+
+      if (
+        !options.keepNops &&
+        parsed.commands[i] instanceof TclCommand &&
+        (parsed.commands[i] as TclCommand).words.length === 0
+      ) {
+        parsed.commands.splice(i, 1);
+        continue;
       }
     }
-  }
 
   return parsed;
-}
-
-export type ParsedWord = Array<AnyWordPart>;
-
-export function ParseWord(word: string): ParsedWord {
-  return WordParser.parse(word);
 }

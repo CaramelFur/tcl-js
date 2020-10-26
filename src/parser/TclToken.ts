@@ -30,7 +30,7 @@ export class TclScript {
    * @returns
    * @memberof TclScript
    */
-  prepend(value: TclCommand | TclComment) {
+  prepend(value: TclCommand | TclComment): TclScript {
     this.commands.unshift(value);
     return this;
   }
@@ -68,7 +68,7 @@ export class TclCommand {
    * @returns
    * @memberof TclCommand
    */
-  prepend(value: TclWord) {
+  prepend(value: TclWord): TclCommand {
     this.words.unshift(value);
     return this;
   }
@@ -156,7 +156,7 @@ export class TclWord {
   constructor(
     value: string,
     type: TclWordTypes = TclWordTypes.normal,
-    expand: boolean = false,
+    expand = false,
   ) {
     this.type = type;
     //this.parts = parts;
@@ -172,7 +172,7 @@ export class TclWord {
    * @returns
    * @memberof TclWord
    */
-  setExpand(value: boolean) {
+  setExpand(value: boolean): TclWord {
     this.expand = value;
     return this;
   }

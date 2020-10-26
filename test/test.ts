@@ -1,4 +1,4 @@
-import Tcl from '../src/Tcl';
+import { Tcl } from '../src/Tcl';
 const tcl = new Tcl();
 
 async function main() {

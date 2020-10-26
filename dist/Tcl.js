@@ -56,6 +56,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Tcl = void 0;
     var fs = require("fs");
     var TclError_1 = require("./TclError");
     var TclInterpreter_1 = require("./interpreter/TclInterpreter");
@@ -99,6 +100,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         };
         return Tcl;
     }());
-    exports.default = Tcl;
+    exports.Tcl = Tcl;
 });
 //# sourceMappingURL=Tcl.js.map
