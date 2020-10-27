@@ -1,4 +1,5 @@
 import * as util from 'util';
+import { ParseWord } from '../parser';
 import { TclWord } from '../parser/TclToken';
 import {
   TextPart,
@@ -13,7 +14,8 @@ import { TclVariable } from './variables/TclVariable';
 export function SubstituteWord(word: TclWord): TclVariable {
   // TODO: build this parser again
 
-  /*const parsed = ParseWord(word.value);
+  const parsed = ParseWord(word.value);
+  //parsed.forEach((p: any) => console.log(p.type, p.value));
   //console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
 
   const substituted = parsed.map(substitutePart);
@@ -22,7 +24,7 @@ export function SubstituteWord(word: TclWord): TclVariable {
     word.value,
     ':',
     util.inspect(substituted.join(''), false, Infinity, true),
-  );*/
+  );
 
   return new TclVariable(word.value);
 }

@@ -1,5 +1,6 @@
 import { TclCommand, TclComment, TclScript } from './TclToken';
 import TclParser from '../nearley/parsers/script';
+import WordParser from '../nearley/parsers/word';
 
 import { AnyWordPart } from './WordToken';
 
@@ -51,4 +52,10 @@ export function ParseTcl(
     }
 
   return parsed;
+}
+
+export type ParsedWord = Array<AnyWordPart>;
+
+export function ParseWord(word: string): ParsedWord {
+  return WordParser(word);
 }

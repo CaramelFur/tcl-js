@@ -2,7 +2,6 @@ import * as moo from 'moo';
 import { createPop, createPush, escapeRegex, wsregex } from './base';
 
 export const lexer = (() => {
-
   const pop = createPop(() => lexer);
 
   const push = createPush(() => lexer);
@@ -50,12 +49,16 @@ export const lexer = (() => {
       },
 
       variable: {
-        nl: { match: '\n', lineBreaks: true, value: pop(2) },
-        ws: { match: wsregex, value: pop(2) },
-        semiColon: { match: ';', value: pop(2) },
         wordchar: [
           { match: '(', push: 'subvariable' },
           { match: /[a-zA-Z0-9_]|::/ },
+          { match: '$', next: 'variable' },
+          { match: '[', next: 'bracketreplace' },
+          {
+            match: /\\.|[^\\]|\\(?=[ \t\v\f\r\n;])/,
+            value: pop(2),
+            lineBreaks: true,
+          },
           { match: escapeRegex, lineBreaks: true, pop: 1 },
         ],
       },
@@ -63,7 +66,7 @@ export const lexer = (() => {
         wordchar: [
           { match: '[', push: 'bracketreplace' },
           { match: '$', push: 'variable' },
-          { match: ')', pop: 1 },
+          { match: ')', value: pop(2) },
           { match: escapeRegex, lineBreaks: true },
         ],
       },

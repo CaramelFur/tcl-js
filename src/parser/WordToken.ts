@@ -19,9 +19,32 @@ export class EscapePart {
   backslashValue: string;
   type: EscapePartType;
 
-  constructor(value: string, type: EscapePartType = EscapePartType.normal) {
-    this.backslashValue = value;
-    this.type = type;
+  constructor(unparsed: string) {
+    const clean = unparsed.slice(1);
+    switch (clean[0]) {
+      case 'x':
+        this.type = EscapePartType.hex;
+        this.backslashValue = clean.slice(1);
+        break;
+      case 'u':
+        this.type = EscapePartType.hex16;
+        this.backslashValue = clean.slice(1);
+        break;
+      case 'U':
+        this.type = EscapePartType.hex32;
+        this.backslashValue = clean.slice(1);
+        break;
+      default: {
+        const cint = parseInt(clean[0], 10);
+        if (cint >= 0 && cint <= 7) {
+          this.type = EscapePartType.octal;
+          this.backslashValue = clean;
+        } else {
+          this.type = EscapePartType.normal;
+          this.backslashValue = clean;
+        }
+      }
+    }
   }
 }
 
