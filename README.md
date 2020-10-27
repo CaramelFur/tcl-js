@@ -88,3 +88,4 @@ These are not commands but just general parts of the program. If they are listed
 
 - lexer
 - parser
+- wordparser
