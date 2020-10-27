@@ -69,6 +69,9 @@
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a href="tclarrayvariable.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="tclarrayvariable.html#unsetentry" class="tsd-kind-icon">unset<wbr>Entry</a>
+				</li>
 			</ul>
 		</li>
 	</ul>
@@ -112,6 +115,7 @@
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="tclarrayvariable.html#isarray" class="tsd-kind-icon">is<wbr>Array</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclarrayvariable.html#setentry" class="tsd-kind-icon">set<wbr>Entry</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="tclarrayvariable.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclarrayvariable.html#unsetentry" class="tsd-kind-icon">unset<wbr>Entry</a></li>
 						</ul>
 					</section>
 				</div>
@@ -123,19 +127,19 @@
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Array<wbr>Variable<span class="tsd-signature-symbol">(</span>initialValues<span class="tsd-signature-symbol">: </span><a href="../interfaces/simplevariableentrylist.html" class="tsd-signature-type">SimpleVariableEntryList</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclarrayvariable.html" class="tsd-signature-type">TclArrayVariable</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Array<wbr>Variable<span class="tsd-signature-symbol">(</span>initialValues<span class="tsd-signature-symbol">?: </span><a href="../interfaces/simplevariableentrylist.html" class="tsd-signature-type">SimpleVariableEntryList</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclarrayvariable.html" class="tsd-signature-type">TclArrayVariable</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:10</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L11">src/interpreter/variables/TclArrayVariable.ts:11</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>initialValues: <a href="../interfaces/simplevariableentrylist.html" class="tsd-signature-type">SimpleVariableEntryList</a></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> initialValues: <a href="../interfaces/simplevariableentrylist.html" class="tsd-signature-type">SimpleVariableEntryList</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="tclarrayvariable.html" class="tsd-signature-type">TclArrayVariable</a></h4>
@@ -151,7 +155,7 @@
 				<div class="tsd-signature tsd-kind-icon">entries<span class="tsd-signature-symbol">:</span> <a href="../interfaces/simplevariableentrylist.html" class="tsd-signature-type">SimpleVariableEntryList</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in src/interpreter/variables/TclArrayVariable.ts:10</li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L11">src/interpreter/variables/TclArrayVariable.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -168,7 +172,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:21</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L22">src/interpreter/variables/TclArrayVariable.ts:22</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -191,7 +195,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:17</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L18">src/interpreter/variables/TclArrayVariable.ts:18</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -215,7 +219,7 @@
 						<aside class="tsd-sources">
 							<p>Overrides <a href="tclvariable.html">TclVariable</a>.<a href="tclvariable.html#isarray">isArray</a></p>
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:43</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L51">src/interpreter/variables/TclArrayVariable.ts:51</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">true</span></h4>
@@ -232,7 +236,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:30</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L31">src/interpreter/variables/TclArrayVariable.ts:31</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -259,10 +263,33 @@
 						<aside class="tsd-sources">
 							<p>Overrides <a href="tclvariable.html">TclVariable</a>.<a href="tclvariable.html#tostring">toString</a></p>
 							<ul>
-								<li>Defined in src/interpreter/variables/TclArrayVariable.ts:36</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L44">src/interpreter/variables/TclArrayVariable.ts:44</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="unsetentry" class="tsd-anchor"></a>
+				<h3>unset<wbr>Entry</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">unset<wbr>Entry<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/variables/TclArrayVariable.ts#L37">src/interpreter/variables/TclArrayVariable.ts:37</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
 				</ul>
 			</section>

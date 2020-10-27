@@ -52,13 +52,25 @@
 					<a href="tclscope.html#constructor" class="tsd-kind-icon">constructor</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="tclscope.html#parent" class="tsd-kind-icon">parent</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="tclscope.html#variables" class="tsd-kind-icon">variables</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="tclscope.html#getparent" class="tsd-kind-icon">get<wbr>Parent</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="tclscope.html#getvariable" class="tsd-kind-icon">get<wbr>Variable</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="tclscope.html#hasvariable" class="tsd-kind-icon">has<wbr>Variable</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="tclscope.html#setvariable" class="tsd-kind-icon">set<wbr>Variable</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="tclscope.html#unsetvariable" class="tsd-kind-icon">unset<wbr>Variable</a>
 				</li>
 			</ul>
 		</li>
@@ -87,14 +99,18 @@
 					<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="tclscope.html#parent" class="tsd-kind-icon">parent</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="tclscope.html#variables" class="tsd-kind-icon">variables</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclscope.html#getparent" class="tsd-kind-icon">get<wbr>Parent</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclscope.html#getvariable" class="tsd-kind-icon">get<wbr>Variable</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclscope.html#hasvariable" class="tsd-kind-icon">has<wbr>Variable</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclscope.html#setvariable" class="tsd-kind-icon">set<wbr>Variable</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclscope.html#unsetvariable" class="tsd-kind-icon">unset<wbr>Variable</a></li>
 						</ul>
 					</section>
 				</div>
@@ -106,19 +122,22 @@
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Scope<span class="tsd-signature-symbol">(</span>disableCommands<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclscope.html" class="tsd-signature-type">TclScope</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Tcl<wbr>Scope<span class="tsd-signature-symbol">(</span>disableCommands<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, parent<span class="tsd-signature-symbol">?: </span><a href="tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclscope.html" class="tsd-signature-type">TclScope</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclScope.ts#L9">src/interpreter/TclScope.ts:9</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L11">src/interpreter/TclScope.ts:11</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> disableCommands: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <a href="tclscope.html" class="tsd-signature-type">TclScope</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="tclscope.html" class="tsd-signature-type">TclScope</a></h4>
@@ -129,12 +148,22 @@
 		<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="parent" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> parent</h3>
+				<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L7">src/interpreter/TclScope.ts:7</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 				<a name="variables" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> variables</h3>
 				<div class="tsd-signature tsd-kind-icon">variables<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclScope.ts#L7">src/interpreter/TclScope.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L9">src/interpreter/TclScope.ts:9</a></li>
 					</ul>
 				</aside>
 				<div class="tsd-type-declaration">
@@ -150,16 +179,39 @@
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-				<a name="getvariable" class="tsd-anchor"></a>
-				<h3>get<wbr>Variable</h3>
+				<a name="getparent" class="tsd-anchor"></a>
+				<h3>get<wbr>Parent</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Variable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Parent<span class="tsd-signature-symbol">(</span>levels<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclScope.ts#L17">src/interpreter/TclScope.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L17">src/interpreter/TclScope.ts:17</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> levels: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="getvariable" class="tsd-anchor"></a>
+				<h3>get<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Variable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclsimplevariable.html" class="tsd-signature-type">TclSimpleVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L54">src/interpreter/TclScope.ts:54</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -171,7 +223,7 @@
 								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+						<h4 class="tsd-returns-title">Returns <a href="tclsimplevariable.html" class="tsd-signature-type">TclSimpleVariable</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -185,7 +237,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclScope.ts#L13">src/interpreter/TclScope.ts:13</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L24">src/interpreter/TclScope.ts:24</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -195,6 +247,61 @@
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="setvariable" class="tsd-anchor"></a>
+				<h3>set<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">set<wbr>Variable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, variable<span class="tsd-signature-symbol">: </span><a href="tclsimplevariable.html" class="tsd-signature-type">TclSimpleVariable</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L28">src/interpreter/TclScope.ts:28</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+							</li>
+							<li>
+								<h5>variable: <a href="tclsimplevariable.html" class="tsd-signature-type">TclSimpleVariable</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="unsetvariable" class="tsd-anchor"></a>
+				<h3>unset<wbr>Variable</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">unset<wbr>Variable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L82">src/interpreter/TclScope.ts:82</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>name: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> = null</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 					</li>
 				</ul>
 			</section>

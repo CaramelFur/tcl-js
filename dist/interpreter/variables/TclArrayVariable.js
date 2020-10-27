@@ -30,7 +30,8 @@ var __extends = (this && this.__extends) || (function () {
         function TclArrayVariable(initialValues) {
             var _this = _super.call(this) || this;
             _this.entries = {};
-            _this.entries = initialValues;
+            if (initialValues)
+                _this.entries = initialValues;
             return _this;
         }
         TclArrayVariable.prototype.hasEntry = function (name) {
@@ -45,6 +46,11 @@ var __extends = (this && this.__extends) || (function () {
             var isNew = this.hasEntry(name);
             this.entries[name] = value;
             return isNew;
+        };
+        TclArrayVariable.prototype.unsetEntry = function (name) {
+            if (!this.hasEntry(name))
+                throw new TclError_1.TclError("Interpreter did not check if element existed");
+            delete this.entries[name];
         };
         TclArrayVariable.prototype.toString = function () {
             var _this = this;

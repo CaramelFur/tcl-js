@@ -1,4 +1,5 @@
 import { TclError } from '../../TclError';
+import { compileVarName } from '../TclScope';
 import { TclSimpleVariable } from './TclSimpleVariable';
 import { TclVariable } from './TclVariable';
 
@@ -9,9 +10,9 @@ interface SimpleVariableEntryList {
 export class TclArrayVariable extends TclVariable {
   private entries: SimpleVariableEntryList = {};
 
-  constructor(initialValues: SimpleVariableEntryList) {
+  constructor(initialValues?: SimpleVariableEntryList) {
     super();
-    this.entries = initialValues;
+    if (initialValues) this.entries = initialValues;
   }
 
   public hasEntry(name: string): boolean {
@@ -31,6 +32,13 @@ export class TclArrayVariable extends TclVariable {
     const isNew = this.hasEntry(name);
     this.entries[name] = value;
     return isNew;
+  }
+
+  public unsetEntry(name: string): void {
+    if (!this.hasEntry(name))
+      throw new TclError(`Interpreter did not check if element existed`);
+
+    delete this.entries[name];
   }
 
   public toString(): string {

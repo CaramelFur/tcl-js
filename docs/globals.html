@@ -127,6 +127,9 @@
 			<a href="globals.html#parsedword" class="tsd-kind-icon">Parsed<wbr>Word</a>
 		</li>
 		<li class=" tsd-kind-variable">
+			<a href="globals.html#builtincommands" class="tsd-kind-icon">Built<wbr>InCommands</a>
+		</li>
+		<li class=" tsd-kind-variable">
 			<a href="globals.html#compile" class="tsd-kind-icon">Compile</a>
 		</li>
 		<li class=" tsd-kind-variable">
@@ -230,6 +233,12 @@
 		</li>
 		<li class=" tsd-kind-variable">
 			<a href="globals.html#wsregex" class="tsd-kind-icon">wsregex</a>
+		</li>
+		<li class=" tsd-kind-function">
+			<a href="globals.html#loadcommands" class="tsd-kind-icon">Load<wbr>Commands</a>
+		</li>
+		<li class=" tsd-kind-function">
+			<a href="globals.html#loadset" class="tsd-kind-icon">Load<wbr>Set</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="globals.html#parsetcl" class="tsd-kind-icon">Parse<wbr>Tcl</a>
@@ -414,6 +423,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<section class="tsd-index-section ">
 						<h3>Variables</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-variable"><a href="globals.html#builtincommands" class="tsd-kind-icon">Built<wbr>InCommands</a></li>
 							<li class="tsd-kind-variable"><a href="globals.html#compile" class="tsd-kind-icon">Compile</a></li>
 							<li class="tsd-kind-variable"><a href="globals.html#compiledparser" class="tsd-kind-icon">Compiled<wbr>Parser</a></li>
 							<li class="tsd-kind-variable"><a href="globals.html#generate" class="tsd-kind-icon">Generate</a></li>
@@ -454,6 +464,8 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<section class="tsd-index-section ">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-function"><a href="globals.html#loadcommands" class="tsd-kind-icon">Load<wbr>Commands</a></li>
+							<li class="tsd-kind-function"><a href="globals.html#loadset" class="tsd-kind-icon">Load<wbr>Set</a></li>
 							<li class="tsd-kind-function"><a href="globals.html#parsetcl" class="tsd-kind-icon">Parse<wbr>Tcl</a></li>
 							<li class="tsd-kind-function"><a href="globals.html#parseword" class="tsd-kind-icon">Parse<wbr>Word</a></li>
 							<li class="tsd-kind-function"><a href="globals.html#replaceescapechar" class="tsd-kind-icon">Replace<wbr>Escape<wbr>Char</a></li>
@@ -485,7 +497,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">Any<wbr>Word<wbr>Part<span class="tsd-signature-symbol">:</span> <a href="classes/textpart.html" class="tsd-signature-type">TextPart</a><span class="tsd-signature-symbol"> | </span><a href="classes/escapepart.html" class="tsd-signature-type">EscapePart</a><span class="tsd-signature-symbol"> | </span><a href="classes/codepart.html" class="tsd-signature-type">CodePart</a><span class="tsd-signature-symbol"> | </span><a href="classes/variablepart.html" class="tsd-signature-type">VariablePart</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/parser/WordToken.ts#L1">src/parser/WordToken.ts:1</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/parser/WordToken.ts#L1">src/parser/WordToken.ts:1</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -506,7 +518,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">Parsed<wbr>Word<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><a href="globals.html#anywordpart" class="tsd-signature-type">AnyWordPart</a><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/parser/index.ts#L57">src/parser/index.ts:57</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/parser/index.ts#L57">src/parser/index.ts:57</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -514,12 +526,22 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Variables</h2>
 			<section class="tsd-panel tsd-member tsd-kind-variable">
+				<a name="builtincommands" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> Built<wbr>InCommands</h3>
+				<div class="tsd-signature tsd-kind-icon">Built<wbr>InCommands<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>scope<span class="tsd-signature-symbol">: </span><a href="classes/tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = [LoadSet]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in src/interpreter/Commands.ts:4</li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-variable">
 				<a name="compile" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagConst">Const</span> Compile</h3>
 				<div class="tsd-signature tsd-kind-icon">Compile<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&#x27;nearley/lib/compile.js&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L5">src/nearley/nearley-there.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L5">src/nearley/nearley-there.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -546,7 +568,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">Generate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&#x27;nearley/lib/generate.js&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L6">src/nearley/nearley-there.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L6">src/nearley/nearley-there.ts:6</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -556,7 +578,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">advanced<wbr>Escape<wbr>Regex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = /\\(?:[0-7]{1,3}|x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|.)/</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L5">src/nearley/lexers/base.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L5">src/nearley/lexers/base.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -566,7 +588,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">baked<wbr>Escape<wbr>Chars<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = Object.keys(bakedEscapeChars)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in src/interpreter/HandleEscape.ts:26</li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L26">src/interpreter/HandleEscape.ts:26</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -606,7 +628,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">debug<wbr>Lexer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L19">src/interpreter/TclInterpreter.ts:19</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclInterpreter.ts#L19">src/interpreter/TclInterpreter.ts:19</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -616,7 +638,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">debug<wbr>Parser<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> = false</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L20">src/interpreter/TclInterpreter.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclInterpreter.ts#L20">src/interpreter/TclInterpreter.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -636,7 +658,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">dot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = /./</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L7">src/nearley/lexers/base.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L7">src/nearley/lexers/base.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -656,7 +678,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">escape<wbr>Regex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = /\\.|[^\\]|\\/</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L3">src/nearley/lexers/base.ts:3</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L3">src/nearley/lexers/base.ts:3</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -706,7 +728,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">lexer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Lexer</span><span class="tsd-signature-symbol"> = (() &#x3D;&gt; {const pop &#x3D; createPop(() &#x3D;&gt; lexer);const push &#x3D; createPush(() &#x3D;&gt; lexer);return moo.states({main: {nl: { match: &#x27;\n&#x27;, lineBreaks: true },ws: wsregex,semiColon: &#x27;;&#x27;,hashTag: { match: &#x27;#&#x27;, push: &#x27;comment&#x27; },expandSign: { match: &#x27;{*}&#x27; },lbrace: { match: &#x27;{&#x27;, push: &#x27;braceWord&#x27; },quote: { match: &#x27;&quot;&#x27;, push: &#x27;quoteWord&#x27; },wordchar: [{ match: &#x27;$&#x27;, value: push(&#x27;word&#x27;, &#x27;variable&#x27;) },{ match: &#x27;[&#x27;, value: push(&#x27;word&#x27;, &#x27;bracketreplace&#x27;) },{ match: escapeRegex, lineBreaks: true, push: &#x27;word&#x27; },],},comment: {comment: /[^\n]+/,nl: { match: &#x27;\n&#x27;, lineBreaks: true, pop: 1 },},word: {nl: { match: &#x27;\n&#x27;, lineBreaks: true, pop: 1 },ws: { match: wsregex, pop: 1 },semiColon: { match: &#x27;;&#x27;, pop: 1 },wordchar: [{ match: &#x27;$&#x27;, push: &#x27;variable&#x27; },{ match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },{ match: escapeRegex, lineBreaks: true },],},quoteWord: {wordchar: [{ match: &#x27;&quot;&#x27;, pop: 1 },{ match: &#x27;$&#x27;, push: &#x27;variable&#x27; },{ match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },{ match: escapeRegex, lineBreaks: true },],},variable: {wordchar: [{ match: &#x27;(&#x27;, push: &#x27;subvariable&#x27; },{ match: /[a-zA-Z0-9_]|::/ },{ match: &#x27;$&#x27;, next: &#x27;variable&#x27; },{ match: &#x27;[&#x27;, next: &#x27;bracketreplace&#x27; },{match: /\\.|[^\\]|\\(?&#x3D;[ \t\v\f\r\n;])/,value: pop(2),lineBreaks: true,},{ match: escapeRegex, lineBreaks: true, pop: 1 },],},subvariable: {wordchar: [{ match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },{ match: &#x27;$&#x27;, push: &#x27;variable&#x27; },{ match: &#x27;)&#x27;, value: pop(2) },{ match: escapeRegex, lineBreaks: true },],},bracketreplace: {wordchar: [{ match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },{ match: &#x27;]&#x27;, pop: 1 },{ match: escapeRegex, lineBreaks: true },],},braceWord: {wordchar: [{ match: &#x27;{&#x27;, push: &#x27;braceWord&#x27; },{ match: &#x27;}&#x27;, pop: 1 },{ match: escapeRegex, lineBreaks: true },],},},&#x27;main&#x27;,);})()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/main.ts#L4">src/nearley/lexers/main.ts:4</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/main.ts#L4">src/nearley/lexers/main.ts:4</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -726,7 +748,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">nearley<wbr>Extension<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"ne"</span><span class="tsd-signature-symbol"> = &quot;ne&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/compile-nearley.ts#L6">src/nearley/compile-nearley.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/compile-nearley.ts#L6">src/nearley/compile-nearley.ts:6</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -736,7 +758,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">nearley<wbr>Grammar<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> = require(&#x27;nearley/lib/nearley-language-bootstrapped.js&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L7">src/nearley/nearley-there.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L7">src/nearley/nearley-there.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -757,7 +779,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">output<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = path.join(__dirname, &#x27;./parsers&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/compile-nearley.ts#L8">src/nearley/compile-nearley.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/compile-nearley.ts#L8">src/nearley/compile-nearley.ts:8</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -767,7 +789,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">parsers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = fs.readdirSync(parsersPath).filter((file) &#x3D;&gt; file.endsWith(&#x60;.${nearleyExtension}&#x60;))</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/compile-nearley.ts#L11">src/nearley/compile-nearley.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/compile-nearley.ts#L11">src/nearley/compile-nearley.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -777,7 +799,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">parsers<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = path.join(__dirname, &#x27;./source&#x27;)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/compile-nearley.ts#L7">src/nearley/compile-nearley.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/compile-nearley.ts#L7">src/nearley/compile-nearley.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -837,7 +859,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">word<wbr>Lexer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Lexer</span><span class="tsd-signature-symbol"> = (() &#x3D;&gt; {const pop &#x3D; createPop(() &#x3D;&gt; wordLexer);return moo.states({main: {dollar: { match: &#x27;$&#x27;, push: &#x27;variable&#x27; },lbracket: { match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },escape: { match: advancedEscapeRegex },char: { match: dot },},variable: {lparen: { match: &#x27;(&#x27;, push: &#x27;subvariable&#x27; },variablechar: { match: /[a-zA-Z0-9_]|::/ },dollar: { match: &#x27;$&#x27;, next: &#x27;variable&#x27; },lbracket: { match: &#x27;[&#x27;, next: &#x27;bracketreplace&#x27; },escape: { match: advancedEscapeRegex, pop: 1 },char: { match: dot, pop: 1 },},subvariable: {lbracket: { match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },dollar: { match: &#x27;$&#x27;, push: &#x27;variable&#x27; },rparen: { match: &#x27;)&#x27;, value: pop(2) },escape: { match: advancedEscapeRegex },char: { match: dot, lineBreaks: true },},bracketreplace: {lbracket: { match: &#x27;[&#x27;, push: &#x27;bracketreplace&#x27; },rbracket: { match: &#x27;]&#x27;, pop: 1 },bracketchar: { match: dot, lineBreaks: true },},},&#x27;main&#x27;,);})()</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/word.ts#L4">src/nearley/lexers/word.ts:4</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/word.ts#L4">src/nearley/lexers/word.ts:4</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -867,13 +889,59 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">wsregex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol"> = /[ \t\v\f\r]/</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L1">src/nearley/lexers/base.ts:1</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L1">src/nearley/lexers/base.ts:1</a></li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Functions</h2>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="loadcommands" class="tsd-anchor"></a>
+				<h3>Load<wbr>Commands</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">Load<wbr>Commands<span class="tsd-signature-symbol">(</span>scope<span class="tsd-signature-symbol">: </span><a href="classes/tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/interpreter/Commands.ts:6</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>scope: <a href="classes/tclscope.html" class="tsd-signature-type">TclScope</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function">
+				<a name="loadset" class="tsd-anchor"></a>
+				<h3>Load<wbr>Set</h3>
+				<ul class="tsd-signatures tsd-kind-function">
+					<li class="tsd-signature tsd-kind-icon">Load<wbr>Set<span class="tsd-signature-symbol">(</span>scope<span class="tsd-signature-symbol">: </span><a href="classes/tclscope.html" class="tsd-signature-type">TclScope</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in src/interpreter/commands/set.ts:3</li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>scope: <a href="classes/tclscope.html" class="tsd-signature-type">TclScope</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-function">
 				<a name="parsetcl" class="tsd-anchor"></a>
 				<h3>Parse<wbr>Tcl</h3>
@@ -884,7 +952,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/parser/index.ts#L26">src/parser/index.ts:26</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/parser/index.ts#L26">src/parser/index.ts:26</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -919,7 +987,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/parser/index.ts#L59">src/parser/index.ts:59</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/parser/index.ts#L59">src/parser/index.ts:59</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -942,7 +1010,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in src/interpreter/HandleEscape.ts:28</li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L28">src/interpreter/HandleEscape.ts:28</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -965,7 +1033,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L61">src/nearley/nearley-there.ts:61</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L61">src/nearley/nearley-there.ts:61</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -994,7 +1062,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L19">src/nearley/nearley-there.ts:19</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L19">src/nearley/nearley-there.ts:19</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1020,7 +1088,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclScope.ts#L43">src/interpreter/TclScope.ts:43</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/TclScope.ts#L109">src/interpreter/TclScope.ts:109</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1046,7 +1114,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L9">src/nearley/lexers/base.ts:9</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L9">src/nearley/lexers/base.ts:9</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1081,7 +1149,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/lexers/base.ts#L16">src/nearley/lexers/base.ts:16</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/lexers/base.ts#L16">src/nearley/lexers/base.ts:16</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1182,7 +1250,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/nearley/nearley-there.ts#L10">src/nearley/nearley-there.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/nearley/nearley-there.ts#L10">src/nearley/nearley-there.ts:10</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1204,7 +1272,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 				<div class="tsd-signature tsd-kind-icon">baked<wbr>Escape<wbr>Chars<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in src/interpreter/HandleEscape.ts:14</li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L14">src/interpreter/HandleEscape.ts:14</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -1213,7 +1281,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">a<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 7</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:17</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L17">src/interpreter/HandleEscape.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1223,7 +1291,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">b<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 8</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:18</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L18">src/interpreter/HandleEscape.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1233,7 +1301,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">f<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 12</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:19</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L19">src/interpreter/HandleEscape.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1243,7 +1311,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">n<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:20</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L20">src/interpreter/HandleEscape.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1253,7 +1321,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">r<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 13</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:21</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L21">src/interpreter/HandleEscape.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1263,7 +1331,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">t<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 9</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:22</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L22">src/interpreter/HandleEscape.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1273,7 +1341,7 @@ main().catch(<span class="hljs-built_in">console</span>.error);</code></pre>
 					<div class="tsd-signature tsd-kind-icon">v<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 11</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in src/interpreter/HandleEscape.ts:23</li>
+							<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/79199b0/src/interpreter/HandleEscape.ts#L23">src/interpreter/HandleEscape.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
