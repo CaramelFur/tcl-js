@@ -57,11 +57,17 @@
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="tclinterpreter.html#scope" class="tsd-kind-icon">scope</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="tclinterpreter.html#substituteword" class="tsd-kind-icon">Substitute<wbr>Word</a>
+				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="tclinterpreter.html#run" class="tsd-kind-icon">run</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="tclinterpreter.html#runcommand" class="tsd-kind-icon">run<wbr>Command</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a href="tclinterpreter.html#substitutepart" class="tsd-kind-icon">substitute<wbr>Part</a>
 				</li>
 			</ul>
 		</li>
@@ -97,8 +103,10 @@
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="tclinterpreter.html#substituteword" class="tsd-kind-icon">Substitute<wbr>Word</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="tclinterpreter.html#run" class="tsd-kind-icon">run</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="tclinterpreter.html#runcommand" class="tsd-kind-icon">run<wbr>Command</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="tclinterpreter.html#substitutepart" class="tsd-kind-icon">substitute<wbr>Part</a></li>
 						</ul>
 					</section>
 				</div>
@@ -116,7 +124,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/4608872/src/interpreter/TclInterpreter.ts#L11">src/interpreter/TclInterpreter.ts:11</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L24">src/interpreter/TclInterpreter.ts:24</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -141,7 +149,7 @@
 				<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/tcloptions.html" class="tsd-signature-type">TclOptions</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/4608872/src/interpreter/TclInterpreter.ts#L10">src/interpreter/TclInterpreter.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L23">src/interpreter/TclInterpreter.ts:23</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -151,13 +159,36 @@
 				<div class="tsd-signature tsd-kind-icon">scope<span class="tsd-signature-symbol">:</span> <a href="tclscope.html" class="tsd-signature-type">TclScope</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/4608872/src/interpreter/TclInterpreter.ts#L11">src/interpreter/TclInterpreter.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L24">src/interpreter/TclInterpreter.ts:24</a></li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="substituteword" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> Substitute<wbr>Word</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">Substitute<wbr>Word<span class="tsd-signature-symbol">(</span>word<span class="tsd-signature-symbol">: </span><a href="tclword.html" class="tsd-signature-type">TclWord</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L68">src/interpreter/TclInterpreter.ts:68</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>word: <a href="tclword.html" class="tsd-signature-type">TclWord</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 				<a name="run" class="tsd-anchor"></a>
 				<h3>run</h3>
@@ -168,7 +199,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/4608872/src/interpreter/TclInterpreter.ts#L18">src/interpreter/TclInterpreter.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L31">src/interpreter/TclInterpreter.ts:31</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -185,22 +216,45 @@
 				<a name="runcommand" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> run<wbr>Command</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<li class="tsd-signature tsd-kind-icon">run<wbr>Command<span class="tsd-signature-symbol">(</span>command<span class="tsd-signature-symbol">: </span><a href="tclcommand.html" class="tsd-signature-type">TclCommand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
+					<li class="tsd-signature tsd-kind-icon">run<wbr>Command<span class="tsd-signature-symbol">(</span>tclcommand<span class="tsd-signature-symbol">: </span><a href="tclcommand.html" class="tsd-signature-type">TclCommand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/4608872/src/interpreter/TclInterpreter.ts#L33">src/interpreter/TclInterpreter.ts:33</a></li>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L55">src/interpreter/TclInterpreter.ts:55</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>command: <a href="tclcommand.html" class="tsd-signature-type">TclCommand</a></h5>
+								<h5>tclcommand: <a href="tclcommand.html" class="tsd-signature-type">TclCommand</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="tclvariable.html" class="tsd-signature-type">TclVariable</a></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+				<a name="substitutepart" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> substitute<wbr>Part</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<li class="tsd-signature tsd-kind-icon">substitute<wbr>Part<span class="tsd-signature-symbol">(</span>part<span class="tsd-signature-symbol">: </span><a href="../globals.html#anywordpart" class="tsd-signature-type">AnyWordPart</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rubikscraft/tcl-js/blob/a4ed239/src/interpreter/TclInterpreter.ts#L84">src/interpreter/TclInterpreter.ts:84</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>part: <a href="../globals.html#anywordpart" class="tsd-signature-type">AnyWordPart</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 					</li>
 				</ul>
 			</section>

@@ -4,14 +4,15 @@
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./TclToken", "../nearley/parsers/script"], factory);
+        define(["require", "exports", "./TclToken", "../nearley/parsers/script", "../nearley/parsers/word"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ParseTcl = void 0;
+    exports.ParseWord = exports.ParseTcl = void 0;
     var TclToken_1 = require("./TclToken");
     var script_1 = require("../nearley/parsers/script");
+    var word_1 = require("../nearley/parsers/word");
     function ParseTcl(tcl, options) {
         if (options === void 0) { options = { keepComments: false, keepNops: false }; }
         var endlineEscapedTclString = tcl.replace(/([^\\](\\\\)*)\\\n/g, '$1 ');
@@ -32,5 +33,9 @@
         return parsed;
     }
     exports.ParseTcl = ParseTcl;
+    function ParseWord(word) {
+        return word_1.default(word);
+    }
+    exports.ParseWord = ParseWord;
 });
 //# sourceMappingURL=index.js.map

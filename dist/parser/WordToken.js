@@ -26,10 +26,33 @@
         EscapePartType["hex32"] = "hex32";
     })(EscapePartType = exports.EscapePartType || (exports.EscapePartType = {}));
     var EscapePart = (function () {
-        function EscapePart(value, type) {
-            if (type === void 0) { type = EscapePartType.normal; }
-            this.backslashValue = value;
-            this.type = type;
+        function EscapePart(unparsed) {
+            var clean = unparsed.slice(1);
+            switch (clean[0]) {
+                case 'x':
+                    this.type = EscapePartType.hex;
+                    this.backslashValue = clean.slice(1);
+                    break;
+                case 'u':
+                    this.type = EscapePartType.hex16;
+                    this.backslashValue = clean.slice(1);
+                    break;
+                case 'U':
+                    this.type = EscapePartType.hex32;
+                    this.backslashValue = clean.slice(1);
+                    break;
+                default: {
+                    var cint = parseInt(clean[0], 10);
+                    if (cint >= 0 && cint <= 7) {
+                        this.type = EscapePartType.octal;
+                        this.backslashValue = clean;
+                    }
+                    else {
+                        this.type = EscapePartType.normal;
+                        this.backslashValue = clean;
+                    }
+                }
+            }
         }
         return EscapePart;
     }());
