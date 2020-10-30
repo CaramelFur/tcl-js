@@ -9,9 +9,9 @@ export const wordLexer = (() => {
       main: {
         dollar: { match: '$', push: 'variable' },
         lbracket: { match: '[', push: 'bracketreplace' },
-        escape: { match: advancedEscapeRegex },
+        escape: { match: advancedEscapeRegex, lineBreaks: true },
 
-        char: { match: dot },
+        char: { match: dot, lineBreaks: true },
       },
       variable: {
         lparen: { match: '(', push: 'subvariable' },
@@ -21,8 +21,8 @@ export const wordLexer = (() => {
         dollar: { match: '$', next: 'variable' },
         lbracket: { match: '[', next: 'bracketreplace' },
 
-        escape: { match: advancedEscapeRegex, pop: 1 },
-        char: { match: dot, pop: 1 },
+        escape: { match: advancedEscapeRegex, pop: 1, lineBreaks: true },
+        char: { match: dot, pop: 1, lineBreaks: true },
       },
       subvariable: {
         lbracket: { match: '[', push: 'bracketreplace' },
@@ -30,7 +30,7 @@ export const wordLexer = (() => {
 
         rparen: { match: ')', value: pop(2) },
 
-        escape: { match: advancedEscapeRegex },
+        escape: { match: advancedEscapeRegex, lineBreaks: true },
 
         char: { match: dot, lineBreaks: true },
       },

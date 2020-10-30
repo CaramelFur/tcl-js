@@ -1,3 +1,1 @@
-set a hello
-#comment
-puts $a
+set hello {*}{this {to that}}

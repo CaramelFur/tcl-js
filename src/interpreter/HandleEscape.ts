@@ -1,16 +1,3 @@
-import * as util from 'util';
-import { ParseWord } from '../parser';
-import { TclWord } from '../parser/TclToken';
-import {
-  TextPart,
-  EscapePart,
-  AnyWordPart,
-  CodePart,
-  VariablePart,
-} from '../parser/WordToken';
-import { TclError } from '../TclError';
-import { TclVariable } from './variables/TclVariable';
-
 const bakedEscapeChars: {
   [index: string]: number;
 } = {

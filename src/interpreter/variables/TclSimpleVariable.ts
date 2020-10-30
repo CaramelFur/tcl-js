@@ -1,3 +1,4 @@
+import { ParseList } from '../../parser';
 import { TclVariable } from './TclVariable';
 
 export class TclSimpleVariable extends TclVariable {
@@ -14,6 +15,10 @@ export class TclSimpleVariable extends TclVariable {
 
   public getValue(): string {
     return this.value;
+  }
+
+  public toList(): string[] {
+    return ParseList(this.value);
   }
 
   public toString(): string {

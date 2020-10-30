@@ -1,6 +1,7 @@
-import { TclCommand, TclComment, TclScript } from './TclToken';
+import { TclCommand, TclComment, TclScript, TclWord } from './TclToken';
 import TclParser from '../nearley/parsers/script';
 import WordParser from '../nearley/parsers/word';
+import ListParser from '../nearley/parsers/list';
 
 import { AnyWordPart } from './WordToken';
 
@@ -58,4 +59,8 @@ export type ParsedWord = Array<AnyWordPart>;
 
 export function ParseWord(word: string): ParsedWord {
   return WordParser(word);
+}
+
+export function ParseList(list: string): string[] {
+  return ListParser(list).map((entry: TclWord) => entry.value);
 }

@@ -53,19 +53,39 @@ export class TclInterpreter {
   }
 
   private runCommand(tclcommand: TclCommand): TclVariable {
-    const words = tclcommand.words.map(this.SubstituteWord.bind(this));
+    const words = this.SubstituteWords(tclcommand.words);
+
     if (words.length === 0) {
       return new TclSimpleVariable('');
     }
 
     const command = words[0].toString();
+    const commandargs = words.slice(1);
 
-    console.log('Executing:', command);
+    console.log('Executing:', command, ...commandargs);
 
     return new TclSimpleVariable('');
   }
 
-  private SubstituteWord(word: TclWord): TclVariable {
+  private SubstituteWords(words: TclWord[]): TclSimpleVariable[] {
+    const processedWords: TclSimpleVariable[] = [];
+
+    for (const word of words) {
+      const substituted = this.SubstituteWord(word);
+      if (word.expand) {
+        const expanded = substituted
+          .toList()
+          .map((value: string) => new TclSimpleVariable(value));
+        processedWords.push(...expanded);
+      } else {
+        processedWords.push(substituted);
+      }
+    }
+
+    return processedWords;
+  }
+
+  private SubstituteWord(word: TclWord): TclSimpleVariable {
     const parsed = ParseWord(word.value);
     //parsed.forEach((p: any) => console.log(p.type, p.value));
     //console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));

@@ -1,4 +1,5 @@
 export const wsregex = /[ \t\v\f\r]/;
+export const nlwsregex = /[ \t\v\f\r\n]/;
 
 export const escapeRegex = /\\.|[^\\]|\\/;
 

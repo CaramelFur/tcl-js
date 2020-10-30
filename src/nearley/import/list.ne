@@ -10,11 +10,11 @@
 @include "./basics.ne"
 
 list
-  ->  flist {% id %}
+  ->  filledlist {% id %}
    |  null
 
-flist
-  ->  flist __ word
+filledlist
+  ->  filledlist __ word
         {% 
           ([list,,word]) => [...list, word]
         %}
