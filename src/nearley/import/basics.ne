@@ -1,16 +1,11 @@
 @lexer lexer
 
-commandSeperator -> (%nl | %semiColon):+
+commandSeperator -> (%nl | %semiColon):+ {% ([seperator]) => seperator.join('') %}
 
 # optional whitespace
-_ -> (%ws):*
+_ -> (%ws):* {% ([ws]) => ws ? ws.join('') : '' %}
 
 # mandatory whitespace
-__ -> (%ws):+
+__ -> (%ws):+ {% ([ws]) => ws.join('') %}
 
-octalChar -> [0-7]
-
-decimalChar -> [0-9]
-
-hexChar -> [0-9A-Fa-f]
 

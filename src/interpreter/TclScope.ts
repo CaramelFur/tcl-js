@@ -1,9 +1,17 @@
 import { TclError } from '../TclError';
 import { LoadCommands } from './Commands';
+import { createHelpers, TclCommandHelpers } from './TclCommandHelpers';
 import { TclInterpreter } from './TclInterpreter';
 import { TclArrayVariable } from './variables/TclArrayVariable';
 import { TclSimpleVariable } from './variables/TclSimpleVariable';
 import { TclVariable } from './variables/TclVariable';
+
+export type TclFullCommandHandler = (
+  interpreter: TclInterpreter,
+  scope: TclScope,
+  args: TclSimpleVariable[],
+  helpers: TclCommandHelpers,
+) => TclSimpleVariable | void;
 
 export type TclCommandHandler = (
   interpreter: TclInterpreter,
@@ -13,6 +21,7 @@ export type TclCommandHandler = (
 
 export interface TclCommandOptions {
   command: string;
+  argsBase: string;
 }
 
 export interface TclCommand {
@@ -51,9 +60,12 @@ export class TclCommandScope {
 
   public addProc(
     options: TclCommandOptions,
-    handler: TclCommandHandler,
+    fullHandler: TclFullCommandHandler,
   ): boolean {
     if (this.hasProc(options.command)) return false;
+
+    const helpers = createHelpers(options);
+    const handler: TclCommandHandler = (interpreter, scope, args) => fullHandler(interpreter, scope, args, helpers)
 
     this.procs[options.command] = {
       handler,
