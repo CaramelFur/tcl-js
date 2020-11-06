@@ -1,5 +1,4 @@
 import { TclError } from '../../TclError';
-import { compileVarName } from '../TclScope';
 import { TclSimpleVariable } from './TclSimpleVariable';
 import { TclVariable } from './TclVariable';
 

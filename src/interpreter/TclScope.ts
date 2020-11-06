@@ -1,25 +1,102 @@
 import { TclError } from '../TclError';
+import { LoadCommands } from './Commands';
+import { TclInterpreter } from './TclInterpreter';
 import { TclArrayVariable } from './variables/TclArrayVariable';
 import { TclSimpleVariable } from './variables/TclSimpleVariable';
 import { TclVariable } from './variables/TclVariable';
 
+export type TclCommandHandler = (
+  interpreter: TclInterpreter,
+  scope: TclScope,
+  args: TclSimpleVariable[],
+) => TclSimpleVariable | void;
+
+export interface TclCommandOptions {
+  command: string;
+}
+
+export interface TclCommand {
+  handler: TclCommandHandler;
+  options: TclCommandOptions;
+}
+
+export class TclCommandScope {
+  private procs: {
+    [index: string]: TclCommand;
+  } = {};
+
+  public constructor(disableCommands: string[]) {
+    LoadCommands(this);
+
+    for (const disabledCommand of disableCommands) {
+      if (this.hasProc(disabledCommand)) {
+        this.deleteProc(disabledCommand);
+      }
+    }
+  }
+
+  // Procs
+
+  public hasProc(command: string): boolean {
+    return Object.keys(this.procs).indexOf(command) >= 0;
+  }
+
+  public getProc(command: string): TclCommand {
+    if (!this.hasProc(command)) {
+      throw new TclError(`invalid command name "${command}"`);
+    }
+
+    return this.procs[command];
+  }
+
+  public addProc(
+    options: TclCommandOptions,
+    handler: TclCommandHandler,
+  ): boolean {
+    if (this.hasProc(options.command)) return false;
+
+    this.procs[options.command] = {
+      handler,
+      options,
+    };
+
+    return true;
+  }
+
+  private deleteProc(command: string) {
+    delete this.procs[command];
+  }
+}
+
 export class TclScope {
   private parent: TclScope | null = null;
+  private commandScope: TclCommandScope;
 
   private variables: {
     [index: string]: TclVariable;
   } = {};
 
   public constructor(disableCommands?: string[], parent?: TclScope) {
-    if (parent) this.parent = parent;
+    if (parent) {
+      this.parent = parent;
+      this.commandScope = parent.getCommandScope();
+    } else {
+      this.commandScope = new TclCommandScope(disableCommands || []);
+    }
   }
 
-  public getParent(levels = 1): TclScope | null {
-    if (this.parent === null) return null;
+  public getCommandScope(): TclCommandScope {
+    return this.commandScope;
+  }
+
+  public getParent(levels = 1, fail = true): TclScope | null {
+    if (this.parent === null) return fail ? null : this;
 
     if (levels === 1) return this.parent;
     return this.parent.getParent(levels - 1);
   }
+
+  // Variables
 
   public hasVariable(name: string): boolean {
     return Object.keys(this.variables).indexOf(name) >= 0;

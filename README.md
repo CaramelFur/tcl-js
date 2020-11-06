@@ -86,6 +86,16 @@ Currently none
 
 These are not commands but just general parts of the program. If they are listed here, they work.
 
-- lexer
-- parser
-- wordparser
+- [x] lexer
+- [x] code parser
+- [x] word parser
+- [x] list parser
+
+- [x] backslash substitution
+- [x] variable substitution
+- [x] code substitution
+
+- [x] list expansion
+
+- [x] Variables
+- [x] Procedures

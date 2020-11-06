@@ -28,7 +28,7 @@ export class TclInterpreter {
     this.scope = scope || new TclScope(options.disableCommands);
   }
 
-  public run(code: string): TclVariable {
+  public run(code: string): TclSimpleVariable {
     if (debugLexer) {
       lexer.reset(code);
       // eslint-disable-next-line no-constant-condition
@@ -42,7 +42,7 @@ export class TclInterpreter {
     const astTree = ParseTcl(code);
     if (debugParser) console.log(util.inspect(astTree, false, Infinity, true));
 
-    let lastValue: TclVariable = new TclSimpleVariable('');
+    let lastValue: TclSimpleVariable = new TclSimpleVariable('');
 
     for (const command of astTree.commands) {
       if (command instanceof TclComment) continue;
@@ -52,19 +52,20 @@ export class TclInterpreter {
     return lastValue;
   }
 
-  private runCommand(tclcommand: TclCommand): TclVariable {
+  private runCommand(tclcommand: TclCommand): TclSimpleVariable {
     const words = this.SubstituteWords(tclcommand.words);
 
     if (words.length === 0) {
       return new TclSimpleVariable('');
     }
 
-    const command = words[0].toString();
+    const command = words[0].getValue();
     const commandargs = words.slice(1);
 
-    console.log('Executing:', command, ...commandargs);
+    const proc = this.scope.getCommandScope().getProc(command);
+    const result = proc.handler(this, this.scope, commandargs);
 
-    return new TclSimpleVariable('');
+    return result instanceof TclSimpleVariable ? result : new TclSimpleVariable('');
   }
 
   private SubstituteWords(words: TclWord[]): TclSimpleVariable[] {
@@ -86,22 +87,29 @@ export class TclInterpreter {
   }
 
   private SubstituteWord(word: TclWord): TclSimpleVariable {
-    const parsed = ParseWord(word.value);
-    //parsed.forEach((p: any) => console.log(p.type, p.value));
-    //console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
-
-    const substituted = parsed.map(this.substitutePart.bind(this)).join('');
-
-    console.log(
-      word.value,
-      ':',
-      util.inspect(substituted, false, Infinity, true),
-    );
+    const substituted = this.SubstituteStringWord(word.value);
 
     return new TclSimpleVariable(substituted);
   }
 
-  private substitutePart(part: AnyWordPart): string {
+  private SubstituteStringWord(word: string): string {
+    const parsed = ParseWord(word);
+
+    // parsed.forEach((p: any) => console.log(p.type, p.value));
+    // console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
+
+    const substituted = parsed.map(this.SubstitutePart.bind(this)).join('');
+
+    // console.log(
+    //   word.value,
+    //   ':',
+    //   util.inspect(substituted, false, Infinity, true),
+    // );
+
+    return substituted;
+  }
+
+  private SubstitutePart(part: AnyWordPart): string {
     if (part instanceof TextPart) {
       return part.value;
     }
@@ -120,13 +128,16 @@ export class TclInterpreter {
     }
 
     if (part instanceof CodePart) {
-      return '{code}';
+      const subInterpreter = new TclInterpreter(this.options, this.scope);
+      const variable = subInterpreter.run(part.value).getValue();
+
+      return variable;
     }
 
     if (part instanceof VariablePart) {
       let index: string | null = null;
       if (part.index) {
-        index = part.index.map(this.substitutePart.bind(this)).join('');
+        index = part.index.map(this.SubstitutePart.bind(this)).join('');
       }
 
       if (!this.scope.hasVariable(part.name)) {

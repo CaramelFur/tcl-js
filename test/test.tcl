@@ -1,1 +1,1 @@
-set hello {*}{this {to that}}
+set [set hello {this {to that}}]
