@@ -51,14 +51,13 @@ export class TclCommand {
    */
   words: TclWord[];
 
-  /**
-   * Creates an instance of TclCommand
-   *
-   * @param {TclWord[]} words
-   * @memberof TclCommand
-   */
-  constructor(words: TclWord[]) {
+  line: number;
+  col: number;
+
+  constructor(words: TclWord[], line: number, col: number) {
     this.words = words;
+    this.line = line;
+    this.col = col;
   }
 
   /**
@@ -88,15 +87,13 @@ export class TclComment {
    * @memberof TclComment
    */
   value: string;
+  line: number;
+  col: number;
 
-  /**
-   * Creates an instance of TclComment
-   *
-   * @param {string} value
-   * @memberof TclComment
-   */
-  constructor(value: string) {
+  constructor(value: string, line: number, col: number) {
     this.value = value;
+    this.line = line;
+    this.col = col;
   }
 }
 
@@ -145,16 +142,13 @@ export class TclWord {
    */
   expand: boolean;
 
-  /**
-   * Creates an instance of TclWord
-   *
-   * @param {string} value
-   * @param {TclWordTypes} [type=TclWordTypes.normal]
-   * @param {boolean} [expand=false]
-   * @memberof TclWord
-   */
+  line: number;
+  col: number;
+
   constructor(
     value: string,
+    line: number,
+    col: number,
     type: TclWordTypes = TclWordTypes.normal,
     expand = false,
   ) {
@@ -162,50 +156,14 @@ export class TclWord {
     //this.parts = parts;
     this.value = value;
     this.expand = expand;
+    this.line = line;
+    this.col = col;
   }
 
-  /**
-   * This changes the expand value,
-   * this value tells the interpreter if this word should be expanded from a list to seperate word
-   *
-   * @param {boolean} value
-   * @returns
-   * @memberof TclWord
-   */
-  setExpand(value: boolean): TclWord {
+  setExpand(value: boolean, line: number, col: number): TclWord {
     this.expand = value;
+    this.line = line;
+    this.col = col;
     return this;
   }
-
-  /*prepend(value: TclWordPart) {
-    this.parts.unshift(value);
-    return this;
-  }*/
 }
-
-/*
-Currently obsolete, but here incase i need them
-
-export enum TclWordPartTypes {
-  string = 'string',
-  //variable = "variable",
-  //bracket = "bracket",
-}
-
-export class TclWordPart {
-  type: TclWordPartTypes;
-  value: string;
-  //value: string | TclVariable;
-  //substituted: boolean = false;
-
-  constructor(value: string, type: TclWordPartTypes = TclWordPartTypes.string) {
-    this.type = type;
-    this.value = value;
-  }
-}
-
-export interface TclVariable {
-  name: string;
-  subname: string | null;
-}
-*/

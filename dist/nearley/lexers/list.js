@@ -9,39 +9,25 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.lexer = void 0;
+    exports.listlexer = void 0;
     var moo = require("moo");
     var base_1 = require("./base");
-    exports.lexer = (function () {
-        var pop = base_1.createPop(function () { return exports.lexer; });
-        var push = base_1.createPush(function () { return exports.lexer; });
+    exports.listlexer = (function () {
+        var pop = base_1.createPop(function () { return exports.listlexer; });
+        var push = base_1.createPush(function () { return exports.listlexer; });
         return moo.states({
-            $all: {
-                fonk: "e",
-                funky: { match: base_1.escapeNlRegex, value: function (x) { debugger; return ""; }, lineBreaks: true }
-            },
             main: {
-                nl: { match: '\n', lineBreaks: true },
-                ws: base_1.wsregex,
-                semiColon: ';',
-                hashTag: { match: '#', push: 'comment' },
-                expandSign: { match: '{*}' },
+                ws: { match: base_1.nlwsregex, lineBreaks: true },
                 lbrace: { match: '{', push: 'braceWord' },
                 quote: { match: '"', push: 'quoteWord' },
                 wordchar: [
                     { match: '$', value: push('word', 'variable') },
                     { match: '[', value: push('word', 'bracketreplace') },
-                    { match: base_1.escapeRegex, lineBreaks: true, push: 'word' },
+                    { match: base_1.escapeRegex, push: 'word', lineBreaks: true },
                 ],
             },
-            comment: {
-                comment: /[^\n]+/,
-                nl: { match: '\n', lineBreaks: true, pop: 1 },
-            },
             word: {
-                nl: { match: '\n', lineBreaks: true, pop: 1 },
-                ws: { match: base_1.wsregex, pop: 1 },
-                semiColon: { match: ';', pop: 1 },
+                ws: { match: base_1.nlwsregex, pop: 1, lineBreaks: true },
                 wordchar: [
                     { match: '$', push: 'variable' },
                     { match: '[', push: 'bracketreplace' },
@@ -63,11 +49,11 @@
                     { match: '$', next: 'variable' },
                     { match: '[', next: 'bracketreplace' },
                     {
-                        match: /\\.|[^\\]|\\(?=[ \t\v\f\r\n;])/,
+                        match: /\\.|[^\\]|\\(?=[ \t\v\f\r\n])/,
                         value: pop(2),
                         lineBreaks: true,
                     },
-                    { match: base_1.escapeRegex, lineBreaks: true, pop: 1 },
+                    { match: base_1.escapeRegex, pop: 1, lineBreaks: true },
                 ],
             },
             subvariable: {
@@ -95,4 +81,4 @@
         }, 'main');
     })();
 });
-//# sourceMappingURL=main.js.map
+//# sourceMappingURL=list.js.map

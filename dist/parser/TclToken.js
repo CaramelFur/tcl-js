@@ -22,8 +22,10 @@
     }());
     exports.TclScript = TclScript;
     var TclCommand = (function () {
-        function TclCommand(words) {
+        function TclCommand(words, line, col) {
             this.words = words;
+            this.line = line;
+            this.col = col;
         }
         TclCommand.prototype.prepend = function (value) {
             this.words.unshift(value);
@@ -33,8 +35,10 @@
     }());
     exports.TclCommand = TclCommand;
     var TclComment = (function () {
-        function TclComment(value) {
+        function TclComment(value, line, col) {
             this.value = value;
+            this.line = line;
+            this.col = col;
         }
         return TclComment;
     }());
@@ -45,15 +49,19 @@
         TclWordTypes["brace"] = "brace";
     })(TclWordTypes = exports.TclWordTypes || (exports.TclWordTypes = {}));
     var TclWord = (function () {
-        function TclWord(value, type, expand) {
+        function TclWord(value, line, col, type, expand) {
             if (type === void 0) { type = TclWordTypes.normal; }
             if (expand === void 0) { expand = false; }
             this.type = type;
             this.value = value;
             this.expand = expand;
+            this.line = line;
+            this.col = col;
         }
-        TclWord.prototype.setExpand = function (value) {
+        TclWord.prototype.setExpand = function (value, line, col) {
             this.expand = value;
+            this.line = line;
+            this.col = col;
             return this;
         };
         return TclWord;

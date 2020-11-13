@@ -9,8 +9,10 @@
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.createPush = exports.createPop = exports.dot = exports.advancedEscapeRegex = exports.escapeRegex = exports.wsregex = void 0;
+    exports.createPush = exports.createPop = exports.dot = exports.advancedEscapeRegex = exports.escapeRegex = exports.escapeNlRegex = exports.nlwsregex = exports.wsregex = void 0;
     exports.wsregex = /[ \t\v\f\r]/;
+    exports.nlwsregex = /[ \t\v\f\r\n]/;
+    exports.escapeNlRegex = /\\\n[ \t\v\f\r]*/;
     exports.escapeRegex = /\\.|[^\\]|\\/;
     exports.advancedEscapeRegex = /\\(?:[0-7]{1,3}|x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|.)/;
     exports.dot = /./;

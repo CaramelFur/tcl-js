@@ -17,12 +17,13 @@ var __extends = (this && this.__extends) || (function () {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "./TclVariable"], factory);
+        define(["require", "exports", "../../parser", "./TclVariable"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TclSimpleVariable = void 0;
+    var parser_1 = require("../../parser");
     var TclVariable_1 = require("./TclVariable");
     var TclSimpleVariable = (function (_super) {
         __extends(TclSimpleVariable, _super);
@@ -36,6 +37,9 @@ var __extends = (this && this.__extends) || (function () {
         };
         TclSimpleVariable.prototype.getValue = function () {
             return this.value;
+        };
+        TclSimpleVariable.prototype.toList = function () {
+            return parser_1.ParseList(this.value);
         };
         TclSimpleVariable.prototype.toString = function () {
             return "TclSimpleVariable(\"" + this.value + "\")";

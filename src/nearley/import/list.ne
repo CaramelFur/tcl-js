@@ -21,7 +21,7 @@ filledlist
    |  word
 
 word
-  -> %expandSign:? nonExpansionWord {% ([expand,word]) => word.setExpand(!!expand) %}
+  -> %expandSign:? nonExpansionWord {% ([expand,word]) => expand ? word.setExpand(expand, expand.line, expand.col) : word %}
 
 nonExpansionWord
   ->  simpleWord {% id %}
@@ -29,10 +29,10 @@ nonExpansionWord
    |  bracedWord {% id %}
   
 simpleWord
-  ->  %wordchar:+ {% ([chars]) => new TclWord(chars.join('')) %}
+  ->  %wordchar:+ {% ([chars]) => new TclWord(chars.join(''), chars[0].line, chars[0].col) %}
 
 quotedWord
-  -> %quote %wordchar:+ {% ([quote,chars]) => new TclWord(chars.slice(0, -1).join('')) %}
+  -> %quote %wordchar:+ {% ([quote,chars]) => new TclWord(chars.slice(0, -1).join(''), quote.line, quote.col) %}
 
 bracedWord
-  -> %lbrace %wordchar:+ {% ([quote,chars]) => new TclWord(chars.slice(0, -1).join(''), TclWordTypes.brace) %}
+  -> %lbrace %wordchar:+ {% ([lbrace,chars]) => new TclWord(chars.slice(0, -1).join(''), lbrace.line, lbrace.col, TclWordTypes.brace) %}

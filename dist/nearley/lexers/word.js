@@ -18,22 +18,22 @@
             main: {
                 dollar: { match: '$', push: 'variable' },
                 lbracket: { match: '[', push: 'bracketreplace' },
-                escape: { match: base_1.advancedEscapeRegex },
-                char: { match: base_1.dot },
+                escape: { match: base_1.advancedEscapeRegex, lineBreaks: true },
+                char: { match: base_1.dot, lineBreaks: true },
             },
             variable: {
                 lparen: { match: '(', push: 'subvariable' },
                 variablechar: { match: /[a-zA-Z0-9_]|::/ },
                 dollar: { match: '$', next: 'variable' },
                 lbracket: { match: '[', next: 'bracketreplace' },
-                escape: { match: base_1.advancedEscapeRegex, pop: 1 },
-                char: { match: base_1.dot, pop: 1 },
+                escape: { match: base_1.advancedEscapeRegex, pop: 1, lineBreaks: true },
+                char: { match: base_1.dot, pop: 1, lineBreaks: true },
             },
             subvariable: {
                 lbracket: { match: '[', push: 'bracketreplace' },
                 dollar: { match: '$', push: 'variable' },
                 rparen: { match: ')', value: pop(2) },
-                escape: { match: base_1.advancedEscapeRegex },
+                escape: { match: base_1.advancedEscapeRegex, lineBreaks: true },
                 char: { match: base_1.dot, lineBreaks: true },
             },
             bracketreplace: {

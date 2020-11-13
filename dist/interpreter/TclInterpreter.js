@@ -9,6 +9,26 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 (function (factory) {
     if (typeof module === "object" && typeof module.exports === "object") {
         var v = factory(require, exports);
@@ -31,7 +51,7 @@ var __values = (this && this.__values) || function(o) {
     var TclError_1 = require("../TclError");
     var HandleEscape_1 = require("./HandleEscape");
     var debugLexer = false;
-    var debugParser = false;
+    var debugParser = true;
     var TclInterpreter = (function () {
         function TclInterpreter(options, scope) {
             this.options = options;
@@ -70,21 +90,53 @@ var __values = (this && this.__values) || function(o) {
             return lastValue;
         };
         TclInterpreter.prototype.runCommand = function (tclcommand) {
-            var words = tclcommand.words.map(this.SubstituteWord.bind(this));
+            var words = this.SubstituteWords(tclcommand.words);
             if (words.length === 0) {
                 return new TclSimpleVariable_1.TclSimpleVariable('');
             }
-            var command = words[0].toString();
-            console.log('Executing:', command);
-            return new TclSimpleVariable_1.TclSimpleVariable('');
+            var command = words[0].getValue();
+            var commandargs = words.slice(1);
+            var proc = this.scope.getCommandScope().getProc(command);
+            var result = proc.handler(this, this.scope, commandargs);
+            return result instanceof TclSimpleVariable_1.TclSimpleVariable ? result : new TclSimpleVariable_1.TclSimpleVariable('');
+        };
+        TclInterpreter.prototype.SubstituteWords = function (words) {
+            var e_2, _a;
+            var processedWords = [];
+            try {
+                for (var words_1 = __values(words), words_1_1 = words_1.next(); !words_1_1.done; words_1_1 = words_1.next()) {
+                    var word = words_1_1.value;
+                    var substituted = this.SubstituteWord(word);
+                    if (word.expand) {
+                        var expanded = substituted
+                            .toList()
+                            .map(function (value) { return new TclSimpleVariable_1.TclSimpleVariable(value); });
+                        processedWords.push.apply(processedWords, __spread(expanded));
+                    }
+                    else {
+                        processedWords.push(substituted);
+                    }
+                }
+            }
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (words_1_1 && !words_1_1.done && (_a = words_1.return)) _a.call(words_1);
+                }
+                finally { if (e_2) throw e_2.error; }
+            }
+            return processedWords;
         };
         TclInterpreter.prototype.SubstituteWord = function (word) {
-            var parsed = parser_1.ParseWord(word.value);
-            var substituted = parsed.map(this.substitutePart.bind(this)).join('');
-            console.log(word.value, ':', util.inspect(substituted, false, Infinity, true));
+            var substituted = this.SubstituteStringWord(word.value);
             return new TclSimpleVariable_1.TclSimpleVariable(substituted);
         };
-        TclInterpreter.prototype.substitutePart = function (part) {
+        TclInterpreter.prototype.SubstituteStringWord = function (word) {
+            var parsed = parser_1.ParseWord(word);
+            var substituted = parsed.map(this.SubstitutePart.bind(this)).join('');
+            return substituted;
+        };
+        TclInterpreter.prototype.SubstitutePart = function (part) {
             if (part instanceof WordToken_1.TextPart) {
                 return part.value;
             }
@@ -101,12 +153,14 @@ var __values = (this && this.__values) || function(o) {
                 }
             }
             if (part instanceof WordToken_1.CodePart) {
-                return '{code}';
+                var subInterpreter = new TclInterpreter(this.options, this.scope);
+                var variable = subInterpreter.run(part.value).getValue();
+                return variable;
             }
             if (part instanceof WordToken_1.VariablePart) {
                 var index = null;
                 if (part.index) {
-                    index = part.index.map(this.substitutePart.bind(this)).join('');
+                    index = part.index.map(this.SubstitutePart.bind(this)).join('');
                 }
                 if (!this.scope.hasVariable(part.name)) {
                     throw new TclError_1.TclError("can't read \"" + TclScope_1.compileVarName(part.name, index) + "\": no such variable");

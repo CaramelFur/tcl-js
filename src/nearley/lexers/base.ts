@@ -1,7 +1,8 @@
 export const wsregex = /[ \t\v\f\r]/;
 export const nlwsregex = /[ \t\v\f\r\n]/;
+export const escapeNlRegex = /\\\n[ \t\v\f\r]*/;
 
-export const escapeRegex = /\\.|[^\\]|\\/;
+export const escapeRegex = /\\.|[^\\]/;
 
 export const advancedEscapeRegex = /\\(?:[0-7]{1,3}|x[0-9a-fA-F]{1,2}|u[0-9a-fA-F]{1,4}|U[0-9a-fA-F]{1,8}|.)/;
 

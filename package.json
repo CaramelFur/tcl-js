@@ -5,6 +5,7 @@
   "main": "dist/tcl.js",
   "scripts": {
     "run": "yarn run generate-nearley && ts-node ./test/test.ts",
+    "debug": "yarn run generate-nearley && yarn run compile-typescript && node --nolazy --inspect-brk ./test/test.js",
     "test": "yarn run build && yarn run run-tests && yarn run report-coverage",
     "build": "yarn run make-prettier && yarn run generate-nearley && yarn run compile-typescript && yarn run generate-docs",
     "generate-nearley": "ts-node ./src/nearley/compile-nearley.ts",
