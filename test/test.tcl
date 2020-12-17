@@ -1,2 +1,2 @@
-test $this(\
-)variable here
+puts new\\
+line

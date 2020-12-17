@@ -4,7 +4,8 @@ import { TclOptions } from '../Tcl';
 import { compileVarName, TclScope } from './TclScope';
 import { TclVariable } from './variables/TclVariable';
 import * as util from 'util';
-import { lexer } from '../nearley/lexers/main';
+import { lexer as mainlexer } from '../nearley/lexers/main';
+import { wordLexer as wordlexer } from '../nearley/lexers/word';
 import { TclSimpleVariable } from './variables/TclSimpleVariable';
 import {
   AnyWordPart,
@@ -30,17 +31,22 @@ export class TclInterpreter {
 
   public run(code: string): TclSimpleVariable {
     if (debugLexer) {
-      lexer.reset(code);
+      console.log('Debug main lexer:');
+
+      mainlexer.reset(code);
       // eslint-disable-next-line no-constant-condition
       while (1) {
-        const e = lexer.next();
+        const e = mainlexer.next();
         if (!e) break;
         console.log(e.type, util.inspect(e.value));
       }
     }
 
     const astTree = ParseTcl(code);
-    if (debugParser) console.log(util.inspect(astTree, false, Infinity, true));
+    if (debugParser) {
+      console.log('Debug main parser:');
+      console.log(util.inspect(astTree, false, Infinity, true));
+    }
 
     let lastValue: TclSimpleVariable = new TclSimpleVariable('');
 
@@ -65,7 +71,9 @@ export class TclInterpreter {
     const proc = this.scope.getCommandScope().getProc(command);
     const result = proc.handler(this, this.scope, commandargs);
 
-    return result instanceof TclSimpleVariable ? result : new TclSimpleVariable('');
+    return result instanceof TclSimpleVariable
+      ? result
+      : new TclSimpleVariable();
   }
 
   private SubstituteWords(words: TclWord[]): TclSimpleVariable[] {
@@ -87,24 +95,35 @@ export class TclInterpreter {
   }
 
   private SubstituteWord(word: TclWord): TclSimpleVariable {
-    const substituted = this.SubstituteStringWord(word.value);
+    if (word.type === 'normal') {
+      return new TclSimpleVariable(this.SubstituteStringWord(word.value));
+    } else if (word.type === 'brace') {
+      return new TclSimpleVariable(word.value);
+    }
 
-    return new TclSimpleVariable(substituted);
+    return new TclSimpleVariable();
   }
 
   private SubstituteStringWord(word: string): string {
+    if (debugLexer) {
+      console.log('Debug word lexer:');
+      wordlexer.reset(word);
+      // eslint-disable-next-line no-constant-condition
+      while (1) {
+        const e = wordlexer.next();
+        if (!e) break;
+        console.log(e.type, util.inspect(e.value));
+      }
+    }
+
     const parsed = ParseWord(word);
 
-    // parsed.forEach((p: any) => console.log(p.type, p.value));
-    // console.log(word.value, ':', util.inspect(parsed, false, Infinity, true));
+    if (debugParser) {
+      console.log('Debug word parser:');
+      console.log(util.inspect(parsed, false, Infinity, true));
+    }
 
     const substituted = parsed.map(this.SubstitutePart.bind(this)).join('');
-
-    // console.log(
-    //   word.value,
-    //   ':',
-    //   util.inspect(substituted, false, Infinity, true),
-    // );
 
     return substituted;
   }

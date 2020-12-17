@@ -5,8 +5,6 @@ import ListParser from '../nearley/parsers/list';
 
 import { AnyWordPart } from './WordToken';
 
-const endlineEscapeRegex = /([^\\](\\\\)*)\\\n/g;
-
 /**
  * Options you can give to the parser
  *
@@ -30,8 +28,6 @@ export function ParseTcl(
   tcl: string,
   options: TclParseOptions = { keepComments: false, keepNops: false },
 ): TclScript {
-  // We need to escape newlines before we start parsing, because weird tcl behaviour
-  //const endlineEscapedTclString = tcl.replace(endlineEscapeRegex, '$1 ');
 
   // Actually parse it with the generated parser
   const parsed: TclScript = TclParser(tcl);

@@ -4,7 +4,7 @@ import { TclVariable } from './TclVariable';
 export class TclSimpleVariable extends TclVariable {
   private value: string;
 
-  constructor(value: string) {
+  constructor(value = '') {
     super();
     this.value = value;
   }
